@@ -54,13 +54,13 @@ function Regattas() {
                             Recent Results
                         </div>
                         <RaceCard Name={"Women's Sprints Regatta"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"}/>
+                                  Status={"On Going"} active={true}/>
                         <RaceCard Name={"Another Race Name"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"}/>
+                                  Status={"On Going"} active={false}/>
                         <RaceCard Name={"Women's Sprints Regatta"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"}/>
+                                  Status={"On Going"} active={false}/>
                         <RaceCard Name={"Women's Sprints Regatta"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"}/>
+                                  Status={"On Going"} active={false}/>
                     </div>
                 </div>
             </div>

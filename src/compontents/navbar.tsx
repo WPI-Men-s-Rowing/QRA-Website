@@ -4,11 +4,15 @@ import communityIcon from "../assets/icons/Community Icon.svg"
 import regattaIcon from "../assets/icons/Regattas Icon.svg"
 import {Link} from "react-router-dom";
 
-function Navbar() {
+interface NavbarProps {
+    solid?: boolean;
+}
+
+function Navbar(props: NavbarProps) {
     return (
         <>
             <div
-                className="w-full h-auto px-2.5 py-5 bg-gradient-to-b from-black justify-between items-center inline-flex absolute">
+                className={`w-full h-auto px-2.5 py-5 bg-gradient-to-b from-black justify-between items-center inline-flex absolute ${props.solid ? 'bg-black' : 'bg-gradient-to-b from-black'}`}>
                 <img className="w-[72px] h-[54.17px]" src={qraLogo} alt="QRA Logo"/>
                 <div className="justify-evenly gap-20 flex flex-row text-white text-xl">
                     <Link to={"/"}>

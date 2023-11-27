@@ -8,7 +8,8 @@ function Home() {
 
     return (
         <>
-            <div className="min-w-screen min-h-screen overflow-x-hidden">
+            <div
+                className="min-w-screen min-h-screen overflow-x-hidden scrollbar scrollbar-thumb-gray-900 scrollbar-track-gray-100">
                 <Navbar/>
                 <JumboTron title={"Quinsigamond Rowing Association, Inc."}
                            subtitle={"Lake Quinsigamond, Massachusetts"}
