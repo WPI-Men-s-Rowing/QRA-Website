@@ -1,24 +1,34 @@
 import ResultLine from "./resultLine.tsx";
+import {Heat} from "../../types/types.ts";
+
 
 interface ResultCardProps {
-    EventName: string;
-    EventTime: string;
-    EventStatus: string;
+    data: Heat;
 }
 
+
 function ResultCard(props: ResultCardProps) {
+    console.log(props.data)
     return (
         <>
             <div
                 className="w-[405px] h-[413px] px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex">
                 <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[5px] flex">
-                    <div className="text-red-900 text-2xl font-bold">{props.EventName}</div>
+                    <div className="text-red-900 text-2xl font-bold">{props.data.title}</div>
+
                     <div className="self-stretch justify-between items-start inline-flex">
                         <div><span
                             className="text-zinc-800 text-[10px] font-normal ">Scheduled: </span><span
-                            className="text-zinc-800 text-[10px] font-bold ">{props.EventTime}</span></div>
+                            className="text-zinc-800 text-[10px] font-bold ">{props.data.startTime.getHours()}:0{props.data.startTime.getMinutes()}</span>
+                            <span
+                                className="text-zinc-800 text-[10px] font-bold ">{props.data.startTime.getHours() > 12 ? "PM" : "AM"}</span>
+                        </div>
+                        <div>
+                            <span className="text-zinc-800 text-[10px] font-normal ">Host: </span><span
+                            className="text-zinc-800 text-[10px] font-bold ">{props.data.host}</span>
+                        </div>
                         <div><span className="text-zinc-800 text-[10px] font-normal ">Status: </span><span
-                            className="text-zinc-800 text-[10px] font-bold ">{props.EventStatus}</span></div>
+                            className="text-zinc-800 text-[10px] font-bold ">{props.data.status}</span></div>
                     </div>
                     <div className="self-stretch h-[0px] border border-zinc-800 border-opacity-20"></div>
                 </div>
@@ -32,14 +42,9 @@ function ResultCard(props: ResultCardProps) {
                         <div className="w-[57px] text-neutral-50 text-base font-bold ">Margin</div>
                     </div>
                     <div className="self-stretch grow shrink basis-0 flex-col justify-start items-start flex p-1">
-                        <ResultLine TeamName={"WPI"} FinishTime={"99:99.99"} Margin={"99:99.99"} Place={0}
-                                    Lane={1}/>
-                        <ResultLine TeamName={"Williams"} FinishTime={"99:99.99"} Margin={"99:99.99"} Place={1}
-                                    Lane={3}/>
-                        <ResultLine TeamName={"Yale"} FinishTime={"99:99.99"} Margin={"99:99.99"} Place={2}
-                                    Lane={4}/>
-                        <ResultLine TeamName={"Tufts"} FinishTime={"99:99.99"} Margin={"99:99.99"} Place={3}
-                                    Lane={2}/>
+                        {props.data.finishOrder.filter((result) => result.place != 0).sort((a, b) => a.place - b.place).map((result, index) => (
+                            <ResultLine data={result} key={index}/>
+                        ))}
                     </div>
 
                 </div>

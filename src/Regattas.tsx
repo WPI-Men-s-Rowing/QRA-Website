@@ -1,9 +1,41 @@
 import Navbar from "./compontents/navbar.tsx";
 import JumboTron from "./compontents/jumbotron.tsx";
-import RaceCard from "./compontents/results/racecard.tsx";
 import bg from "./assets/photo.png";
+import RaceCard from "./compontents/results/racecard.tsx";
+import {Regatta, RegattaStatus} from "./types/types";
+
 
 function Regattas() {
+    const testRegatta: Regatta = {
+        name: "Another Regatta",
+        date: new Date(),
+        uuid: "1234",
+        location: "Lake Quinsigamond",
+        status: RegattaStatus.UPCOMING,
+        heats: []
+
+    }
+    const testRegatta2: Regatta = {
+        name: "Quinsigamond Snake Regatta",
+        date: new Date(),
+        uuid: "1234",
+        location: "Lake Quinsigamond",
+        status: RegattaStatus.ACTIVE,
+        heats: []
+
+    }
+
+    const testRegatta3: Regatta = {
+        name: "WPI Invitational",
+        date: new Date(),
+        uuid: "1234",
+        location: "Lake Quinsigamond",
+        status: RegattaStatus.FINISHED,
+        heats: []
+    }
+    const regattas: Regatta[] = [
+        testRegatta, testRegatta2, testRegatta3
+    ]
 
     return (
         <>
@@ -53,14 +85,12 @@ function Regattas() {
                             className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
                             Recent Results
                         </div>
-                        <RaceCard Name={"Women's Sprints Regatta"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"} active={true}/>
-                        <RaceCard Name={"Another Race Name"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"} active={false}/>
-                        <RaceCard Name={"Women's Sprints Regatta"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"} active={false}/>
-                        <RaceCard Name={"Women's Sprints Regatta"} Date={"05/05/05"} UUID={"1234"}
-                                  Status={"On Going"} active={false}/>
+                        {regattas.map((regatta) => {
+                                return (
+                                    <RaceCard regatta={regatta} key={regatta.uuid}/>
+                                )
+                            }
+                        )}
                     </div>
                 </div>
             </div>
