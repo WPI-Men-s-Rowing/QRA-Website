@@ -6,7 +6,6 @@ interface RaceCardProps {
 }
 
 function RaceCard(props: RaceCardProps) {
-    console.log(props.regatta)
     return (
         <>
             <Link to={"/results/" + props.regatta.uuid}>

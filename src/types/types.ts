@@ -22,7 +22,7 @@ export interface FinishedCrew {
     lane: number;
     place: number;
     margin: number;
-    splitTimes?: number[];
+    splitTimes: number[];
 }
 
 

@@ -1,5 +1,6 @@
 import {FinishedCrew, Heat, HeatStatus, Regatta, RegattaStatus} from "./types/types";
 import ResultCard from "./compontents/results/resultcard.tsx";
+import moment from "moment";
 
 
 function ResultsDetails() {
@@ -9,6 +10,8 @@ function ResultsDetails() {
         lane: 1,
         place: 0,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Tufts: FinishedCrew = {
         teamName: "Tufts",
@@ -16,6 +19,8 @@ function ResultsDetails() {
         lane: 2,
         place: 1,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Bates: FinishedCrew = {
         teamName: "Bates",
@@ -23,6 +28,8 @@ function ResultsDetails() {
         lane: 3,
         place: 2,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const MIT: FinishedCrew = {
         teamName: "MIT",
@@ -30,6 +37,8 @@ function ResultsDetails() {
         lane: 4,
         place: 3,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Harvard: FinishedCrew = {
         teamName: "Harvard",
@@ -37,6 +46,8 @@ function ResultsDetails() {
         lane: 5,
         place: 4,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Brown: FinishedCrew = {
         teamName: "Brown",
@@ -44,6 +55,8 @@ function ResultsDetails() {
         lane: 6,
         place: 5,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Northeastern: FinishedCrew = {
         teamName: "Northeastern",
@@ -51,6 +64,8 @@ function ResultsDetails() {
         lane: 7,
         place: 6,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Dartmouth: FinishedCrew = {
         teamName: "Dartmouth",
@@ -58,6 +73,8 @@ function ResultsDetails() {
         lane: 8,
         place: 7,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Yale: FinishedCrew = {
         teamName: "Yale",
@@ -65,6 +82,8 @@ function ResultsDetails() {
         lane: 9,
         place: 8,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Princeton: FinishedCrew = {
         teamName: "Princeton",
@@ -72,6 +91,8 @@ function ResultsDetails() {
         lane: 10,
         place: 9,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Columbia: FinishedCrew = {
         teamName: "Columbia",
@@ -79,6 +100,8 @@ function ResultsDetails() {
         lane: 11,
         place: 10,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
+
     }
     const Penn: FinishedCrew = {
         teamName: "Penn",
@@ -86,6 +109,7 @@ function ResultsDetails() {
         lane: 12,
         place: 11,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
     }
     const Cornell: FinishedCrew = {
         teamName: "Cornell",
@@ -93,12 +117,13 @@ function ResultsDetails() {
         lane: 13,
         place: 12,
         margin: 0,
+        splitTimes: [99999, 99999, 99999]
     }
 
     const heat1: Heat = {
         title: "Men's Varsity 8+",
         status: HeatStatus.ACTIVE,
-        startTime: new Date(),
+        startTime: moment('2023-11-29 14:00:00').toDate(),
         host: "WPI",
         finishOrder: [WPI, Tufts, Bates, MIT, Harvard, Brown, Northeastern, Dartmouth]
     }
@@ -186,6 +211,7 @@ function ResultsDetails() {
     }
     return (
         <>
+            {/*<Navbar/>*/}
             <div
                 className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
                 {testRegatta.name} Results
