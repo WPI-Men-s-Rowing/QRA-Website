@@ -1,6 +1,6 @@
+import { RegattaStatus } from "@/types/types";
 import type { Meta, StoryObj } from "@storybook/react";
 import RaceCard from "./RaceCard";
-import { RegattaStatus } from "@/types/types";
 
 /**
  * Component for a race card, providing navigation information to a race details page
@@ -23,7 +23,7 @@ export const TestRegatta: Story = {
     name: "Another Regatta",
     uuid: "1234",
     status: RegattaStatus.UPCOMING,
-  }
+  },
 };
 
 /**
@@ -34,7 +34,7 @@ export const TestRegatta2: Story = {
     name: "Quinsigamond Snake Regatta",
     uuid: "1234",
     status: RegattaStatus.ACTIVE,
-  }
+  },
 };
 
 /**
@@ -44,6 +44,6 @@ export const TestRegatta3: Story = {
   args: {
     name: "WPI Inivitational",
     uuid: "1234",
-    status: RegattaStatus.FINISHED
-  }
+    status: RegattaStatus.FINISHED,
+  },
 };

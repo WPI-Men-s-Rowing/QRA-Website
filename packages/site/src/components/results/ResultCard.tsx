@@ -16,7 +16,7 @@ interface ResultCardProps {
   /**
    * The regatta's start time
    */
-  startTime: Date
+  startTime: Date;
   /**
    * The host of the regatta
    */
@@ -24,11 +24,11 @@ interface ResultCardProps {
   /**
    * The status of the regatta
    */
-  status: HeatStatus
+  status: HeatStatus;
   /**
    * Finishing crews in the regatta
    */
-  finishOrder: FinishedCrew[]
+  finishOrder: FinishedCrew[];
 }
 
 /**
@@ -42,9 +42,7 @@ function ResultCard(props: ResultCardProps) {
     return (
       <div className="transition-all duration-700 w-full h-[500px] px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex">
         <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[5px] flex">
-          <div className="text-red-900 text-2xl font-bold">
-            {props.title}
-          </div>
+          <div className="text-red-900 text-2xl font-bold">{props.title}</div>
 
           <div className="self-stretch justify-between items-start inline-flex">
             <div>
@@ -52,8 +50,7 @@ function ResultCard(props: ResultCardProps) {
                 Scheduled:{" "}
               </span>
               <span className="text-zinc-800 text-[10px] font-bold ">
-                {props.startTime.getHours()}:
-                {props.startTime.getMinutes()}
+                {props.startTime.getHours()}:{props.startTime.getMinutes()}
               </span>
               <span className="text-zinc-800 text-[10px] font-bold ">
                 {props.startTime.getHours() > 12 ? "PM" : "AM"}
@@ -133,9 +130,7 @@ function ResultCard(props: ResultCardProps) {
     return (
       <div className="transition-all duration-700 w-[405px] h-[413px] px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex">
         <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[5px] flex">
-          <div className="text-red-900 text-2xl font-bold">
-            {props.title}
-          </div>
+          <div className="text-red-900 text-2xl font-bold">{props.title}</div>
 
           <div className="self-stretch justify-between items-start inline-flex">
             <div>
@@ -143,8 +138,7 @@ function ResultCard(props: ResultCardProps) {
                 Scheduled:{" "}
               </span>
               <span className="text-zinc-800 text-[10px] font-bold ">
-                {props.startTime.getHours()}:
-                {props.startTime.getMinutes()}
+                {props.startTime.getHours()}:{props.startTime.getMinutes()}
               </span>
               <span className="text-zinc-800 text-[10px] font-bold ">
                 {props.startTime.getHours() > 12 ? "PM" : "AM"}

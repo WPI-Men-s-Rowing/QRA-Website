@@ -77,7 +77,14 @@ function Regattas() {
               Recent Results
             </div>
             {regattas.map((regatta) => {
-              return <RaceCard uuid={regatta.uuid} name={regatta.name} status={regatta.status} key={regatta.uuid} />;
+              return (
+                <RaceCard
+                  uuid={regatta.uuid}
+                  name={regatta.name}
+                  status={regatta.status}
+                  key={regatta.uuid}
+                />
+              );
             })}
           </div>
         </div>

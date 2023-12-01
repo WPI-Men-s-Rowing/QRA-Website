@@ -7,7 +7,7 @@ interface ResultLineProps {
   teamName: string;
   splitTimes: number[];
   totalTime: number;
-  margin: number|null;
+  margin: number | null;
   expanded: boolean;
   place: number;
   lane: number;

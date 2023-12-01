@@ -21,7 +21,7 @@ export const HomePage: Story = {
   args: {
     title: "Quinsigamond Rowing Association, Inc.",
     subtitle: "Lake Quinsigamond, Massachusetts",
-    picture: "/donahue.png"
+    picture: "/donahue.png",
   },
 };
 
@@ -29,9 +29,9 @@ export const HomePage: Story = {
  * Regattas page configuration
  */
 export const RegattasPage: Story = {
-    args: {
-        title: "QRA Regattas",
-        subtitle: "Hosting quality racing since 1857",
-        picture: "/photo.png"
-    }
+  args: {
+    title: "QRA Regattas",
+    subtitle: "Hosting quality racing since 1857",
+    picture: "/photo.png",
+  },
 };

@@ -21,7 +21,7 @@ interface JumboTronProps {
 /**
  * Creates a jumbo tron that will fill the height of its parent container
  * @param props thd props to use in creating the jumbotron
- * @returns 
+ * @returns
  */
 function JumboTron(props: JumboTronProps) {
   return (
