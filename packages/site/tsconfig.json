@@ -1,0 +1,19 @@
+{
+  "extends": "@qra-website/tsconfig/next.json",
+  "compilerOptions": {
+    "plugins": [{ "name": "next" }],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+  },
+  "include": [
+    "next-env.d.ts",
+    "next.config.cjs",
+    "postcss.config.js",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+    ".storybook/**/*"
+  ],
+  "exclude": ["node_modules"]
+}

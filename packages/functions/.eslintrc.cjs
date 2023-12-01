@@ -5,5 +5,4 @@ const { defineConfig } = require("eslint-define-config");
 
 module.exports = defineConfig({
   extends: ["@qra-website/custom/node"],
-  ignorePatterns: ["packages/", "configs/"],
 });

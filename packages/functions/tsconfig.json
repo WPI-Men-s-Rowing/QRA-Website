@@ -1,0 +1,9 @@
+{
+  "extends": "@qra-website/tsconfig/node.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@test/core/*": ["../core/src/*"]
+    }
+  }
+}

@@ -1,0 +1,3 @@
+{
+  "extends": "@qra-website/tsconfig/node.json"
+}
