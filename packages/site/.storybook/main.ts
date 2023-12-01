@@ -1,6 +1,6 @@
 import type { StorybookConfig } from "@storybook/nextjs";
 
-import { dirname, join } from "path";
+import path, { dirname, join } from "path";
 
 /**
  * This function is used to resolve the absolute path of a package.
@@ -27,6 +27,18 @@ const config: StorybookConfig = {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     name: getAbsolutePath("@storybook/nextjs"),
     options: {},
+  },
+  // This resolver ensures that the @/ aliases used in Next will work here.
+  // Even though we're using Next, webpack is used by storybook because
+  webpackFinal: (config) => {
+    if (config.resolve) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        "@": path.resolve(__dirname, "../src"),
+        "@public": path.resolve(__dirname, "../public"),
+      };
+    }
+    return Promise.resolve(config);
   },
   docs: {
     autodocs: "tag",

@@ -5,10 +5,17 @@ import RaceCard from "./RaceCard";
 /**
  * Component for a race card, providing navigation information to a race details page
  */
-const meta = {
+const meta: Meta<typeof RaceCard> = {
   title: "Components/results/RaceCard",
   component: RaceCard,
   tags: ["autodocs"],
+  decorators: [
+    (Story) => (
+      <div className="mx-auto w-min">
+        <Story />
+      </div>
+    ),
+  ],
 } satisfies Meta<typeof RaceCard>;
 
 export default meta;

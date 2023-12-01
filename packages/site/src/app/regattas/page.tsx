@@ -1,6 +1,7 @@
 import JumboTron from "@/components/JumboTron";
 import RaceCard from "@/components/results/RaceCard";
 import { Regatta, RegattaStatus } from "@/types/types";
+import photo from "@public/photo.png";
 
 function Regattas() {
   const testRegatta: Regatta = {
@@ -36,7 +37,7 @@ function Regattas() {
         <JumboTron
           title={"QRA Regattas"}
           subtitle={"Lake Quinsigamond, Massachusetts"}
-          picture={"/photo.png"}
+          picture={photo}
         />
         <div className="flex flex-row p-5 gap-4">
           <div className="flex flex-col w-3/4">

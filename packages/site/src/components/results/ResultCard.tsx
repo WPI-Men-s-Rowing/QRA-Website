@@ -1,7 +1,9 @@
 "use client";
 
 import { FinishedCrew, HeatStatus } from "@/types/types.ts";
-import Image from "next/image";
+import grow from "@public/icons/expand.svg";
+import shrink from "@public/icons/shrink.svg";
+import Image, { StaticImageData } from "next/image";
 import { useState } from "react";
 import ResultLine from "./ResultLine";
 
@@ -118,7 +120,7 @@ function ResultCard(props: ResultCardProps) {
           <Image
             width={20}
             height={20}
-            src="/icons/shrink.svg"
+            src={shrink as StaticImageData}
             className="cursor-pointer"
             alt="Shrink Icon"
             onClick={() => setExpanded(!expanded)}
@@ -197,7 +199,7 @@ function ResultCard(props: ResultCardProps) {
           <Image
             width={20}
             height={20}
-            src="/icons/expand.svg"
+            src={grow as StaticImageData}
             className="cursor-pointer"
             alt="Expand Icon"
             onClick={() => setExpanded(true)}

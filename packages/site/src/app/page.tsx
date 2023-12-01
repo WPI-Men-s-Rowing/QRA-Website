@@ -1,6 +1,7 @@
 import About from "@/components/About";
 import JumboTron from "@/components/JumboTron";
 import ShortCuts from "@/components/ShortCuts";
+import donahue from "@public/donahue.jpg";
 
 function Home() {
   return (
@@ -9,7 +10,7 @@ function Home() {
         <JumboTron
           title={"Quinsigamond Rowing Association, Inc."}
           subtitle={"Lake Quinsigamond, Massachusetts"}
-          picture={"/donahue.jpg"}
+          picture={donahue}
         />
         <div className="flex flex-row ">
           <ShortCuts />

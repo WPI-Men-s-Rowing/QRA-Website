@@ -25,16 +25,14 @@ interface RaceCardProps {
  */
 function RaceCard(props: RaceCardProps) {
   return (
-    <>
-      <Link href={"/regattas/results/" + props.uuid}>
-        <div className="h-auto w-auto border-b-text-color border-black border-2 rounded-xl p-2">
-          <div className="text-2xl">{props.name}</div>
-          <div className="flex flex-row gap-4">
-            <div className="text-xl">{props.status}</div>
-          </div>
+    <Link href={"/regattas/results/" + props.uuid}>
+      <div className="w-full border-b-text-color border-black border-2 rounded-xl p-2">
+        <div className="text-2xl whitespace-nowrap">{props.name}</div>
+        <div className="flex flex-row gap-4">
+          <div className="text-xl">{props.status}</div>
         </div>
-      </Link>
-    </>
+      </div>
+    </Link>
   );
 }
 

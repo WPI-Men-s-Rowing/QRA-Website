@@ -3,17 +3,19 @@
   "compilerOptions": {
     "plugins": [{ "name": "next" }],
     "paths": {
-      "@/*": ["./src/*"]
+      "@/*": ["./src/*"],
+      "@public/*": ["./public/*"]
     }
   },
   "include": [
     "next-env.d.ts",
-    "next.config.cjs",
+    "next.config.js",
     "postcss.config.js",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    ".storybook/**/*"
+    ".storybook/**/*",
+    "sst-env.d.ts"
   ],
   "exclude": ["node_modules"]
 }

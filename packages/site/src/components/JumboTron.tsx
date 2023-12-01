@@ -1,3 +1,4 @@
+import { StaticImageData } from "next/dist/shared/lib/get-img-props";
 import Image from "next/image";
 
 /**
@@ -15,7 +16,7 @@ interface JumboTronProps {
   /**
    * Absolute URL pathing to the image to display on the JumboTron
    */
-  picture: string;
+  picture: StaticImageData;
 }
 
 /**
