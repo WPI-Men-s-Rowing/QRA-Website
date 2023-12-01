@@ -1,5 +1,8 @@
 import Link from "next/link";
 
+/**
+ * Component which creates links section on the homepage
+ */
 function ShortCuts() {
   return (
     <>

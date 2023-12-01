@@ -19,5 +19,5 @@ module.exports = defineConfig({
       version: "detect",
     },
   },
-  ignorePatterns: ["!.storybook"]
+  ignorePatterns: ["!.storybook"],
 });

@@ -20,7 +20,7 @@ const config: StorybookConfig = {
     getAbsolutePath("@storybook/addon-onboarding"),
     getAbsolutePath("@storybook/addon-interactions"),
     getAbsolutePath("@storybook/addon-themes"),
-    getAbsolutePath("@storybook/addon-a11y")
+    getAbsolutePath("@storybook/addon-a11y"),
   ],
   framework: {
     // This auto-generated code has errors, this is the safest way to get around them

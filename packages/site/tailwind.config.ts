@@ -14,18 +14,16 @@ const config: Config = {
           "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
       },
       colors: {
-				'secondary': '#f0f0f0',
-				'text-color': '#313131',
-				'red': '#730000',
-				'blue': '#730000',
-				'auxiliary-orange': '#CD801F',
-				'auxiliary-gray': '#3A3A3A',
-			}
+        secondary: "#f0f0f0",
+        "text-color": "#313131",
+        red: "#730000",
+        blue: "#730000",
+        "auxiliary-orange": "#CD801F",
+        "auxiliary-gray": "#3A3A3A",
+      },
     },
   },
-  plugins: [
-    require("tailwind-scrollbar")
-  ],
-  darkMode: "class"
+  plugins: [require("tailwind-scrollbar")],
+  darkMode: "class",
 };
 export default config;

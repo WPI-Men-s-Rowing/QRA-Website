@@ -1,15 +1,23 @@
-import ResultCard from "@/components/results/ResultCard";
+import type { Meta, StoryObj } from "@storybook/react";
+import ResultCard from "./ResultCard";
+import { FinishedCrew, HeatStatus } from "@/types/types";
 
-import {
-  FinishedCrew,
-  Heat,
-  HeatStatus,
-  Regatta,
-  RegattaStatus,
-} from "@/types/types";
+/**
+ * Component for a result card, providing the ability to view details on an individual race,
+ * with a UI that grows/shrinks
+ */
+const meta = {
+  title: "Components/results/ResultCard",
+  component: ResultCard,
+  tags: ["autodocs"],
+} satisfies Meta<typeof ResultCard>;
 
-function ResultsDetails() {
-  const WPI: FinishedCrew = {
+export default meta;
+
+type Story = StoryObj<typeof meta>;
+
+// What follows is a collection of prebuilt crews
+const WPI: FinishedCrew = {
     teamName: "WPI",
     totalTime: 99999,
     lane: 1,
@@ -114,10 +122,14 @@ function ResultsDetails() {
     splitTimes: [99999, 99999, 99999],
   };
 
-  const heat1: Heat = {
+  /**
+   * Generic heat
+   */
+  export const Heat1: Story = {
+    args: {
     title: "Men's Varsity 8+",
     status: HeatStatus.ACTIVE,
-    startTime: new Date(Date.parse("2023-11-29 14:00:00")),
+    startTime: new Date("2023-11-29 14:00:00"),
     host: "WPI",
     finishOrder: [
       WPI,
@@ -129,8 +141,13 @@ function ResultsDetails() {
       Northeastern,
       Dartmouth,
     ],
-  };
-  const heat2: Heat = {
+  }
+};
+
+/**
+ * Second generic heat
+ */
+  export const Heat2: Story = {args : {
     title: "Men's 2nd Varsity 8+",
     status: HeatStatus.OFFICIAL,
     startTime: new Date(),
@@ -145,8 +162,12 @@ function ResultsDetails() {
       Tufts,
       Bates,
     ],
-  };
-  const heat3: Heat = {
+  }};
+  
+  /**
+   * Third generic heat
+   */
+  export const Heat3: Story = {args: {
     title: "Women's Varsity 8+",
     status: HeatStatus.ACTIVE,
     startTime: new Date(),
@@ -161,15 +182,23 @@ function ResultsDetails() {
       Northeastern,
       Dartmouth,
     ],
-  };
-  const heat4: Heat = {
+  }};
+
+  /**
+   * Break in-between sessions
+   */
+  export const Break: Story = {args: {
     title: "BREAK",
     status: HeatStatus.UPCOMING,
     startTime: new Date(),
     host: "WPI",
     finishOrder: [],
-  };
-  const heat5: Heat = {
+  }};
+
+  /**
+   * Fourth generic heat
+   */
+  export const Heat4: Story = {args: {
     title: "Men's Novice 4+",
     status: HeatStatus.ACTIVE,
     startTime: new Date(),
@@ -184,8 +213,12 @@ function ResultsDetails() {
       Northeastern,
       Dartmouth,
     ],
-  };
-  const heat6: Heat = {
+  }};
+
+  /**
+   * Fifth generic heat
+   */
+  export const Heat5: Story = {args: {
     title: "Women's Lightweight 4+",
     status: HeatStatus.OFFICIAL,
     startTime: new Date(),
@@ -200,8 +233,12 @@ function ResultsDetails() {
       Northeastern,
       Dartmouth,
     ],
-  };
-  const heat7: Heat = {
+  }};
+
+  /**
+   * Sixth generic heat
+   */
+  export const Heat6: Story = {args: {
     title: "Women's Lightweight 8+",
     status: HeatStatus.ACTIVE,
     startTime: new Date(),
@@ -218,8 +255,12 @@ function ResultsDetails() {
       Penn,
       Cornell,
     ],
-  };
-  const heat8: Heat = {
+  }};
+
+  /**
+   * Seventh generic heat
+   */
+  export const Heat7: Story = {args: {
     title: "Men's Lightweight 8+",
     status: HeatStatus.OFFICIAL,
     startTime: new Date(),
@@ -236,15 +277,24 @@ function ResultsDetails() {
       Cornell,
       MIT,
     ],
-  };
-  const heat9: Heat = {
+  }}
+  ;
+
+  /**
+   * Second break
+   */
+  export const Break2: Story = {args: {
     title: "BREAK",
     status: HeatStatus.OFFICIAL,
     startTime: new Date(),
     host: "Brown",
     finishOrder: [],
-  };
-  const heat10: Heat = {
+  }};
+
+  /**
+   * Eighth generic heat
+   */
+  export const Heat8: Story = {args: {
     title: "Men's Freshman 8+",
     status: HeatStatus.ACTIVE,
     startTime: new Date(),
@@ -261,8 +311,12 @@ function ResultsDetails() {
       Northeastern,
       Dartmouth,
     ],
-  };
-  const heat11: Heat = {
+  }};
+
+  /**
+   * Ninth generic heat
+   */
+  export const Heat9: Story = {args: {
     title: "Women's 2nd Varsity 8+",
     status: HeatStatus.OFFICIAL,
     startTime: new Date(),
@@ -279,42 +333,4 @@ function ResultsDetails() {
       Brown,
       Northeastern,
     ],
-  };
-
-  const testRegatta: Regatta = {
-    name: "Quinsigamond Snake Regatta",
-    date: new Date(),
-    uuid: "1234",
-    location: "Lake Quinsigamond",
-    status: RegattaStatus.UPCOMING,
-    heats: [
-      heat1,
-      heat2,
-      heat3,
-      heat4,
-      heat5,
-      heat6,
-      heat7,
-      heat8,
-      heat9,
-      heat10,
-      heat11,
-    ],
-  };
-  return (
-    <>
-      <div className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
-        {testRegatta.name} Results
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        <div className="flex flex-row justify-start gap-4 flex-wrap p-2">
-          {testRegatta.heats.map((heat) => {
-            return <ResultCard {...heat} key={heat.startTime.getTime()} />;
-          })}
-        </div>
-      </div>
-    </>
-  );
-}
-
-export default ResultsDetails;
+  }};

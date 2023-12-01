@@ -1,6 +1,6 @@
-import '../src/app/globals.css';
 import { withThemeByClassName } from "@storybook/addon-themes";
-import type { Preview } from '@storybook/react';
+import type { Preview } from "@storybook/react";
+import "../src/app/globals.css";
 
 // Using unknown here suppresses a TS warning. Not sure how else to get around it =)
 export const decorators: unknown = [
@@ -15,11 +15,11 @@ export const decorators: unknown = [
 
 const preview: Preview = {
   parameters: {
-    actions: { argTypesRegex: '^on[A-Z].*' },
+    actions: { argTypesRegex: "^on[A-Z].*" },
     controls: {
       matchers: {
-       color: /(background|color)$/i,
-       date: /Date$/i,
+        color: /(background|color)$/i,
+        date: /Date$/i,
       },
     },
   },
