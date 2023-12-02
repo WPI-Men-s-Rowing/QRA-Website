@@ -4,6 +4,9 @@
     "dependencies": {
       "dependsOn": ["^dependencies"]
     },
+    "//#dependencies": {
+      "dependsOn": ["^dependencies"]
+    },
     "storybook": {
       "cache": false,
       "persistent": true
@@ -17,7 +20,8 @@
       "persistent": true
     },
     "//#build": {
-      "dependsOn": ["lint", "^build"]
+      "dependsOn": ["lint", "^build"],
+      "outputs": [".sst/dist/**/*"]
     },
     "build": {
       "dependsOn": ["lint", "^build"]
@@ -31,11 +35,18 @@
     "test": {
       "dependsOn": ["dependencies"]
     },
+    "//#gentypes": {
+      "dependsOn": ["^gentypes"],
+      "outputs": [".sst/dist/**/*"]
+    },
+    "gentypes": {
+      "dependsOn": ["^gentypes"]
+    },
     "//#typecheck": {
-      "dependsOn": ["^dependencies"]
+      "dependsOn": ["gentypes", "dependencies"]
     },
     "typecheck": {
-      "dependsOn": ["^dependencies"]
+      "dependsOn": ["gentypes", "dependencies"]
     },
     "//#lint": {
       "dependsOn": ["typecheck"]
