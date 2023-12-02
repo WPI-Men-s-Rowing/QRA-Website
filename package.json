@@ -15,10 +15,13 @@
     "prepare": "husky install"
   },
   "devDependencies": {
+    "@aws-sdk/client-dynamodb": "^3.462.0",
     "@qra-website/eslint-config-custom": "workspace:*",
     "@qra-website/tsconfig": "workspace:*",
     "aws-cdk-lib": "2.110.1",
+    "aws-sdk": "^2.1509.0",
     "constructs": "10.3.0",
+    "electrodb": "^2.12.1",
     "eslint": "^8.54.0",
     "eslint-define-config": "^2.0.0",
     "husky": "^8.0.3",
