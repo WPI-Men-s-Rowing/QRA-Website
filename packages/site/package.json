@@ -5,6 +5,7 @@
   "scripts": {
     "dev": "sst bind next dev",
     "lint": "next lint --fix --max-warnings 0",
+    "build": "next build",
     "typecheck": "tsc",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
