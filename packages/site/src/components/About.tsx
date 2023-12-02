@@ -5,7 +5,7 @@ function About() {
         <div className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
           About Us
         </div>
-        <div className="text-2xl w-3/4">
+        <div className="text-2xl w-3/4 sm:text-xl text-left text-black">
           Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce id
           tortor non quam sodales semper sed sit amet ex. Pellentesque eleifend,
           est quis hendrerit hendrerit, est urna fringilla massa, nec rutrum
