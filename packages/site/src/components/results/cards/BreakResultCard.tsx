@@ -1,5 +1,3 @@
-import { FinishedCrew, HeatStatus } from "@/types/types.ts";
-
 /**
  * Interface representing the props in a result card
  */
@@ -12,18 +10,6 @@ interface ResultCardProps {
    * The regatta's start time
    */
   startTime: Date;
-  /**
-   * The host of the regatta
-   */
-  host: string;
-  /**
-   * The status of the regatta
-   */
-  status: HeatStatus;
-  /**
-   * Finishing crews in the regatta
-   */
-  finishOrder: FinishedCrew[];
 }
 
 /**

@@ -28,7 +28,7 @@ interface ResultCardProps {
 }
 
 /**
- * Component that crates a result card showing the results of an individual race
+ * Component that crates a result card showing the expanded results of an individual race
  * @param props the properties defining the result card
  */
 function ExpandedResultCard(props: ResultCardProps) {
@@ -69,7 +69,7 @@ function ExpandedResultCard(props: ResultCardProps) {
         <div className="self-stretch h-[0px] border border-zinc-800 border-opacity-20"></div>
       </div>
       <div className="self-stretch w-full grow shrink basis-0 bg-neutral-50 rounded-[10px] shadow flex-col justify-start items-start flex overflow-x-scroll">
-        <div className="self-stretch p-2.5 bg-neutral-700 justify-between items-start inline-flex w-fit">
+        <div className="self-stretch p-2.5 bg-neutral-700 justify-between items-start inline-flex w-fit lg:w-full">
           <div className="w-11 text-neutral-50 lg:text-base text-sm font-bold text-center">
             Place
           </div>
@@ -95,7 +95,7 @@ function ExpandedResultCard(props: ResultCardProps) {
             Margin
           </div>
         </div>
-        <div className="self-stretch grow shrink basis-0 flex-col justify-start items-start flex p-1 w-fit">
+        <div className="self-stretch grow shrink basis-0 flex-col justify-start items-start flex p-1 w-fit lg:w-full">
           {props.finishOrder
             .filter((result) => result.place != 0)
             .sort((a, b) => a.place - b.place)

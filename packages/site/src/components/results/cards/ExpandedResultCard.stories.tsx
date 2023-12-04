@@ -1,16 +1,22 @@
 import { Athlete, FinishedCrew, HeatStatus, LineupSeat } from "@/types/types";
-import type { Meta, StoryObj } from "@storybook/react";
-import ResultCard from "./ResultCard";
+import { Meta, StoryObj } from "@storybook/react";
+import ExpandedResultCard from "./ExpandedResultCard";
 
 /**
- * Component for a result card, providing the ability to view details on an individual race,
- * with a UI that grows/shrinks
+ * Component for an expanded result card, meant to be used in the race results display page
  */
-const meta = {
-  title: "Components/results/ResultCard",
-  component: ResultCard,
+const meta: Meta<typeof ExpandedResultCard> = {
+  title: "Components/results/cards/ExpandedResultCard",
+  component: ExpandedResultCard,
   tags: ["autodocs"],
-} satisfies Meta<typeof ResultCard>;
+  decorators: [
+    (Story) => (
+      <div className="h-[413px] lg:w-[405px] flex-col justify-start items-start gap-2.5 inline-flex">
+        <Story />
+      </div>
+    ),
+  ],
+} satisfies Meta<typeof ExpandedResultCard>;
 
 export default meta;
 

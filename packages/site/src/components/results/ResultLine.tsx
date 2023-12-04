@@ -43,7 +43,7 @@ function ResultLine(props: ResultLineProps) {
     return (
       <>
         <div
-          className={`self-stretch p-2.5 justify-between items-start inline-flex ${
+          className={`w-full self-stretch p-2.5 justify-between items-start inline-flex ${
             props.place % 2 == 1 ? `bg-neutral-50` : `bg-gray-200`
           }`}
         >
