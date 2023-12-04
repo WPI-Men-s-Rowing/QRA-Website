@@ -36,7 +36,7 @@ function RaceCard(props: RaceCardProps) {
           {props.name}
         </div>
         <div className="flex flex-row gap-4">
-          <div className="lg:text-xl">
+          <div className="lg:text-xl whitespace-nowrap">
             {props.startTime.toLocaleDateString([], {
               year: "numeric",
               month: "long",
