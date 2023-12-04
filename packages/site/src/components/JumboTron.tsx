@@ -27,8 +27,13 @@ interface JumboTronProps {
 function JumboTron(props: JumboTronProps) {
   return (
     <div className="h-full static">
-      <div className="w-full h-screen object-cover brightness-50">
-        <Image fill src={props.picture} alt="QRA" />
+      <div className="w-full h-screen overflow-hidden">
+        <Image
+          fill
+          src={props.picture}
+          alt="QRA"
+          className="object-cover brightness-50"
+        />
       </div>
       <div className="h-fit absolute inset-x-0 bottom-10 text-center text-white">
         <div className="text-5xl font-bold text-white">{props.title}</div>

@@ -30,6 +30,7 @@ export const TestRegatta: Story = {
     name: "Another Regatta",
     uuid: "1234",
     status: RegattaStatus.UPCOMING,
+    startTime: new Date(),
   },
 };
 
@@ -41,6 +42,7 @@ export const TestRegatta2: Story = {
     name: "Quinsigamond Snake Regatta",
     uuid: "1234",
     status: RegattaStatus.ACTIVE,
+    startTime: new Date("12/1/2024"),
   },
 };
 
@@ -52,5 +54,6 @@ export const TestRegatta3: Story = {
     name: "WPI Inivitational",
     uuid: "1234",
     status: RegattaStatus.FINISHED,
+    startTime: new Date("12/12/2025"),
   },
 };
