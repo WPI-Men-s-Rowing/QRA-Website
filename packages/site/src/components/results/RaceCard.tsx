@@ -32,16 +32,18 @@ function RaceCard(props: RaceCardProps) {
   return (
     <Link href={"/regattas/results/" + props.uuid}>
       <div className="w-auto h-auto p2.5 border-black border-2 rounded-xl p-2">
-        <div className="text-2xl whitespace-nowrap">{props.name}</div>
+        <div className="lg:text-2xl whitespace-nowrap text-xl">
+          {props.name}
+        </div>
         <div className="flex flex-row gap-4">
-          <div className="text-xl">
+          <div className="lg:text-xl">
             {props.startTime.toLocaleDateString([], {
               year: "numeric",
               month: "long",
               day: "numeric",
             })}
           </div>
-          <div className="text-xl">{props.status}</div>
+          <div className="lg:text-xl">{props.status}</div>
         </div>
       </div>
     </Link>

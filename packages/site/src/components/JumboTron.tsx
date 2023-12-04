@@ -26,7 +26,7 @@ interface JumboTronProps {
  */
 function JumboTron(props: JumboTronProps) {
   return (
-    <div className="h-full static">
+    <div className="h-screen static">
       <div className="w-full h-screen overflow-hidden">
         <Image
           fill
@@ -36,8 +36,12 @@ function JumboTron(props: JumboTronProps) {
         />
       </div>
       <div className="h-fit absolute inset-x-0 bottom-10 text-center text-white">
-        <div className="text-5xl font-bold text-white">{props.title}</div>
-        <div className="text-3xl font-normal text-white">{props.subtitle}</div>
+        <div className="lg:text-5xl text-3xl font-bold text-white">
+          {props.title}
+        </div>
+        <div className="lg:text-3xl text-xl font-normal text-white">
+          {props.subtitle}
+        </div>
       </div>
     </div>
   );

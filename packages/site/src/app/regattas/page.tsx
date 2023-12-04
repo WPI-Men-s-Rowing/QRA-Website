@@ -39,12 +39,12 @@ function Regattas() {
           subtitle={"Lake Quinsigamond, Massachusetts"}
           picture={photo}
         />
-        <div className="flex flex-row p-5 gap-4">
-          <div className="flex flex-col w-3/4">
+        <div className="flex p-5 gap-4 lg:flex-row flex-col">
+          <div className="flex flex-col lg:w-3/4">
             <div className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
               Overview
             </div>
-            <div className="text-2xl">
+            <div className="lg:text-2xl text-xl">
               Competitive rowing teams first came to Lake Quinsigamond in 1857.
               Finding the lake ideal for such crew meets, avid rowers
               established boating clubs on the lake&apos;s shores, the first
@@ -73,7 +73,7 @@ function Regattas() {
               the nation.
             </div>
           </div>
-          <div className="w-auto flex flex-col gap-5">
+          <div className="w-auto flex flex-col gap-5 lg:order-last order-first">
             <div className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
               Recent Results
             </div>

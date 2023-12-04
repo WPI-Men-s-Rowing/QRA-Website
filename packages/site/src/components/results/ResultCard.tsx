@@ -49,7 +49,7 @@ function ResultCard(props: ResultCardProps) {
   return (
     <div
       className={`transition-all duration-700 ${
-        expanded ? `w-full h-[500px]` : `w-[405px] h-[413px]`
+        expanded ? `w-screen h-[500px]` : `lg:w-[405px] h-[413px]`
       }  px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex`}
     >
       {expanded ? ExpandedResultCard(props) : StandardResultCard(props)}

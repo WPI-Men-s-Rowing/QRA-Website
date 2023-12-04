@@ -496,14 +496,16 @@ function ResultsDetails() {
 
   return (
     <>
-      <div className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
-        {testRegatta.name} Results
-      </div>
-      <div className="flex flex-col justify-center items-center">
-        <div className="flex flex-row justify-start gap-4 flex-wrap p-2">
-          {testRegatta.heats.map((heat, index) => {
-            return <ResultCard {...heat} key={index} />;
-          })}
+      <div className="ps-2">
+        <div className="text-4xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
+          {testRegatta.name} Results
+        </div>
+        <div className="flex flex-col justify-center items-center">
+          <div className="flex flex-row lg:justify-start justify-center gap-4 flex-wrap p-2">
+            {testRegatta.heats.map((heat, index) => {
+              return <ResultCard {...heat} key={index} />;
+            })}
+          </div>
         </div>
       </div>
     </>

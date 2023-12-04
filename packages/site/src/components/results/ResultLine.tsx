@@ -47,10 +47,10 @@ function ResultLine(props: ResultLineProps) {
             props.place % 2 == 1 ? `bg-neutral-50` : `bg-gray-200`
           }`}
         >
-          <div className="w-11 text-zinc-800 text-base font-bold text-center">
+          <div className="w-11 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {props.place}
           </div>
-          <div className="w-[39px] text-zinc-800 text-base font-bold text-center">
+          <div className="w-[39px] text-zinc-800 lg:text-base text-sm font-bold text-center">
             {props.lane}
           </div>
           <span
@@ -58,7 +58,7 @@ function ResultLine(props: ResultLineProps) {
             className={"cursor-pointer"}
           >
             <div className="flex flex-col justify-start items-center gap-0 text-center">
-              <div className="w-20 text-zinc-800 text-base font-bold">
+              <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold">
                 {props.teamName}
               </div>
               <Image
@@ -73,19 +73,19 @@ function ResultLine(props: ResultLineProps) {
               />
             </div>
           </span>
-          <div className="w-20 text-zinc-800 text-base font-bold text-center">
+          <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.splitTimes[0])}
           </div>
-          <div className="w-20 text-zinc-800 text-base font-bold text-center">
+          <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.splitTimes[1])}
           </div>
-          <div className="w-20 text-zinc-800 text-base font-bold text-center">
+          <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.splitTimes[2])}
           </div>
-          <div className="w-20 text-zinc-800 text-base font-bold text-center">
+          <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.totalTime)}
           </div>
-          <div className="w-[57px] text-zinc-800 text-base font-bold text-center">
+          <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.margin)}
           </div>
         </div>
@@ -99,10 +99,10 @@ function ResultLine(props: ResultLineProps) {
             props.place % 2 == 1 ? `bg-neutral-50` : `bg-gray-200`
           }`}
         >
-          <div className="w-11 text-zinc-800 text-base font-bold text-center">
+          <div className="w-11 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {props.place}
           </div>
-          <div className="w-[39px] text-zinc-800 text-base font-bold text-center">
+          <div className="w-[39px] text-zinc-800 lg:text-base text-sm font-bold text-center">
             {props.lane}
           </div>
           <span
@@ -110,7 +110,7 @@ function ResultLine(props: ResultLineProps) {
             className={"cursor-pointer"}
           >
             <div className="flex flex-col justify-start items-center gap-0 text-center">
-              <div className="w-20 text-zinc-800 text-base font-bold text-center">
+              <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
                 {props.teamName}
               </div>
               <Image
@@ -126,10 +126,10 @@ function ResultLine(props: ResultLineProps) {
               />
             </div>
           </span>
-          <div className="w-20 text-zinc-800 text-base font-bold text-center">
+          <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.totalTime)}
           </div>
-          <div className="w-[57px] text-zinc-800 text-base font-bold text-center">
+          <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
             {msToTime(props.margin)}
           </div>
         </div>

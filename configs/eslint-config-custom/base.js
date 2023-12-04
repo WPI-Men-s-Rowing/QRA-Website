@@ -25,7 +25,7 @@ module.exports = defineConfig({
     "prefer-const": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
   },
-  ignorePatterns: ["dist/", "node_modules/", ".eslintrc.cjs"],
+  ignorePatterns: ["dist/", "node_modules/", ".eslintrc.cjs", "*.md"],
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
   parserOptions: {

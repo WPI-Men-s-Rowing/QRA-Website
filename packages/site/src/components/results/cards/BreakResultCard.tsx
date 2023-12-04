@@ -34,7 +34,7 @@ function BreakResultCard(props: ResultCardProps) {
   return (
     <>
       <div
-        className={`transition-all duration-700 w-[405px] h-[413px] px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex`}
+        className={`transition-all duration-700 lg:w-[405px] w-full h-[413px] px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex`}
       >
         <div className="self-stretch h-full flex-col justify-center items-center gap-[5px] flex">
           <div className="text-zinc-800 text-3xl font-bold">{props.title}</div>

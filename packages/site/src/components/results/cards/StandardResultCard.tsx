@@ -70,19 +70,19 @@ function StandardResultCard(props: ResultCardProps) {
       </div>
       <div className="self-stretch grow shrink basis-0 bg-neutral-50 rounded-[10px] shadow flex-col justify-start items-start flex overflow-x-hidden">
         <div className="self-stretch p-2.5 bg-neutral-700 justify-between items-start inline-flex">
-          <div className="w-11 text-neutral-50 text-base font-bold text-center">
+          <div className="w-11 text-neutral-50 lg:text-base text-sm font-bold text-center">
             Place
           </div>
-          <div className="w-[39px] text-neutral-50 text-base font-bold text-center">
+          <div className="w-[39px] text-neutral-50 lg:text-base text-sm font-bold text-center">
             Lane
           </div>
-          <div className="w-20 text-neutral-50 text-base font-bold text-center">
+          <div className="w-20 text-neutral-50 lg:text-base text-sm font-bold text-center">
             Entry
           </div>
-          <div className="w-20 text-neutral-50 text-base font-bold text-center">
+          <div className="w-20 text-neutral-50 lg:text-base text-sm font-bold text-center">
             Finish
           </div>
-          <div className="w-[57px] text-neutral-50 text-base font-bold text-centers">
+          <div className="w-[57px] text-neutral-50 lg:text-base text-sm font-bold text-centers">
             Margin
           </div>
         </div>

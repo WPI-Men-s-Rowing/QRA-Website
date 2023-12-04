@@ -23,20 +23,23 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <nav className="w-full top-0 z-10 p-2 absolute bg-gradient-to-b from-black to-transparent">
+        <nav className="w-full top-0 z-10 p-2 absolute bg-gradient-to-b from-black to-transparents">
           <div className="mx-auto">
             <div className="flex items-center justify-between h-16">
-              <Image width={72} height={54.17} src={qraLogo} alt="QRA Logo" />
-              <div className="flex flex-row gap-10 text-gray-900">
+              <Image
+                src={qraLogo}
+                alt="QRA Logo"
+                className="lg:w-[72px] lg:h-[54.17px] w-[42px] h-[30px]"
+              />
+              <div className="flex flex-row lg:gap-10 gap-4 text-gray-900">
                 <Link
                   href={"/"}
                   className="flex flex-row text-white items-center gap-2 text-opacity-50"
                 >
                   <Image
-                    width={40}
-                    height={40}
                     src={homeIcon as StaticImageData}
                     alt="Home Icon"
+                    className="lg:w-[40px] lg:h-[40px] w-[20px] h-[20px]"
                   />
                   Home
                 </Link>
@@ -45,10 +48,9 @@ export default function RootLayout({
                   className="flex flex-row text-white items-center gap-2 text-opacity-50"
                 >
                   <Image
-                    width={40}
-                    height={40}
                     src={regattasIcon as StaticImageData}
                     alt="Regatta Icon"
+                    className="lg:w-[40px] lg:h-[40px] w-[20px] h-[20px]"
                   />
                   Regattas
                 </Link>
@@ -57,10 +59,9 @@ export default function RootLayout({
                   className="flex flex-row text-white items-center gap-2 text-opacity-50"
                 >
                   <Image
-                    width={40}
-                    height={40}
                     src={communityIcon as StaticImageData}
                     alt="Home Icon"
+                    className="lg:w-[40px] lg:h-[40px] w-[20px] h-[20px]"
                   />
                   Community
                 </Link>

@@ -12,7 +12,7 @@ function Home() {
           subtitle={"Lake Quinsigamond, Massachusetts"}
           picture={donahue}
         />
-        <div className="flex lg:flex-row sm:flex-col">
+        <div className="flex lg:flex-row flex-col">
           <ShortCuts />
           <About />
         </div>
