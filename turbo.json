@@ -27,9 +27,19 @@
       "dependsOn": ["lint", "^build"]
     },
     "//#deploy": {
+      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
+      "cache": false
+    },
+    "deploy": {
+      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
       "cache": false
     },
     "//#remove": {
+      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
+      "cache": false
+    },
+    "remove": {
+      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
       "cache": false
     },
     "test": {
