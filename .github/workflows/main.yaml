@@ -60,4 +60,5 @@ jobs:
         env:
           PROD_GITHUB_ORG: ${{github.repository_owner}}
           PROD_GITHUB_REPO: ${{github.event.repository.name}}
+          PROD_GITHUB_ROLE: ${{vars.PROD_GITHUB_ROLE}}
         run: pnpm sst deploy --stage prod
