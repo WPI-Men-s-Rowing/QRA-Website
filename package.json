@@ -10,7 +10,7 @@
     "remove": "sst remove",
     "console": "sst console",
     "typecheck": "tsc",
-    "gentypes": "sst types",
+    "typegen": "sst types --stage=ianwright",
     "lint": "eslint --max-warnings 0 --report-unused-disable-directives --fix .",
     "format": "prettier --write --ignore-unknown .",
     "prepare": "husky install"

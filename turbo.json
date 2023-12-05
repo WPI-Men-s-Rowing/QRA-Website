@@ -65,18 +65,18 @@
     "test": {
       "dependsOn": ["dependencies"]
     },
-    "//#gentypes": {
-      "dependsOn": ["^gentypes"],
+    "//#typegen": {
+      "dependsOn": ["^typegen"],
       "outputs": [".sst/dist/**/*"]
     },
-    "gentypes": {
-      "dependsOn": ["^gentypes"]
+    "typegen": {
+      "dependsOn": ["^typegen"]
     },
     "//#typecheck": {
-      "dependsOn": ["gentypes", "dependencies"]
+      "dependsOn": ["typegen", "dependencies"]
     },
     "typecheck": {
-      "dependsOn": ["gentypes", "dependencies"]
+      "dependsOn": ["//#typegen", "typegen", "dependencies"]
     },
     "//#lint": {
       "dependsOn": ["typecheck"]
