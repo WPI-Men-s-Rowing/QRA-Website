@@ -14,9 +14,9 @@ export function CICDStack({ app, stack }: StackContext) {
   if (app.stage === "prod") {
     // Validate we have all the environment information we need
     if (
-      !process.env.GITHUB_ORG ||
-      !process.env.GITHUB_REPO ||
-      !process.env.GITHUB_ROLE
+      !process.env.PROD_GITHUB_ORG ||
+      !process.env.PROD_GITHUB_REPO ||
+      !process.env.PROD_GITHUB_ROLE
     ) {
       throw new Error("Missing required GitHub CI/CD Environment variables");
     }
@@ -29,11 +29,11 @@ export function CICDStack({ app, stack }: StackContext) {
     new iam.Role(stack, "GitHubActionsRole", {
       assumedBy: new iam.OpenIdConnectPrincipal(provider).withConditions({
         StringLike: {
-          "token.actions.githubusercontent.com:sub": `repo:${process.env.GITHUB_ORG}/${process.env.GITHUB_REPO}:*`,
+          "token.actions.githubusercontent.com:sub": `repo:${process.env.PROD_GITHUB_ORG}/${process.env.PROD_GITHUB_REPO}:*`,
         },
       }),
       description: "Role assumed for deploying from GitHub CI using AWS CDK",
-      roleName: process.env.GITHUB_ROLE,
+      roleName: process.env.PROD_GITHUB_ROLE,
       maxSessionDuration: Duration.hours(1),
       // Bare-minimum  access needed by SST to deploy
       inlinePolicies: {

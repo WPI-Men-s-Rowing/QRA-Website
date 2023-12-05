@@ -1,0 +1,63 @@
+name: SST workflow
+on:
+  push:
+    branches: main
+
+# Concurrency group name ensures concurrent workflow runs wait for any in-progress job to finish
+concurrency:
+  group: merge-${{ github.ref }}
+
+permissions:
+  id-token: write # This is required for requesting the JWT
+  contents: read # This is required for actions/checkout
+
+jobs:
+  deploy:
+    name: "Deploy App"
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: "us-east-1"
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - uses: pnpm/action-setup@v2
+        name: Install pnpm
+        with:
+          version: 8
+          run_install: false
+
+      - name: Get pnpm store directory
+        shell: bash
+        run: |
+          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+
+      - uses: actions/cache@v3
+        name: Setup pnpm cache
+        with:
+          path: ${{ env.STORE_PATH }}
+          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-store-
+
+      - name: Install dependencies
+        run: pnpm install
+      - name: Run Linter
+        run: pnpm turbo lint
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROD_GITHUB_ROLE}}
+          role-duration-seconds: 14390
+          aws-region: ${{env.AWS_REGION}}
+      - name: Deploy app
+        env:
+          PROD_GITHUB_ORG: ${{github.repository_owner}}
+          PROD_GITHUB_REPO: ${{github.event.repository.name}}
+        run: pnpm sst deploy --stage prod

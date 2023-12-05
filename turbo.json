@@ -27,19 +27,39 @@
       "dependsOn": ["lint", "^build"]
     },
     "//#deploy": {
-      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
+      "env": [
+        "PROD_GITHUB_ORG",
+        "PROD_GITHUB_REPO",
+        "PROD_GITHUB_ROLE",
+        "PROD_AWS_REGION"
+      ],
       "cache": false
     },
     "deploy": {
-      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
+      "env": [
+        "PROD_GITHUB_ORG",
+        "PROD_GITHUB_REPO",
+        "PROD_GITHUB_ROLE",
+        "PROD_AWS_REGION"
+      ],
       "cache": false
     },
     "//#remove": {
-      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
+      "env": [
+        "PROD_GITHUB_ORG",
+        "PROD_GITHUB_REPO",
+        "PROD_GITHUB_ROLE",
+        "PROD_AWS_REGION"
+      ],
       "cache": false
     },
     "remove": {
-      "env": ["GITHUB_ORG", "GITHUB_REPO", "GITHUB_ROLE", "AWS_REGION"],
+      "env": [
+        "PROD_GITHUB_ORG",
+        "PROD_GITHUB_REPO",
+        "PROD_GITHUB_ROLE",
+        "PROD_AWS_REGION"
+      ],
       "cache": false
     },
     "test": {
