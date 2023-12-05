@@ -39,6 +39,5 @@
     "tailwind-scrollbar": "^3.0.5",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
-  },
-  "Transform": "AWS::Serverless-2016-10-31"
+  }
 }
