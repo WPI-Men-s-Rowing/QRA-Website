@@ -50,8 +50,10 @@ jobs:
       - name: Run Linter
         run: pnpm turbo lint
 
+      - name: Test
+        run: echo ${{vars.PROD_GITHUB_ROLE}}
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v2
+        uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROD_GITHUB_ROLE}}
           role-duration-seconds: 14390
