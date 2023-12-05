@@ -16,6 +16,9 @@ importers:
       "@qra-website/tsconfig":
         specifier: workspace:*
         version: link:configs/tsconfig
+      "@types/node":
+        specifier: ^20.10.3
+        version: 20.10.3
       aws-cdk-lib:
         specifier: 2.110.1
         version: 2.110.1(constructs@10.3.0)
@@ -8344,6 +8347,15 @@ packages:
       undici-types: 5.26.5
     dev: true
 
+  /@types/node@20.10.3:
+    resolution:
+      {
+        integrity: sha512-XJavIpZqiXID5Yxnxv3RUDKTN5b81ddNC3ecsA0SoFXz/QU8OGBwZGMomiq0zw+uuqbL/krztv/DINAQ/EV4gg==,
+      }
+    dependencies:
+      undici-types: 5.26.5
+    dev: true
+
   /@types/normalize-package-data@2.4.4:
     resolution:
       {
@@ -8475,7 +8487,7 @@ packages:
         integrity: sha512-vmQSUcfalpIq0R9q7uTo2lXs6eGIpt9wtnLdMv9LVpIjCA/+ufZRozlVoVelIYixx1ugCBKDhn89vnsEGOCx9A==,
       }
     dependencies:
-      "@types/node": 20.10.0
+      "@types/node": 20.10.3
     dev: true
 
   /@types/yargs-parser@21.0.3:
