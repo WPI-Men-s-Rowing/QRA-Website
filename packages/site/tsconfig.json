@@ -1,6 +1,7 @@
 {
   "extends": "@qra-website/tsconfig/next.json",
   "compilerOptions": {
+    "baseUrl": ".",
     "plugins": [{ "name": "next" }],
     "paths": {
       "@/*": ["./src/*"],
