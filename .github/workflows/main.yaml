@@ -56,6 +56,7 @@ jobs:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROD_GITHUB_ROLE}}
           role-duration-seconds: 3600
           aws-region: ${{env.PROD_AWS_REGION}}
+
       - name: Deploy app
         env:
           PROD_GITHUB_ORG: ${{github.repository_owner}}
