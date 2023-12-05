@@ -9,7 +9,7 @@ export default {
     if (input.stage === "prod" && !process.env.PROD_AWS_REGION) {
       // Don't allow anything to proceed if we don't have it
       throw new Error(
-        "Missing required deployment environment variable AWS_REGION",
+        "Missing required deployment environment variable PROD_AWS_REGION",
       );
     }
 
