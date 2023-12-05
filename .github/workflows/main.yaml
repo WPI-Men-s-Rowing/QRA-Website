@@ -24,7 +24,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: 20
+          node-version: 21.0.3
 
       - uses: pnpm/action-setup@v2
         name: Install pnpm
@@ -47,6 +47,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+      - name: Test
+        run: ls -l
       - name: Run Linter
         run: pnpm turbo lint
 
