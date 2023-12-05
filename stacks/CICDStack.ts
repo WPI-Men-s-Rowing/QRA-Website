@@ -28,6 +28,9 @@ export function CICDStack({ app, stack }: StackContext) {
 
     new iam.Role(stack, "GitHubActionsRole", {
       assumedBy: new iam.OpenIdConnectPrincipal(provider).withConditions({
+        StringEquals: {
+          "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+        },
         StringLike: {
           "token.actions.githubusercontent.com:sub": `repo:${process.env.PROD_GITHUB_ORG}/${process.env.PROD_GITHUB_REPO}:*`,
         },
@@ -73,7 +76,6 @@ export function CICDStack({ app, stack }: StackContext) {
                 "ssm:GetParametersByPath",
                 "ssm:PutParameter",
                 "sts:AssumeRole",
-                "sts:AssumeRoleWithWebIdentity",
               ],
               resources: ["*"],
             }),

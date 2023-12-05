@@ -50,8 +50,6 @@ jobs:
       - name: Run Linter
         run: pnpm turbo lint
 
-      - name: Test
-        run: echo ${{vars.PROD_GITHUB_ROLE}}
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
         with:
