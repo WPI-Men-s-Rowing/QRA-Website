@@ -54,7 +54,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v3
         with:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROD_GITHUB_ROLE}}
-          role-duration-seconds: 14390
+          role-duration-seconds: 3600
           aws-region: ${{env.AWS_REGION}}
       - name: Deploy app
         env:
