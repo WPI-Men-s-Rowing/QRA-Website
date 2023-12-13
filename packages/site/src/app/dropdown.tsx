@@ -62,19 +62,21 @@ const Dropdown: React.FC<DropdownProps> = ({ title, items }) => {
         {title}
       </button>
       {isOpen && (
-        <div className="absolute z-10 bg-red rounded">
-          {/* eslint-disable-next-line react/prop-types */}
-          {items.map((item) => (
-            <div
-              key={item.path}
-              className="p-2 cursor-pointer hover:bg-red-500 hover:text-white"
-              onClick={() => handleItemClick(item.path)}
-              onMouseOver={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
-            >
-              {item.label}
-            </div>
-          ))}
+        <div className="fixed left-0 bg-red rounded w-full px-20">
+          <div className="flex flex-col border-white border-2">
+            {/* eslint-disable-next-line react/prop-types */}
+            {items.map((item) => (
+              <div
+                key={item.path}
+                className="p-2 cursor-pointer hover:bg-red-500 hover:text-white"
+                onClick={() => handleItemClick(item.path)}
+                onMouseOver={() => setIsOpen(true)}
+                onMouseLeave={() => setIsOpen(false)}
+              >
+                {item.label}
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>
