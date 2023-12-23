@@ -6,7 +6,8 @@ import { NextjsSite, StackContext, Table } from "sst/constructs";
  * @param stack the stack context to use in building this stack
  */
 export function SiteStack({ stack }: StackContext) {
-  const regattas = new Table(stack, "regattas", {
+  // Creates the DynamoDB Database
+  const database = new Table(stack, "database", {
     // The best practice in DynamoDB is to use completely generic column names as per single
     // table design
     // see (https://electrodb.dev/en/core-concepts/quick-start/)
@@ -37,7 +38,7 @@ export function SiteStack({ stack }: StackContext) {
   // Create the nextJS site
   const site = new NextjsSite(stack, "site", {
     path: "packages/site",
-    bind: [regattas],
+    bind: [database],
   });
 
   stack.addOutputs({

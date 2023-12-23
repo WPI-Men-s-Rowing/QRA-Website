@@ -16,8 +16,7 @@ interface DropdownProps {
   items: DropdownItem[];
 }
 
-// eslint-disable-next-line react/prop-types
-const Dropdown: React.FC<DropdownProps> = ({ title, items }) => {
+function Dropdown({ title, items }: DropdownProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [icon, setIcon] = useState<StaticImageData>(
     homeIcon as StaticImageData,
@@ -79,5 +78,5 @@ const Dropdown: React.FC<DropdownProps> = ({ title, items }) => {
       )}
     </div>
   );
-};
+}
 export default Dropdown;
