@@ -1,7 +1,9 @@
+"use client";
+
 import LineupPopOver from "@/components/results/popover/LineupPopOver.tsx";
 import { Athlete } from "@/types/types.ts";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 /**
  * Props for the ResultLine component
@@ -23,6 +25,17 @@ interface ResultLineProps {
  */
 function ResultLine(props: ResultLineProps) {
   const [isPopoverVisible, setPopoverVisible] = useState(false);
+
+  const [imageUrl, setImageUrl] = useState(
+    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==",
+  );
+
+  // This ensures that image loading is deferred as long as possible
+  useEffect(() => {
+    setImageUrl(
+      `https://www.regattatiming.com/images/org/${props.teamName.toLowerCase()}.svg`,
+    );
+  }, [props.teamName]);
 
   const msToTime = (duration: number) => {
     const milliseconds = parseInt(String((duration % 1000) / 100));
@@ -61,12 +74,15 @@ function ResultLine(props: ResultLineProps) {
               <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold">
                 {props.teamName}
               </div>
-              <Image
-                width={28}
-                height={28}
-                src={`https://www.regattatiming.com/images/org/${props.teamName.toLowerCase()}.svg`}
-                alt={`${props.teamName} Logo`}
-              />
+              <div className="w-[28px] h-[28px] relative">
+                <Image
+                  fill
+                  sizes="28,28"
+                  src={imageUrl}
+                  alt="Logo"
+                  className="cursor-pointer"
+                />
+              </div>
               <LineupPopOver
                 lineup={props.lineup}
                 isVisible={isPopoverVisible}
@@ -113,13 +129,15 @@ function ResultLine(props: ResultLineProps) {
               <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
                 {props.teamName}
               </div>
-              <Image
-                width={28}
-                height={28}
-                src={`https://www.regattatiming.com/images/org/${props.teamName.toLowerCase()}.svg`}
-                alt="Logo"
-                className="cursor-pointer"
-              />
+              <div className="w-[28px] h-[28px] relative">
+                <Image
+                  fill
+                  sizes="28,28"
+                  src={imageUrl}
+                  alt="Logo"
+                  className="cursor-pointer"
+                />
+              </div>
               <LineupPopOver
                 lineup={props.lineup}
                 isVisible={isPopoverVisible}

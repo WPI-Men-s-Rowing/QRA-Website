@@ -27,9 +27,10 @@ interface JumboTronProps {
 function JumboTron(props: JumboTronProps) {
   return (
     <div className="h-screen static">
-      <div className="w-full h-screen overflow-hidden">
+      <div className="w-full h-screen overflow-hidden absolute">
         <Image
           fill
+          placeholder="blur"
           src={props.picture}
           alt="QRA"
           className="object-cover brightness-50"

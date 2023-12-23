@@ -1,3 +1,5 @@
+"use client";
+
 import { FinishedCrew, HeatStatus } from "@/types/types.ts";
 import ResultLine from "../ResultLine.tsx";
 

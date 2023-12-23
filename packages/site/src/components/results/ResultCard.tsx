@@ -52,7 +52,11 @@ function ResultCard(props: ResultCardProps) {
         expanded ? `w-screen h-[500px]` : `lg:w-[405px] h-[413px]`
       }  px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex`}
     >
-      {expanded ? ExpandedResultCard(props) : StandardResultCard(props)}
+      {expanded ? (
+        <ExpandedResultCard {...props} />
+      ) : (
+        <StandardResultCard {...props} />
+      )}
       <div className="flex flex-row justify-between w-full">
         <div className="text-zinc-800 text-[10px] font-normal ">
           *Penalty - tap penalized time for details
