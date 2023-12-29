@@ -148,6 +148,9 @@ importers:
 
   packages/site:
     dependencies:
+      dompurify:
+        specifier: ^3.0.6
+        version: 3.0.6
       next:
         specifier: 14.0.3
         version: 14.0.3(@babel/core@7.23.3)(react-dom@18.2.0)(react@18.2.0)
@@ -200,6 +203,9 @@ importers:
       "@storybook/test":
         specifier: ^7.6.2
         version: 7.6.2
+      "@types/dompurify":
+        specifier: ^3.0.5
+        version: 3.0.5
       "@types/node":
         specifier: ^20
         version: 20.10.0
@@ -8441,6 +8447,15 @@ packages:
       }
     dev: true
 
+  /@types/dompurify@3.0.5:
+    resolution:
+      {
+        integrity: sha512-1Wg0g3BtQF7sSb27fJQAKck1HECM6zV1EB66j8JH9i3LCjYabJa0FSdiSgsD5K/RbrsR0SiraKacLB+T8ZVYAg==,
+      }
+    dependencies:
+      "@types/trusted-types": 2.0.7
+    dev: true
+
   /@types/ejs@3.1.5:
     resolution:
       {
@@ -8810,6 +8825,13 @@ packages:
     resolution:
       {
         integrity: sha512-Hy6UMpxhE3j1tLpl27exp1XqHD7n8chAiNPzWfz16LPZoMMoSc4dzLl6w9qijkEb/r5O1ozdu1CWGA2L83ZeZg==,
+      }
+    dev: true
+
+  /@types/trusted-types@2.0.7:
+    resolution:
+      {
+        integrity: sha512-ScaPdn1dQczgbl0QFTeTOmVHFULt394XJgOQNoyVhZ6r2vLnMLJfBPd53SB52T/3G36VI1/g2MZaX0cwDuXsfw==,
       }
     dev: true
 
@@ -12073,6 +12095,13 @@ packages:
     dependencies:
       domelementtype: 2.3.0
     dev: true
+
+  /dompurify@3.0.6:
+    resolution:
+      {
+        integrity: sha512-ilkD8YEnnGh1zJ240uJsW7AzE+2qpbOUYjacomn3AvJ6J4JhKGSZ2nh4wUIXPZrEPppaCLx5jFe8T89Rk8tQ7w==,
+      }
+    dev: false
 
   /domutils@2.8.0:
     resolution:

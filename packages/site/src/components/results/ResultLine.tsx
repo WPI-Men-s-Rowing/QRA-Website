@@ -2,8 +2,9 @@
 
 import LineupPopOver from "@/components/results/popover/LineupPopOver.tsx";
 import { Athlete } from "@/types/types.ts";
-import Image from "next/image";
-import { useEffect, useState } from "react";
+import DOMPurify from "dompurify";
+import { useState } from "react";
+import useSWR from "swr";
 
 /**
  * Props for the ResultLine component
@@ -26,16 +27,23 @@ interface ResultLineProps {
 function ResultLine(props: ResultLineProps) {
   const [isPopoverVisible, setPopoverVisible] = useState(false);
 
-  const [imageUrl, setImageUrl] = useState(
-    "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z/C/HgAGgwJ/lK3Q6wAAAABJRU5ErkJggg==",
+  // This beautiful mob is how we handle image loading completely asynchronously. SWR just simplifies the data flow
+  // (e.g., rather than state and an effect)
+  const { data } = useSWR<string>(
+    // This defers to the local route which gets image data
+    `/teams/${props.teamName}/icon`,
+    async (url: string) =>
+      // Now we sanitize the image data (just to be safe)
+      DOMPurify.sanitize(
+        // Then we fetch it as simple text
+        (await (await fetch(url)).text()).replace(
+          // This looks really complicated but is super simple - it replaces the first instance of width and height with 28px each,
+          // so the SVGs fit as expected
+          /width="\d+(px)?" height="\d+(px)?"/m,
+          `width="28px" height="28px"`,
+        ),
+      ),
   );
-
-  // This ensures that image loading is deferred as long as possible
-  useEffect(() => {
-    setImageUrl(
-      `https://www.regattatiming.com/images/org/${props.teamName.toLowerCase()}.svg`,
-    );
-  }, [props.teamName]);
 
   const msToTime = (duration: number) => {
     const milliseconds = parseInt(String((duration % 1000) / 100));
@@ -74,13 +82,11 @@ function ResultLine(props: ResultLineProps) {
               <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold">
                 {props.teamName}
               </div>
-              <div className="w-[28px] h-[28px] relative">
-                <Image
-                  fill
-                  sizes="28,28"
-                  src={imageUrl}
-                  alt="Logo"
-                  className="cursor-pointer"
+              <div className="w-[28px] h-[28px]">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: data ?? "",
+                  }}
                 />
               </div>
               <LineupPopOver
@@ -129,13 +135,11 @@ function ResultLine(props: ResultLineProps) {
               <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
                 {props.teamName}
               </div>
-              <div className="w-[28px] h-[28px] relative">
-                <Image
-                  fill
-                  sizes="28,28"
-                  src={imageUrl}
-                  alt="Logo"
-                  className="cursor-pointer"
+              <div className="w-[28px] h-[28px]">
+                <div
+                  dangerouslySetInnerHTML={{
+                    __html: data ?? "",
+                  }}
                 />
               </div>
               <LineupPopOver
