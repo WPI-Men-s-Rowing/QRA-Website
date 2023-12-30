@@ -1,1 +1,1 @@
-export * from "./dynamo.ts";
+export * from "./services.ts";

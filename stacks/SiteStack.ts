@@ -16,8 +16,6 @@ export function SiteStack({ stack }: StackContext) {
       sk: "string",
       gsi1pk: "string",
       gsi1sk: "string",
-      gsi2pk: "string",
-      gsi2sk: "string",
     },
     primaryIndex: {
       partitionKey: "pk",
@@ -27,10 +25,6 @@ export function SiteStack({ stack }: StackContext) {
       gsi1: {
         partitionKey: "gsi1pk",
         sortKey: "gsi1sk",
-      },
-      gsi2: {
-        partitionKey: "gsi2pk",
-        sortKey: "gsi2sk",
       },
     },
   });
