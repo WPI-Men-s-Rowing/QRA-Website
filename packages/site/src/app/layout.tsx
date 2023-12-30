@@ -9,7 +9,11 @@ import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import "./globals.css";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-inter",
+});
 
 export const metadata: Metadata = {
   title: "QRA",
@@ -22,9 +26,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className={inter.className}>
-        <nav className="w-full top-0 z-10 p-2 absolute bg-gradient-to-b from-black to-transparents">
+    <html lang="en" className={`${inter.variable}`}>
+      <body>
+        <nav className="w-full top-0 z-10 p-2 absolute bg-gradient-to-b from-[#000000] to-transparent">
           <div className="mx-auto">
             <div className="flex items-center justify-between h-16">
               <Image
@@ -74,25 +78,28 @@ export default function RootLayout({
             </div>
           </div>
         </nav>
-        {children}
+        <div className="bg-background">{children}</div>
         <footer>
-          <div className="w-full h-[88.68px] p-2.5 bg-neutral-700 justify-between items-center inline-flex">
+          <div className="w-full p-2.5 bg-tertiary justify-between items-center inline-flex">
             <div className="flex-col justify-start items-start gap-[5px] inline-flex">
-              <div className="text-neutral-50 text-[10px] font-normal">
-                ©️ {new Date().getFullYear()} Quinsigamond Rowing Association,
-                Inc.
-              </div>
+              <small className="text-background text-[10px] font-normal">
+                &#169; {new Date().getFullYear()} Quinsigamond Rowing
+                Association, Inc.
+              </small>
               <div className="justify-start items-start gap-[5px] inline-flex">
-                <div className="text-neutral-50 text-[10px] font-normal">
+                <small className="text-background text-[10px] font-normal">
                   Photos courtesy of
-                </div>
-                <div className="text-blue-500 text-[10px] font-normal underline">
+                </small>
+                <a
+                  className="text-[#3385FF] text-[10px] font-normal underline"
+                  href={"https://sportsgraphics.com"}
+                >
                   SportGraphics.com
-                </div>
+                </a>
               </div>
-              <div className="self-stretch text-neutral-50 text-[10px] font-normal">
+              <small className="self-stretch text-background text-[10px] font-normal">
                 Website developed by Bob Nyce, Ian Wright, and Emerson Shatouhy
-              </div>
+              </small>
             </div>
             <div className="flex-col justify-start items-start gap-2.5 inline-flex">
               <Image

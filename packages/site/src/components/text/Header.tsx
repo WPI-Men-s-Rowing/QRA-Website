@@ -8,9 +8,9 @@ import { ReactNode } from "react";
 function Header({ children }: { children: ReactNode }) {
   return (
     <>
-      <div className="lg:text-4xl text-3xl text-left text-red underline underline-offset-8 decoration-text-color decoration-1">
+      <header className="lg:text-4xl text-3xl text-left text-red underline underline-offset-[5px] decoration-divider decoration-1">
         {children}
-      </div>
+      </header>
     </>
   );
 }
