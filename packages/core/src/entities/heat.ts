@@ -16,22 +16,30 @@ export const Heat = new Entity({
     regattaId: {
       type: "string",
       readOnly: true,
+      required: true,
     },
     heatId: {
       type: "string",
       readOnly: true,
+      required: true,
       default: () => ulid(),
     },
     type: {
       type: "map",
+      required: true,
       properties: {
         boatClass: {
-          type: "string",
+          required: true,
+          type: ["8+", "4+", "4-", "4x", "2+", "2-", "1x"] as const,
         },
         gender: {
-          type: "string",
+          required: true,
+          type: ["men", "women", "open"] as const,
         },
         displayName: {
+          // Since a heat may contain some type information that can't be represented by only class and gender,
+          // this enables that (this can be masters, 2v, etc.)
+          required: false,
           type: "string",
         },
       },
@@ -39,6 +47,7 @@ export const Heat = new Entity({
     // Epoch MS
     scheduledStart: {
       type: "number",
+      required: true,
     },
     // Delay in MS
     delay: {
@@ -46,7 +55,8 @@ export const Heat = new Entity({
       required: false,
     },
     status: {
-      type: ["scheduled", "delayed", "unofficial", "official"],
+      required: true,
+      type: ["scheduled", "delayed", "unofficial", "official"] as const,
     },
     host: {
       // The host of the heat. For non-QRA regattas (e.g., duels) this should be the name of the host school
@@ -59,20 +69,24 @@ export const Heat = new Entity({
       required: false,
       properties: {
         numberToNext: {
+          required: true,
           type: "number",
         },
         nextId: {
+          required: true,
           type: "string",
         },
       },
     },
     entries: {
+      required: true,
       type: "list",
       items: {
         type: "map",
         properties: {
           // "foreign key" (even though this isn't enforced cuz NoSQL things) to team
           teamName: {
+            required: true,
             type: "string",
           },
           // Entry letter for the team (e.g., "A", "B", "C"). Optional if the team only has one entry in the event
@@ -81,10 +95,12 @@ export const Heat = new Entity({
             required: false,
           },
           bowNumber: {
+            required: true,
             type: "number",
           },
           // Finish time in MS
           finishTime: {
+            required: false,
             type: "number",
           },
           segments: {
@@ -96,10 +112,12 @@ export const Heat = new Entity({
               properties: {
                 // The distance the time is represented at, in meters from start
                 distance: {
+                  required: true,
                   type: "number",
                 },
                 // The time, in MS from race start
                 time: {
+                  required: true,
                   type: "number",
                 },
               },

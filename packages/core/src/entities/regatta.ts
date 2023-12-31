@@ -15,21 +15,27 @@ export const Regatta = new Entity({
     regattaId: {
       type: "string",
       readOnly: true,
+      required: true,
       default: () => ulid(),
     },
     name: {
+      required: true,
       type: "string",
     },
     type: {
-      type: ["duel", "head", "championship"],
+      required: true,
+      type: ["duel", "head", "championship"] as const,
     },
     distance: {
+      required: true,
       type: "number",
     },
     startDate: {
+      required: true,
       type: "number",
     },
     endDate: {
+      required: true,
       type: "number",
     },
   },

@@ -13,6 +13,7 @@ export const Team = new Entity(
     },
     attributes: {
       name: {
+        required: true,
         type: "string",
       },
     },

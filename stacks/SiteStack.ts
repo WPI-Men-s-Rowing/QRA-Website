@@ -1,4 +1,4 @@
-import { NextjsSite, StackContext, Table } from "sst/constructs";
+import { NextjsSite, Script, StackContext, Table } from "sst/constructs";
 
 /**
  * This method creates a stack for use by the NextJs site, interfacing with other
@@ -28,6 +28,18 @@ export function SiteStack({ stack }: StackContext) {
       },
     },
   });
+
+  // Script to handle seeding the database. Only create it if the mode is not production (because we obviously don't want to seed prod...)
+  if (stack.stage !== "prod") {
+    new Script(stack, "databaseSeedScript", {
+      defaults: {
+        function: {
+          bind: [database],
+        },
+      },
+      onCreate: "packages/functions/src/databaseSeed.script",
+    });
+  }
 
   // Create the nextJS site
   const site = new NextjsSite(stack, "site", {
