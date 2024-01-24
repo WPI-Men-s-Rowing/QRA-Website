@@ -1,26 +1,20 @@
 import { Attribute, ElectroError, Entity, Service } from "electrodb";
 import {
   Adapter,
+  InitializeAdapter,
   KeySchema,
-  LuciaError,
+  LuciaErrorConstructor,
   SessionSchema,
   UserSchema,
 } from "lucia";
 import { databaseConfiguration } from "./dynamo.ts";
 
 /**
- * Interface representing configuration options for DynamoDB
+ * Configuration items for the DynamoDB Adapter. Contains additional attributes for the user and the session
  */
 export interface DynamoDbAdapterConfig {
-  /**
-   * Additional attributes to add to the user Entity
-   */
-  userAttributes: Record<string, Attribute>;
-
-  /**
-   * Additional attributes to add to the session Entity
-   */
-  sessionAttributes: Record<string, Attribute>;
+  userAttributes: Readonly<Record<string, Attribute>>;
+  sessionAttributes: Readonly<Record<string, Attribute>>;
 }
 
 /**
@@ -28,10 +22,7 @@ export interface DynamoDbAdapterConfig {
  */
 class DynamoDbAdapter implements Adapter {
   // Any adapter errors must throw this instead of the raw error as per Lucia docs
-  private luciaError: typeof LuciaError;
-
-  // Adapter configuration
-  private config: DynamoDbAdapterConfig;
+  private luciaError: LuciaErrorConstructor;
 
   // Base type for the user entity
   private userEntity: Entity<
@@ -47,8 +38,8 @@ class DynamoDbAdapter implements Adapter {
       attributes: {
         id: {
           type: "string";
-          readOnly: true;
           required: true;
+          readOnly: true;
         };
       };
       indexes: {
@@ -188,10 +179,12 @@ class DynamoDbAdapter implements Adapter {
     key: DynamoDbAdapter["keyEntity"];
   }>;
 
-  constructor(config: DynamoDbAdapterConfig, luciaError: typeof LuciaError) {
+  constructor(
+    config: DynamoDbAdapterConfig,
+    luciaError: LuciaErrorConstructor,
+  ) {
     // Save the lucia error type and config
     this.luciaError = luciaError;
-    this.config = config;
 
     // Create the user entity with the expanded attributes
     this.userEntity = new Entity({
@@ -201,15 +194,14 @@ class DynamoDbAdapter implements Adapter {
         service: "accounts",
       },
       attributes: {
+        ...config.userAttributes,
         id: {
           type: "string",
           readOnly: true,
           required: true,
         },
-        ...this.config.userAttributes,
       },
       indexes: {
-        // Index to look up a user by their ID. Uses no SK to enforce uniqueness on user ID
         user: {
           pk: {
             field: "pk",
@@ -232,6 +224,7 @@ class DynamoDbAdapter implements Adapter {
         service: "accounts",
       },
       attributes: {
+        ...config.sessionAttributes,
         id: {
           type: "string",
           required: true,
@@ -250,7 +243,6 @@ class DynamoDbAdapter implements Adapter {
           type: "number",
           required: true,
         },
-        ...config.sessionAttributes,
       },
       indexes: {
         session: {
@@ -432,7 +424,8 @@ class DynamoDbAdapter implements Adapter {
    */
   async getUser(userId: string) {
     return (await this.accountService.entities.user.get({ id: userId }).go())
-      .data;
+      .data as UserSchema; // This little thing forces TypeScript to be happy when the user defines custom attributes. As long
+    // as they do so correctly, this works great. If they screw it up, that's on them
   }
 
   /**
@@ -605,7 +598,8 @@ class DynamoDbAdapter implements Adapter {
   async getSession(sessionId: string) {
     return (
       await this.accountService.entities.session.get({ id: sessionId }).go()
-    ).data;
+    ).data as SessionSchema; // This allows the user to define custom session attributes without everything breaking.
+    // As long as they do so correctly, this doesn't really impact functionality
   }
 
   /**
@@ -661,7 +655,8 @@ class DynamoDbAdapter implements Adapter {
  * @param config the configuration options to use
  * @returns a Lucia adapter builder that creates a DynamoDB Adapter
  */
-export const dynamoDbAdapter = (config: DynamoDbAdapterConfig) => {
-  return (luciaError: typeof LuciaError) =>
-    new DynamoDbAdapter(config, luciaError);
+export const dynamoDbAdapter = (
+  config: DynamoDbAdapterConfig,
+): InitializeAdapter<Adapter> => {
+  return (luciaError): Adapter => new DynamoDbAdapter(config, luciaError);
 };
