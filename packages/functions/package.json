@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "@qra-website/core": "workspace:*",
-    "electrodb": "^2.12.1"
+    "electrodb": "^2.12.1",
+    "lucia": "^2.7.6"
   },
   "devDependencies": {
     "@qra-website/eslint-config-custom": "workspace:*",

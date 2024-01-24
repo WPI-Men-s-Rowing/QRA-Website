@@ -133,6 +133,9 @@ importers:
       electrodb:
         specifier: ^2.12.1
         version: 2.12.1(@aws-sdk/client-dynamodb@3.462.0)
+      lucia:
+        specifier: ^2.7.6
+        version: 2.7.6
     devDependencies:
       "@qra-website/eslint-config-custom":
         specifier: workspace:*

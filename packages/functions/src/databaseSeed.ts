@@ -1,6 +1,7 @@
 import { RegattaService, TeamService } from "@qra-website/core";
 import { randomInt, randomUUID } from "crypto";
 import { CreateEntityItem, EntityItem } from "electrodb";
+import { auth } from "./auth.ts";
 
 // How many milliseconds are in a day, for random value generation
 const dayInMilliseconds = 1000 * 60 * 60 * 24;
@@ -10,6 +11,18 @@ const dayInMilliseconds = 1000 * 60 * 60 * 24;
  * @returns The data on the randomly generated regatta
  */
 async function createRandomRegatta() {
+  // Create a random account
+  await auth.createUser({
+    key: {
+      providerId: "email",
+      providerUserId: "example@example.com",
+      password: "example",
+    },
+    attributes: {
+      email: "example@example.com",
+    },
+  });
+
   // Create a random date, either one week before or one week after now, or now
   const date = Date.now() + dayInMilliseconds * [-7, 7, 0][randomInt(0, 3)];
 
@@ -132,6 +145,8 @@ function createRandomHeatCreateArgs(
  * Script that can be used to seed the database
  */
 export async function script() {
+  // Create a temporary admin user
+
   // List of teams we can use here
   const teams = [
     "WPI",
