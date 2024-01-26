@@ -21,7 +21,7 @@ const config: Config = {
         background: "#FAFAFA",
         black: "#313131",
         red: "#730000",
-        blue: "#730000",
+        blue: "#230088",
         auxiliary: "#CD801F",
         tertiary: "#3A3A3A",
       },
