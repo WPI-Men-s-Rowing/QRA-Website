@@ -8,7 +8,6 @@ import { DetailedHTMLProps, InputHTMLAttributes, useState } from "react";
 /**
  * Component for a styled input box, to be used throughout the application
  * @param props props for an input box, same as could be passed to a non-styled input
- * @returns a styled input box
  */
 export default function Input(
   props: DetailedHTMLProps<
