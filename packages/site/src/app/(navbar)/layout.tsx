@@ -7,11 +7,10 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
-import "./globals.css";
+import "../globals.css";
 
 const inter = Inter({
   subsets: ["latin"],
-  display: "swap",
   variable: "--font-inter",
 });
 

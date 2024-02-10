@@ -322,11 +322,14 @@ class DynamoDbAdapter implements Adapter {
       databaseConfiguration,
     });
 
-    this.accountService = new Service({
-      user: this.userEntity,
-      key: this.keyEntity,
-      session: this.sessionEntity,
-    });
+    this.accountService = new Service(
+      {
+        user: this.userEntity,
+        key: this.keyEntity,
+        session: this.sessionEntity,
+      },
+      databaseConfiguration,
+    );
   }
 
   /**

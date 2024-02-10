@@ -3,14 +3,25 @@ import { ReactNode } from "react";
 /**
  * Header component, used for all headers
  * @param children the text to display in the header
- * @constructor
+ * @param className classes to pass to the text itself, to provide additional styling
  */
-function Header({ children }: { children: ReactNode }) {
+function Header({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   return (
     <>
-      <header className="lg:text-4xl text-3xl text-left text-red underline underline-offset-[5px] decoration-divider decoration-1">
-        {children}
-      </header>
+      <div>
+        <header
+          className={`md:text-4xl text-2xl text-left text-red whitespace-nowrap ${className}`}
+        >
+          {children}
+        </header>
+        <hr className="h-px bg-divider border-0 my-[5px]" />
+      </div>
     </>
   );
 }

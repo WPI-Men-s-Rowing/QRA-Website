@@ -1,5 +1,10 @@
 import { RegattaService, TeamService } from "@qra-website/core";
-import { randomInt, randomUUID } from "crypto";
+import { webcrypto } from "node:crypto";
+
+/* @ts-expect-error Required since we don't have any type data on the polyfill */ /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */
+globalThis.crypto = webcrypto as Crypto;
+
+import crypto from "crypto";
 import { CreateEntityItem, EntityItem } from "electrodb";
 import { auth } from "./auth.ts";
 
@@ -11,20 +16,9 @@ const dayInMilliseconds = 1000 * 60 * 60 * 24;
  * @returns The data on the randomly generated regatta
  */
 async function createRandomRegatta() {
-  // Create a random account
-  await auth.createUser({
-    key: {
-      providerId: "email",
-      providerUserId: "example@example.com",
-      password: "example",
-    },
-    attributes: {
-      email: "example@example.com",
-    },
-  });
-
   // Create a random date, either one week before or one week after now, or now
-  const date = Date.now() + dayInMilliseconds * [-7, 7, 0][randomInt(0, 3)];
+  const date =
+    Date.now() + dayInMilliseconds * [-7, 7, 0][crypto.randomInt(0, 3)];
 
   // Array type, being the possible types of regatta we can have
   const typePossibilities =
@@ -32,11 +26,11 @@ async function createRandomRegatta() {
 
   const regatta = await RegattaService.entities.regatta
     .put({
-      name: "Test Regatta " + randomUUID(), // Generate a type
-      type: typePossibilities[randomInt(0, typePossibilities.length)], // Randomly pick a type
-      distance: [2000, 5000][randomInt(0, 2)], // Pick either 2k or 5k cuz why not
+      name: "Test Regatta " + crypto.randomUUID(), // Generate a type
+      type: typePossibilities[crypto.randomInt(0, typePossibilities.length)], // Randomly pick a type
+      distance: [2000, 5000][crypto.randomInt(0, 2)], // Pick either 2k or 5k cuz why not
       startDate: date,
-      endDate: date + dayInMilliseconds * [0, 1][randomInt(0, 2)], // Regatta either ends same day or one day later
+      endDate: date + dayInMilliseconds * [0, 1][crypto.randomInt(0, 2)], // Regatta either ends same day or one day later
     })
     .go();
 
@@ -54,31 +48,34 @@ function createRandomHeatCreateArgs(
   regatta: EntityItem<typeof RegattaService.entities.regatta>,
   teams: readonly string[],
 ): CreateEntityItem<typeof RegattaService.entities.heat> {
-  const scheduledStart = regatta.startDate + randomInt(0, dayInMilliseconds); // Randomly generate a start time
+  const scheduledStart =
+    regatta.startDate + crypto.randomInt(0, dayInMilliseconds); // Randomly generate a start time
   const regattaHasResults = scheduledStart + 1000 * 60 * 20 < Date.now(); // Whether the race has results. If now is more than 20 minutes after scheduled start
   const host =
-    regatta.type === "duel" ? teams[randomInt(0, teams.length)] : undefined; // Randomly determined host, only duels have hosts
+    regatta.type === "duel"
+      ? teams[crypto.randomInt(0, teams.length)]
+      : undefined; // Randomly determined host, only duels have hosts
   const numEntries =
-    regatta.type === "head" ? randomInt(15, 30) : randomInt(3, 7);
+    regatta.type === "head" ? crypto.randomInt(15, 30) : crypto.randomInt(3, 7);
   const entries: EntityItem<typeof RegattaService.entities.heat>["entries"] =
     []; // Entries
   let status: EntityItem<typeof RegattaService.entities.heat>["status"]; // Heats status
   let delay: number | undefined; // The regattas delay time  (or undefined for none)
   const officialRegatta =
-    regatta.type === "championship" && randomInt(0, 2) === 1; // Whether the regatta is official (e.g., should have segments and progression)
+    regatta.type === "championship" && crypto.randomInt(0, 2) === 1; // Whether the regatta is official (e.g., should have segments and progression)
 
   // Create the entries
   for (let i = 0; i < numEntries; i++) {
     // Get a team, and then calculate the number of times that team has been in this heat before now
-    const team = teams[randomInt(0, teams.length)];
+    const team = teams[crypto.randomInt(0, teams.length)];
     const numOtherTeams = entries.filter(
       (entry) => entry.teamName === team,
     ).length;
     // Randomly generate a finish time (if applicable) based on 5k/2k
     const finishTime = regattaHasResults
       ? regatta.distance === 5000
-        ? randomInt(1000 * 60 * 20, 1000 * 60 * 22)
-        : randomInt(1000 * 60 * 5, 1000 * 60 * 6)
+        ? crypto.randomInt(1000 * 60 * 20, 1000 * 60 * 22)
+        : crypto.randomInt(1000 * 60 * 5, 1000 * 60 * 6)
       : undefined;
 
     // Create the entry
@@ -100,13 +97,13 @@ function createRandomHeatCreateArgs(
 
   // If the regatta has results,
   if (regattaHasResults) {
-    status = randomInt(2) == 1 ? "unofficial" : "official"; // generate a random status based on the regatta having results
+    status = crypto.randomInt(2) == 1 ? "unofficial" : "official"; // generate a random status based on the regatta having results
   } else {
-    status = randomInt(2) == 1 ? "delayed" : "scheduled";
+    status = crypto.randomInt(2) == 1 ? "delayed" : "scheduled";
 
     // Determine whether the regatta is delayed
     if (status === "delayed") {
-      delay = randomInt(0, 1000 * 60 * 60);
+      delay = crypto.randomInt(0, 1000 * 60 * 60);
     }
   }
 
@@ -115,8 +112,8 @@ function createRandomHeatCreateArgs(
     RegattaService.entities.heat.schema.attributes.type.properties;
   const boatClassTypes = heatType.boatClass.type;
   const genderType = heatType.gender.type;
-  const boatClass = boatClassTypes[randomInt(0, boatClassTypes.length)];
-  const gender = genderType[randomInt(0, genderType.length)];
+  const boatClass = boatClassTypes[crypto.randomInt(0, boatClassTypes.length)];
+  const gender = genderType[crypto.randomInt(0, genderType.length)];
 
   // Now put type information together
   const type = {
@@ -124,8 +121,8 @@ function createRandomHeatCreateArgs(
     gender,
     // Decide whether to create a manual display name randomly
     displayName:
-      randomInt(0, 2) === 1
-        ? `${gender}'s ${randomInt(1, 5)} Varsity ${boatClass}`
+      crypto.randomInt(0, 2) === 1
+        ? `${gender}'s ${crypto.randomInt(1, 5)} Varsity ${boatClass}`
         : undefined,
   };
 
@@ -146,6 +143,17 @@ function createRandomHeatCreateArgs(
  */
 export async function script() {
   // Create a temporary admin user
+  // Create a random account
+  await auth.createUser({
+    key: {
+      providerId: "email",
+      providerUserId: "example@example.com",
+      password: "example",
+    },
+    attributes: {
+      email: "example@example.com",
+    },
+  });
 
   // List of teams we can use here
   const teams = [

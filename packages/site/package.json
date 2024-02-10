@@ -14,6 +14,7 @@
     "@qra-website/core": "workspace:*",
     "dompurify": "^3.0.6",
     "electrodb": "^2.12.1",
+    "framer-motion": "^11.0.3",
     "lucia": "^2.7.6",
     "next": "14.0.3",
     "react": "^18",
