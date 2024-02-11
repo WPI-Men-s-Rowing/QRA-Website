@@ -5,10 +5,11 @@ import Button from "@/components/Button";
 import Header from "@/components/text/Header";
 import Input from "@/components/text/Input";
 import qraLogo from "@public/qra-logo.png";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useFormState } from "react-dom";
-import { login } from "./actions";
+import { login } from "./actions.ts";
 
 /**
  * Client component representing the login form. This is kept here, so that the page can use server-side stuff (such as redirecting if the user is logged in)
@@ -21,9 +22,13 @@ export default function LoginForm() {
     <div className="min-h-fit w-full h-full relative flex justify-center items-center">
       {/* Div that displays the login error message when appropriate*/}
       {state.message !== "" && (
-        <div className="absolute top-5 right-0 mx-2.5 my-2.5 bg-red text-secondary rounded-[10px] text-base md:text-2xl">
+        <motion.div
+          className="absolute top-5 px-2.5 py-2.5 bg-red text-secondary rounded-[10px] text-base md:text-2xl"
+          animate={{ right: 0 }}
+          initial={{ right: -50 }}
+        >
           {state.message}
-        </div>
+        </motion.div>
       )}
 
       <form
@@ -88,9 +93,7 @@ export default function LoginForm() {
             Forgot Password?
           </Link>
           <BackButton>Cancel</BackButton>
-          <Button className="bg-red text-background" formAction="submit">
-            Login
-          </Button>
+          <Button className="bg-red text-background">Login</Button>
         </div>
       </form>
     </div>

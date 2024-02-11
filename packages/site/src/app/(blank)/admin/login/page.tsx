@@ -1,14 +1,19 @@
+"use server";
+
 import { auth } from "@/lib/utils/auth";
 import background from "@public/bg.png";
 import * as context from "next/headers";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 import LoginForm from "./LoginForm";
+import { init } from "./actions";
 
 /**
  * Admin login page. Validates to see if the user is logged in, and if they are, redirects to the admin page
  */
 export default async function AdminLogin() {
+  await init();
+
   // Check if the user is already logged in, and if they are
   const authRequest = auth.handleRequest("GET", context);
   const session = await authRequest.validate();
