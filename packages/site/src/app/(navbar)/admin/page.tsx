@@ -1,5 +1,6 @@
 "use server";
 
+import logout from "@/app/(blank)/admin/login/actions";
 import Button from "@/components/Button";
 import { auth } from "@/lib/utils/auth";
 import * as context from "next/headers";
@@ -19,7 +20,9 @@ export default async function AdminPage() {
   return (
     <div className="h-[1000px] justify-center items-center flex flex-col">
       <p>Welcome, Admin!</p>
-      <form>
+      {/* Required because nextjs form typing is *weird* */}
+      {/* eslint-disable-next-line @typescript-eslint/no-misused-promises */}
+      <form action={logout}>
         <Button className="bg-red text-background">Log Out</Button>
       </form>
     </div>

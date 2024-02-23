@@ -14,7 +14,7 @@ function Header({
 }) {
   return (
     <>
-      <div>
+      <div className="flex flex-col w-min">
         <header
           className={`md:text-4xl text-2xl text-left text-red whitespace-nowrap ${className}`}
         >
