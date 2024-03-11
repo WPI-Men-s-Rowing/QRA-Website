@@ -22,7 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable}`}>
       <body>
-        <div className="absolute top-0">
+        <div className="absolute top-0 w-full z-10">
           <NavBar />
         </div>
 

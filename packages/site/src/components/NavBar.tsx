@@ -10,7 +10,7 @@ import Link from "next/link";
  */
 export default function NavBar() {
   return (
-    <nav className="w-full z-10 p-2 bg-gradient-to-b from-[#000000] to-transparent">
+    <nav className="w-full p-2 bg-gradient-to-b from-[#000000] to-transparent">
       <div className="mx-auto">
         <div className="flex items-center justify-between h-16">
           <Image
