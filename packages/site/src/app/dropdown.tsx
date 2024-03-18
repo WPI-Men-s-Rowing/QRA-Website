@@ -3,6 +3,7 @@ import communityIcon from "@public/icons/navigation/community-icon.svg";
 import homeIcon from "@public/icons/navigation/home-icon.svg";
 import regattasIcon from "@public/icons/navigation/regattas-icon.svg";
 import Image, { StaticImageData } from "next/image";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -46,30 +47,40 @@ function Dropdown({ title, items }: DropdownProps) {
   }, [title]);
 
   return (
-    <div className={`relative`}>
+    <div className={`relative pointer-events-auto`}>
       <button
         onClick={() => setIsOpen(!isOpen)}
         onMouseOver={() => setIsOpen(true)}
         onMouseLeave={() => setIsOpen(false)}
-        className="flex flex-row text-white items-center gap-2 text-opacity-50"
+        className={`flex flex-row text-white items-center gap-2 text-opacity-50`}
       >
-        <Image
-          src={icon}
-          alt={title + " Icon"}
-          className="lg:w-[40px] lg:h-[40px] w-[20px] h-[20px]"
-        />
-        {title}
+        <Link
+          href={`/${title.toLowerCase()}`}
+          className="flex flex-row text-white items-center gap-2 text-opacity-50"
+        >
+          <Image
+            src={icon}
+            alt={title + " Icon"}
+            className="lg:w-[40px] lg:h-[40px] w-[20px] h-[20px]"
+          />
+          {title}
+        </Link>
       </button>
       {isOpen && (
-        <div className="absolute z-10 bg-red rounded">
+        <div
+          className="fixed left-0 bg-red rounded w-full p-2 text-white cursor-auto gap-2.5"
+          onMouseOver={() => setIsOpen(true)}
+          onMouseLeave={() => setIsOpen(false)}
+          onClick={() => setIsOpen(false)}
+        >
+          <div className="lg:text-2xl text-xl font-bold">{title}</div>
+          <hr className="h-px bg-background-subtext border-0 my-[5px]" />
           {/* eslint-disable-next-line react/prop-types */}
           {items.map((item) => (
             <div
               key={item.path}
-              className="p-2 cursor-pointer hover:bg-red-500 hover:text-white"
+              className="cursor-pointer pb-2.5 hover:text-gray-400 w-fit"
               onClick={() => handleItemClick(item.path)}
-              onMouseOver={() => setIsOpen(true)}
-              onMouseLeave={() => setIsOpen(false)}
             >
               {item.label}
             </div>
@@ -79,4 +90,5 @@ function Dropdown({ title, items }: DropdownProps) {
     </div>
   );
 }
+
 export default Dropdown;
