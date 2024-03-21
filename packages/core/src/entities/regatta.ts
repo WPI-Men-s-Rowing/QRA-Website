@@ -26,6 +26,10 @@ export const Regatta = new Entity({
       required: true,
       type: ["duel", "head", "championship"] as const,
     },
+    host: {
+      required: true,
+      type: "string",
+    },
     distance: {
       required: true,
       type: "number",
