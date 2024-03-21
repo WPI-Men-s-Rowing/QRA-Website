@@ -7,7 +7,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
       <div className="min-w-screen min-h-screen overflow-x-hidden">
         <JumboTron
           title={"Regattas"}
-          subtitle={"Hosting quality"}
+          subtitle={"Hosting quality regattas since 1857"}
           picture={photo}
         />
         {children}
