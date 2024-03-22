@@ -11,6 +11,23 @@ import { auth } from "./auth.ts";
 // How many milliseconds are in a day, for random value generation
 const dayInMilliseconds = 1000 * 60 * 60 * 24;
 
+// List of teams we can use here
+const teams = [
+  "WPI",
+  "Tufts",
+  "MIT",
+  "Harvard",
+  "Dartmouth",
+  "Northeastern",
+  "Bates",
+  "Yale",
+  "Brown",
+  "Princeton",
+  "Columbia",
+  "Penn",
+  "Cornell",
+];
+
 /**
  * Function that creates a completely random regatta
  * @returns The data on the randomly generated regatta
@@ -24,11 +41,17 @@ async function createRandomRegatta() {
   const typePossibilities =
     RegattaService.entities.regatta.schema.attributes.type.type;
 
+  const regattaType =
+    typePossibilities[crypto.randomInt(0, typePossibilities.length)];
+
+  const host =
+    regattaType === "duel" ? teams[crypto.randomInt(0, teams.length)] : "QRA"; // Randomly determined host, only duels have hosts
+
   const regatta = await RegattaService.entities.regatta
     .put({
       name: "Test Regatta " + crypto.randomUUID(), // Generate a type
-      type: typePossibilities[crypto.randomInt(0, typePossibilities.length)], // Randomly pick a type
-      host: "QRA",
+      type: regattaType, // Randomly pick a type
+      host: host,
       distance: [2000, 5000][crypto.randomInt(0, 2)], // Pick either 2k or 5k cuz why not
       startDate: date,
       endDate: date + dayInMilliseconds * [0, 1][crypto.randomInt(0, 2)], // Regatta either ends same day or one day later
@@ -52,10 +75,6 @@ function createRandomHeatCreateArgs(
   const scheduledStart =
     regatta.startDate + crypto.randomInt(0, dayInMilliseconds); // Randomly generate a start time
   const regattaHasResults = scheduledStart + 1000 * 60 * 20 < Date.now(); // Whether the race has results. If now is more than 20 minutes after scheduled start
-  const host =
-    regatta.type === "duel"
-      ? teams[crypto.randomInt(0, teams.length)]
-      : undefined; // Randomly determined host, only duels have hosts
   const numEntries =
     regatta.type === "head" ? crypto.randomInt(15, 30) : crypto.randomInt(3, 7);
   const entries: EntityItem<typeof RegattaService.entities.heat>["entries"] =
@@ -132,7 +151,6 @@ function createRandomHeatCreateArgs(
     regattaId: regatta.regattaId,
     type,
     scheduledStart,
-    host,
     delay,
     status,
     entries,
@@ -155,23 +173,6 @@ export async function script() {
       email: "example@example.com",
     },
   });
-
-  // List of teams we can use here
-  const teams = [
-    "WPI",
-    "Tufts",
-    "MIT",
-    "Harvard",
-    "Dartmouth",
-    "Northeastern",
-    "Bates",
-    "Yale",
-    "Brown",
-    "Princeton",
-    "Columbia",
-    "Penn",
-    "Cornell",
-  ];
 
   // First, create all teams that may be of relevance
   await TeamService.entities.team

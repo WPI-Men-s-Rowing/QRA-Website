@@ -58,11 +58,6 @@ export const Heat = new Entity({
       required: true,
       type: ["scheduled", "delayed", "unofficial", "official"] as const,
     },
-    host: {
-      // The host of the heat. For non-QRA regattas (e.g., duels) this should be the name of the host school
-      type: "string",
-      required: false,
-    },
     // Progression information, optional. Should contain the number to the next heat, and the ID of the next heat
     progression: {
       type: "map",
