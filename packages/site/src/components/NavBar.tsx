@@ -37,7 +37,7 @@ export default function NavBar() {
                 { label: "Historical Results", path: "/regattas/test3" },
                 { label: "Regattas", path: "/regattas/test4" },
                 { label: "Duel Racing", path: "/regattas/test5" },
-                { label: "Lake Schedule", path: "/regattas/test6" },
+                { label: "Lake Schedule", path: "/regattas/lakeschedule" },
               ]}
             />
             <Dropdown
