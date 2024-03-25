@@ -53,7 +53,7 @@ function LakeSchedule() {
   ];
 
   return (
-    <div className="flex lg:flex-row flex-col gap-2.5 overflow-auto">
+    <div className="flex lg:flex-row flex-col overflow-auto">
       {testSchedule
         .sort(
           (a, b) =>
