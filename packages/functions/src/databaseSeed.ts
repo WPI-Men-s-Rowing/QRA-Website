@@ -49,9 +49,11 @@ async function createRandomRegatta() {
 
   const regatta = await RegattaService.entities.regatta
     .put({
-      name: "Test Regatta " + crypto.randomUUID(), // Generate a type
+      name: "Test Regatta", // Generate a type
       type: regattaType, // Randomly pick a type
       host: host,
+      participantDescription: "New England Teams",
+      rampClosed: regattaType !== "duel",
       distance: [2000, 5000][crypto.randomInt(0, 2)], // Pick either 2k or 5k cuz why not
       startDate: date,
       endDate: date + dayInMilliseconds * [0, 1][crypto.randomInt(0, 2)], // Regatta either ends same day or one day later

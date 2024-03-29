@@ -30,6 +30,14 @@ export const Regatta = new Entity({
       required: true,
       type: "string",
     },
+    participantDescription: {
+      required: true,
+      type: "string",
+    },
+    rampClosed: {
+      required: true,
+      type: "boolean",
+    },
     distance: {
       required: true,
       type: "number",
