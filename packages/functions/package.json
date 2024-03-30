@@ -7,13 +7,18 @@
     "typecheck": "tsc",
     "lint": "eslint --max-warnings 0 --report-unused-disable-directives --fix ."
   },
+  "dependencies": {
+    "@qra-website/core": "workspace:*",
+    "electrodb": "^2.12.1",
+    "lucia": "^2.7.6"
+  },
   "devDependencies": {
-    "@types/node": "^20.10.0",
-    "@types/aws-lambda": "^8.10.129",
-    "vitest": "^0.34.6",
-    "sst": "^2.36.7",
     "@qra-website/eslint-config-custom": "workspace:*",
     "@qra-website/tsconfig": "workspace:*",
-    "typescript": "^5.3.2"
+    "@types/aws-lambda": "^8.10.129",
+    "@types/node": "^20.10.0",
+    "sst": "^2.36.7",
+    "typescript": "^5.3.2",
+    "vitest": "^0.34.6"
   }
 }

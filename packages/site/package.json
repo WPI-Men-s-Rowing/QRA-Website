@@ -11,9 +11,17 @@
     "build-storybook": "storybook build"
   },
   "dependencies": {
+    "@qra-website/core": "workspace:*",
+    "dompurify": "^3.0.6",
+    "electrodb": "^2.12.1",
+    "framer-motion": "^11.0.3",
+    "lucia": "^2.7.6",
     "next": "14.0.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "server-only": "^0.0.1",
+    "sharp": "^0.33.1",
+    "swr": "^2.2.4"
   },
   "devDependencies": {
     "@qra-website/eslint-config-custom": "workspace:*",
@@ -28,6 +36,7 @@
     "@storybook/nextjs": "^7.6.2",
     "@storybook/react": "^7.6.2",
     "@storybook/test": "^7.6.2",
+    "@types/dompurify": "^3.0.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

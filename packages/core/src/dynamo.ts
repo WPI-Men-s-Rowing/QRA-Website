@@ -6,7 +6,7 @@ import { Table } from "sst/node/table"; // This gets the tables that are availab
 const Client = new DynamoDBClient({});
 
 // This is the global configuration for the regattas table
-export const RegattasConfiguration: EntityConfiguration = {
+export const databaseConfiguration: EntityConfiguration = {
   client: Client,
-  table: Table.regattas.tableName,
+  table: Table.database.tableName,
 };

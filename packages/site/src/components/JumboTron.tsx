@@ -26,20 +26,21 @@ interface JumboTronProps {
  */
 function JumboTron(props: JumboTronProps) {
   return (
-    <div className="h-screen static">
-      <div className="w-full h-screen overflow-hidden">
+    <div className="lg:h-screen w-screen aspect-[16/9] relative">
+      <div className="lg:h-screen w-screen aspect-[16/9] overflow-hidden absolute">
         <Image
           fill
+          placeholder="blur"
           src={props.picture}
           alt="QRA"
           className="object-cover brightness-50"
         />
       </div>
-      <div className="h-fit absolute inset-x-0 bottom-10 text-center text-white">
-        <div className="lg:text-5xl text-3xl font-bold text-white">
+      <div className="h-fit absolute inset-x-0 bottom-10 text-center">
+        <div className="lg:text-5xl text-2xl font-bold text-background">
           {props.title}
         </div>
-        <div className="lg:text-3xl text-xl font-normal text-white">
+        <div className="lg:text-3xl text-base font-normal text-background-subtext">
           {props.subtitle}
         </div>
       </div>

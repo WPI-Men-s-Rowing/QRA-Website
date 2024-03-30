@@ -23,6 +23,11 @@ export default {
     };
   },
   stacks(app) {
+    // Remove all resources (e.g., including DynamoDB/S3 Buckets) in non-prod instances
+    if (app.stage !== "prod") {
+      app.setDefaultRemovalPolicy("destroy");
+    }
+
     app.stack(SiteStack).stack(CICDStack);
   },
 } satisfies SSTConfig;
