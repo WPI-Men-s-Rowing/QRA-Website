@@ -36,7 +36,7 @@ function RaceCard(props: RaceCardProps) {
           Head Race
         </div>
         {/*##TODO: Change to match regatta type*/}
-        <div className="self-stretch text-red text-2xl font-bold">
+        <div className="self-stretch text-text-color text-2xl font-bold">
           {props.name}
         </div>
         <div className="text-zinc-800 text-base font-normal">
