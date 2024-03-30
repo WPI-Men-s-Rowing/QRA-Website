@@ -1,4 +1,4 @@
-name: SST workflow
+name: Deploy
 on:
   push:
     branches: main
@@ -12,43 +12,21 @@ permissions:
   contents: read # This is required for actions/checkout
 
 jobs:
+  lint:
+    name: "Lint App"
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run linter
+        uses: "./github/workflows/lint.yaml"
   deploy:
+    needs: lint
     name: "Deploy App"
     runs-on: ubuntu-latest
     env:
       PROD_AWS_REGION: "us-east-1"
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Install Node.js
-        uses: actions/setup-node@v3
-        with:
-          node-version: 21.1.0
-
-      - uses: pnpm/action-setup@v2
-        name: Install pnpm
-        with:
-          version: 8
-          run_install: false
-
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
-
-      - uses: actions/cache@v3
-        name: Setup pnpm cache
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
-
-      - name: Install dependencies
-        run: pnpm install
-      - name: Run Linter
-        run: pnpm turbo lint
+      - name: Setup
+        uses: "./github/workflows/setup.yaml"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
