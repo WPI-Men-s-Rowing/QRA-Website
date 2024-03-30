@@ -18,6 +18,11 @@ jobs:
     steps:
       - name: Run linter
         uses: "./github/workflows/lint.yaml"
+  codeql:
+    name: "CodeQL"
+    runs-on: ubuntu-latest
+    steps:
+      - uses: "./github/workflows/codeql.yaml"
   deploy:
     needs: lint
     name: "Deploy App"
