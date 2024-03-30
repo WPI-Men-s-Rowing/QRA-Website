@@ -26,7 +26,7 @@ jobs:
       PROD_AWS_REGION: "us-east-1"
     steps:
       - name: Setup
-        uses: "./github/workflows/setup.yaml"
+        uses: "./.github/setup"
 
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v3
