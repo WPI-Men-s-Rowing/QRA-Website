@@ -27,8 +27,9 @@ jobs:
     needs: lint
     name: "Deploy App"
     runs-on: ubuntu-latest
-    env:
-      PROD_AWS_REGION: "us-east-1"
+    environment:
+      name: Production
+      url: https://d3qny3i081io7i.cloudfront.net/
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -41,7 +42,7 @@ jobs:
         with:
           role-to-assume: arn:aws:iam::${{secrets.AWS_ACCOUNT_ID}}:role/${{vars.PROD_GITHUB_ROLE}}
           role-duration-seconds: 3600
-          aws-region: ${{env.PROD_AWS_REGION}}
+          aws-region: ${{vars.PROD_AWS_REGION}}
 
       - name: Deploy app
         env:
