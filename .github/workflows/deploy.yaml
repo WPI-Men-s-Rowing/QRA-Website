@@ -13,17 +13,9 @@ permissions:
 
 jobs:
   lint:
-    name: "Lint App"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: "./github/workflows/lint.yaml"
+    uses: ./.github/workflows/lint.yaml
   codeql:
-    name: "CodeQL"
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: "./github/workflows/codeql.yaml"
+    uses: ./.github/workflows/codeql.yaml
   deploy:
     needs: [lint, codeql]
     name: "Deploy App"
