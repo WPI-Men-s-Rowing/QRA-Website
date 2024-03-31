@@ -16,15 +16,16 @@ jobs:
     name: "Lint App"
     runs-on: ubuntu-latest
     steps:
-      - name: Run linter
-        uses: "./github/workflows/lint.yaml"
+      - uses: actions/checkout@v4
+      - uses: "./github/workflows/lint.yaml"
   codeql:
     name: "CodeQL"
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - uses: "./github/workflows/codeql.yaml"
   deploy:
-    needs: lint
+    needs: [lint, codeql]
     name: "Deploy App"
     runs-on: ubuntu-latest
     environment:
