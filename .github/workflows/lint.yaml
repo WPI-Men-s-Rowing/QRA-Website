@@ -6,6 +6,9 @@ on:
       - main
       - dev
 
+permissions:
+  contents: read # This is required for actions/checkout
+
 jobs:
   lint:
     name: "Lint App"

@@ -11,6 +11,10 @@
 #
 name: "CodeQL"
 
+permissions:
+  actions: read # Required by codeQL
+  security-events: write # Required by codeQL
+
 on:
   workflow_call:
   pull_request:
