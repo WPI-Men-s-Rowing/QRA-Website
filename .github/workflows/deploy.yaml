@@ -44,4 +44,5 @@ jobs:
           PROD_GITHUB_ORG: ${{github.repository_owner}}
           PROD_GITHUB_REPO: ${{github.event.repository.name}}
           PROD_GITHUB_ROLE: ${{vars.PROD_GITHUB_ROLE}}
+          PROD_AWS_REGION: ${{vars.PROD_AWS_REGION}}
         run: pnpm sst deploy --stage prod
