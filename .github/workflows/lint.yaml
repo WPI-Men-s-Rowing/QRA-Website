@@ -20,5 +20,15 @@ jobs:
       - name: Setup
         uses: "./.github/setup"
 
+      - name: Cache Turbo
+        uses: actions/cache@v4
+        with:
+          path: .turbo
+          # Generate a new hash for every commit
+          key: ${{ runner.os }}-turbo-${{ github.sha }}
+          # But restore the cache as long as we're on the same OS
+          restore-keys: |
+            ${{ runner.os }}-turbo-
+
       - name: Run Linter
-        run: pnpm turbo lint
+        run: pnpm turbo lint --cache-dir=.turbo
