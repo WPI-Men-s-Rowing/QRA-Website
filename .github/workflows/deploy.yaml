@@ -39,6 +39,17 @@ jobs:
           role-duration-seconds: 3600
           aws-region: ${{vars.PROD_AWS_REGION}}
 
+      - name: Cache Next.js
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/packages/site/.next/cache
+          # Generate a new cache whenever packages or source files change.
+          key: ${{ runner.os }}-nextjs-${{ hashFiles('packages/site/**/package-lock.json') }}-${{ hashFiles('packages/site/**/*.js', 'packages/site/**/*.jsx', 'packages/site/**/*.ts', 'packages/site/**/*.tsx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache.
+          restore-keys: |
+            ${{ runner.os }}-nextjs-${{ hashFiles('packages/site/**/package-lock.json') }}-
+
       - name: Deploy app
         env:
           PROD_GITHUB_ORG: ${{github.repository_owner}}
