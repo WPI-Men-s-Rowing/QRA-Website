@@ -31,7 +31,8 @@
         "PROD_GITHUB_ORG",
         "PROD_GITHUB_REPO",
         "PROD_GITHUB_ROLE",
-        "PROD_AWS_REGION"
+        "PROD_AWS_REGION",
+        "PROD_DEPLOY_PREP_STAGE"
       ],
       "cache": false
     },
@@ -40,7 +41,8 @@
         "PROD_GITHUB_ORG",
         "PROD_GITHUB_REPO",
         "PROD_GITHUB_ROLE",
-        "PROD_AWS_REGION"
+        "PROD_AWS_REGION",
+        "PROD_DEPLOY_PREP_STAGE"
       ],
       "cache": false
     },
@@ -49,7 +51,8 @@
         "PROD_GITHUB_ORG",
         "PROD_GITHUB_REPO",
         "PROD_GITHUB_ROLE",
-        "PROD_AWS_REGION"
+        "PROD_AWS_REGION",
+        "PROD_DEPLOY_PREP_STAGE"
       ],
       "cache": false
     },
@@ -58,7 +61,8 @@
         "PROD_GITHUB_ORG",
         "PROD_GITHUB_REPO",
         "PROD_GITHUB_ROLE",
-        "PROD_AWS_REGION"
+        "PROD_AWS_REGION",
+        "PROD_DEPLOY_PREP_STAGE"
       ],
       "cache": false
     },

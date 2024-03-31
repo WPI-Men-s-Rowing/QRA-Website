@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: Production
-      url: https://d3qny3i081io7i.cloudfront.net/
+      url: ${{steps.process-url.outputs.DEPLOY_URL}}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -50,10 +50,24 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nextjs-${{ hashFiles('packages/site/**/package-lock.json') }}-
 
-      - name: Deploy app
+      - name: Pre-deploy app
         env:
           PROD_GITHUB_ORG: ${{github.repository_owner}}
           PROD_GITHUB_REPO: ${{github.event.repository.name}}
           PROD_GITHUB_ROLE: ${{vars.PROD_GITHUB_ROLE}}
           PROD_AWS_REGION: ${{vars.PROD_AWS_REGION}}
+          PROD_DEPLOY_PREP_STAGE: "YES"
         run: pnpm sst deploy --stage prod
+      - name: Deploy app
+        id: deploy
+        env:
+          PROD_GITHUB_ORG: ${{github.repository_owner}}
+          PROD_GITHUB_REPO: ${{github.event.repository.name}}
+          PROD_GITHUB_ROLE: ${{vars.PROD_GITHUB_ROLE}}
+          PROD_AWS_REGION: ${{vars.PROD_AWS_REGION}}
+        run: |
+          echo "SST_OUTPUT=$(pnpm sst deploy --stage prod)" >> $GITHUB_OUTPUT
+      - name: Process deploy URL
+        id: process-url
+        run: |
+          echo `expr "${steps.deploy.outputs.SST_OUTPUT}" : '.*SiteUrl:[[:space:]]\(https:\/\/[a-zA-Z.]*\.com\)'` >> $GITHUB_OUTPUT

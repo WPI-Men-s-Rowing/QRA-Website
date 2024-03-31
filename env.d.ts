@@ -21,6 +21,12 @@ declare namespace NodeJS {
     /**
      * The region to use with AWS. This is optional (and ignored) unless the environment is production, at which point is required
      */
-    readonly PROD_AWS_REGION: string;
+    readonly PROD_AWS_REGION?: string;
+
+    /**
+     * Whether we are in the deploy prep stage, e.g., if this is defined the site will not be deployed.
+     * This is to enable dependent resources (e.g., DynamoDB and S3) to be built before the Site needs them
+     */
+    readonly PROD_DEPLOY_PREP_STAGE?: string;
   }
 }
