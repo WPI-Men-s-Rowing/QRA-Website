@@ -1,2 +1,2 @@
-export * from "./dynamo.ts";
-export * from "./team.ts";
+export * from "./adapter.ts";
+export * from "./services.ts";

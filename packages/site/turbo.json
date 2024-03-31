@@ -3,6 +3,9 @@
   "pipeline": {
     "build": {
       "outputs": [".next/**/*"]
+    },
+    "dev": {
+      "env": ["NODE_ENV"]
     }
   }
 }
