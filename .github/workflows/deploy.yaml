@@ -84,7 +84,5 @@ jobs:
         uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{steps.sst-out.outputs.SST_OUT}}
-          regex: '\"SiteUrl\": \"(https:\/\/[a-zA-Z.]+\.com)\"'
+          regex: '\"SiteUrl\":\s\"(https:\/\/[a-zA-Z1-9.]*\.(com|net))\"'
           flags: gm
-      - name: Echo Regex out
-        run: echo ${{ steps.url-regex.outputs.group1 }}
