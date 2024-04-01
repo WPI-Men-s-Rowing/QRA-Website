@@ -37,9 +37,7 @@ export const Heat = new Entity({
           type: ["men", "women", "open"] as const,
         },
         displayName: {
-          // Since a heat may contain some type information that can't be represented by only class and gender,
-          // this enables that (this can be masters, 2v, etc.)
-          required: false,
+          required: true,
           type: "string",
         },
       },

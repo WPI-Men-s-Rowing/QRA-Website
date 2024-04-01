@@ -142,10 +142,7 @@ function createRandomHeatCreateArgs(
     boatClass,
     gender,
     // Decide whether to create a manual display name randomly
-    displayName:
-      crypto.randomInt(0, 2) === 1
-        ? `${gender}'s ${crypto.randomInt(1, 5)} Varsity ${boatClass}`
-        : undefined,
+    displayName: `${gender}'s ${crypto.randomInt(1, 5)} Varsity ${boatClass}`,
   };
 
   // Return the parsed heat information
