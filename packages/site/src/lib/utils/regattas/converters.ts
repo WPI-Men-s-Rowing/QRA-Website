@@ -54,23 +54,23 @@ export function convertDbHeatToHeat(
   // Then, fall back to bow number order
   const entriesSorted = entriesNoDelta.toSorted((a, b) => {
     if (a.finalFinishTime && b.finalFinishTime) {
-      return b.finalFinishTime - a.finalFinishTime; // Reverse cuz lower is higher in this case
+      return a.finalFinishTime - b.finalFinishTime;
     } else if (a.finalFinishTime) {
-      return 1;
+      return -1; // A is less than (closer to start/top)
     } else if (b.finalFinishTime) {
-      return -1;
+      return 1;
     } else if (a.didFailToFinish && b.didFailToFinish) {
       return a.bowNumber - b.bowNumber;
     } else if (a.didFailToFinish) {
-      return 1;
+      return -1;
     } else if (b.didFailToFinish) {
-      return -1;
-    } else if (a.penalty && b.penalty && a.rawFinishTime && b.rawFinishTime) {
-      return b.rawFinishTime - a.rawFinishTime; // Again, reverse cuz lower is higher
-    } else if (a.penalty) {
       return 1;
-    } else if (b.penalty) {
+    } else if (a.penalty && b.penalty && a.rawFinishTime && b.rawFinishTime) {
+      return a.rawFinishTime - b.rawFinishTime;
+    } else if (a.penalty) {
       return -1;
+    } else if (b.penalty) {
+      return 1;
     } else {
       return a.bowNumber - b.bowNumber;
     }
