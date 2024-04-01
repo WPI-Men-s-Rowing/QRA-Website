@@ -40,29 +40,26 @@ export const getRegattasSummary = cache(
     endDateUpper?: Date,
   ) => {
     return (
-      (
-        await RegattaService.entities.regatta.query
-          .regattaSummary({})
-          .between(
-            {
-              startDate: startDateLower?.getTime(),
-              endDate: endDateLower?.getTime(),
-            },
-            {
-              startDate: startDateUpper?.getTime(),
-              endDate: endDateUpper?.getTime(),
-            },
-          )
-          .go()
-      )// Coerce dates to date objects
-      .data
-        .map((regatta) => {
-          return {
-            ...regatta,
-            startDate: new Date(regatta.startDate),
-            endDate: new Date(regatta.endDate),
-          };
-        })
-    );
+      await RegattaService.entities.regatta.query
+        .regattaSummary({})
+        .between(
+          {
+            startDate: startDateLower?.getTime(),
+            endDate: endDateLower?.getTime(),
+          },
+          {
+            startDate: startDateUpper?.getTime(),
+            endDate: endDateUpper?.getTime(),
+          },
+        )
+        .go()
+    ).data // Coerce dates to date objects
+      .map((regatta) => {
+        return {
+          ...regatta,
+          startDate: new Date(regatta.startDate),
+          endDate: new Date(regatta.endDate),
+        };
+      });
   },
 );
