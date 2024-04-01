@@ -1,6 +1,7 @@
 import { RegattaService } from "@qra-website/core";
 import { cache } from "react";
 import "server-only"; // This ensures this library will never under any circumstances be included in the client bundle
+import { convertDbRegattaSummaryToRegattaSummary } from "./converters";
 
 /**
  * Method to preload the date values. This can be called before
@@ -54,12 +55,6 @@ export const getRegattasSummary = cache(
         )
         .go()
     ).data // Coerce dates to date objects
-      .map((regatta) => {
-        return {
-          ...regatta,
-          startDate: new Date(regatta.startDate),
-          endDate: new Date(regatta.endDate),
-        };
-      });
+      .map(convertDbRegattaSummaryToRegattaSummary);
   },
 );
