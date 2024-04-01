@@ -56,7 +56,13 @@ export const Heat = new Entity({
     },
     status: {
       required: true,
-      type: ["scheduled", "delayed", "unofficial", "official"] as const,
+      type: [
+        "scheduled",
+        "delayed",
+        "unofficial",
+        "official",
+        "in-progress",
+      ] as const,
     },
     // Progression information, optional. Should contain the number to the next heat, and the ID of the next heat
     progression: {
