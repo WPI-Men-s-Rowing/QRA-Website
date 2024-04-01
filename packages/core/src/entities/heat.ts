@@ -127,7 +127,7 @@ export const Heat = new Entity({
               // The time (added to finish time) for the penalty
               time: {
                 required: false,
-                type: "string",
+                type: "number",
               },
             },
           },
