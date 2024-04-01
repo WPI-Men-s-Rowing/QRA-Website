@@ -1,7 +1,11 @@
+"use server";
 import LakeSchedule from "@/components/schedule/LakeSchedule.tsx";
 import Header from "@/components/text/Header.tsx";
+import { getRegattasSummary } from "@/lib/utils/regattas/get-regattas-summary.ts";
 
-function Regattas() {
+async function Regattas() {
+  const data = await getRegattasSummary();
+  console.log(data);
   return (
     <div className="flex p-5 flex-col">
       <Header>Lake Schedule</Header>
@@ -16,7 +20,7 @@ function Regattas() {
         placeholder={"Search by date, team, or event"}
       />
       <hr className=" h-px bg-divider border-0 my-[5px]" />
-      <LakeSchedule />
+      <LakeSchedule regattas={data} />
     </div>
   );
 }

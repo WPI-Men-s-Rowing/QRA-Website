@@ -1,5 +1,7 @@
 "use client";
+import qraLogo from "@public/qra-logo.png";
 import DOMPurify from "dompurify";
+import Image from "next/image";
 import useSWR from "swr";
 
 /**
@@ -16,24 +18,24 @@ interface RaceCardProps {
    */
   host: string;
   /**
-   * Other information about the regatta, to display
+   * rampClosed
    */
-  otherInfo?: string;
+  rampClosed: boolean;
 
   /**
    * The start time of the regatta, to display
    */
-  startTime: Date;
+  startDate: Date;
 
   /**
    * The end time of the regatta, to display
    */
-  endTime?: Date;
+  endDate: Date;
 
   /**
    * The location of the regatta, to display
    */
-  participants: string[];
+  participantDescription: string;
 
   /**
    * The type of the regatta, to display
@@ -70,28 +72,39 @@ function ScheduleCard(props: RaceCardProps) {
       <div className="self-stretch h-[41.02px] flex-col justify-start items-start gap-1 inline-flex">
         <div className="self-stretch justify-between items-start inline-flex">
           <div className="justify-center items-center gap-[5px] flex">
-            <div
-              dangerouslySetInnerHTML={{
-                __html: data ?? "",
-              }}
-            />
+            {data?.toString().includes("svg") ? ( // Set to QRA logo if the schools logo doesn't exist
+              <div
+                dangerouslySetInnerHTML={{
+                  __html: data ?? "",
+                }}
+              />
+            ) : (
+              <Image
+                src={qraLogo}
+                alt="QRA Logo"
+                className="w-[42px] h-[30px]"
+              />
+            )}
+
             <div className="text-zinc-800 text-base font-bold">
               {props.host}
             </div>
           </div>
-          <div className="text-red text-base font-bold">{props.type}</div>
+          <div className="text-red text-base font-bold capitalize ">
+            {props.type}
+          </div>
         </div>
         <div className="self-stretch justify-between items-start inline-flex">
           <div className="text-zinc-800 text-opacity-50 text-base font-normal">
-            {props.endTime
-              ? `${props.startTime.toLocaleTimeString(
+            {!props.rampClosed
+              ? `${props.startDate.toLocaleTimeString(
                   [],
                   timeOptions,
-                )} - ${props.endTime.toLocaleTimeString([], timeOptions)}`
+                )} - ${props.endDate.toLocaleTimeString([], timeOptions)}`
               : "All Day"}
           </div>
           <div className="text-zinc-800 text-opacity-50 text-base font-normal">
-            {props.otherInfo ? props.otherInfo : ""}
+            {props.rampClosed ? "Corrazini State Boat Ramp Closed" : ""}
           </div>
         </div>
       </div>
@@ -100,7 +113,7 @@ function ScheduleCard(props: RaceCardProps) {
         {props.name}
       </div>
       <div className="text-zinc-800 text-opacity-50 text-base font-normal">
-        {props.participants.join(", ")}
+        {props.participantDescription}
       </div>
     </div>
   );
