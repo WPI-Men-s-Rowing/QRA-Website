@@ -15,11 +15,28 @@ export const preload = (regattaId: string) => {
  * @returns all information about the requested regatta
  */
 export const getRegattaDetails = cache(async (regattaId: string) => {
-  return (
+  const data = (
     await RegattaService.collections
       .regatta({
         regattaId: regattaId,
       })
       .go()
   ).data;
+
+  // Coerce dates to date objects and return
+  return {
+    regatta: data.regatta.map((regatta) => {
+      return {
+        ...regatta,
+        startDate: new Date(regatta.startDate),
+        endDate: new Date(regatta.endDate),
+      };
+    }),
+    heat: data.heat.map((heat) => {
+      return {
+        ...heat,
+        scheduledStart: new Date(heat.scheduledStart),
+      };
+    }),
+  };
 });

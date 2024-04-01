@@ -21,17 +21,26 @@ export const preload = (dateLower?: Date, dateUpper?: Date) => {
 export const getHeatsByDate = cache(
   async (dateLower?: Date, dateUpper?: Date) => {
     return (
-      await RegattaService.entities.heat.query
-        .heatsByDate({})
-        .between(
-          {
-            scheduledStart: dateLower?.getTime(),
-          },
-          {
-            scheduledStart: dateUpper?.getTime(),
-          },
-        )
-        .go()
-    ).data;
+      (
+        await RegattaService.entities.heat.query
+          .heatsByDate({})
+          .between(
+            {
+              scheduledStart: dateLower?.getTime(),
+            },
+            {
+              scheduledStart: dateUpper?.getTime(),
+            },
+          )
+          .go()
+      )// Coerce dates to date objects
+      .data
+        .map((heat) => {
+          return {
+            ...heat,
+            scheduledStart: new Date(heat.scheduledStart),
+          };
+        })
+    );
   },
 );
