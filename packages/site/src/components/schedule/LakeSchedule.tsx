@@ -1,66 +1,24 @@
 import ScheduleCard from "@/components/schedule/ScheduleCard.tsx";
 
-function LakeSchedule() {
-  const testSchedule = [
-    {
-      name: "Class of 2003 Cup",
-      host: "WPI",
-      startTime: new Date(2024, 3, 23, 8, 0, 0),
-      endTime: new Date(2024, 3, 23, 8, 30, 0),
-      participants: ["Wesleyan", "Hamilton", "Colby"],
-      type: "Duel",
-    },
-    {
-      name: "Cup Name and Stuff",
-      host: "Clark",
-      startTime: new Date(2024, 3, 23, 8, 30, 0),
-      endTime: new Date(2024, 3, 23, 8, 40, 0),
-      participants: ["Wesleyan", "Hamilton", "Colby"],
-      type: "Duel",
-    },
-    {
-      name: "Why is Yale here??",
-      host: "Yale",
-      startTime: new Date(2024, 3, 23, 8, 40, 0),
-      endTime: new Date(2024, 3, 23, 9, 30, 0),
-      participants: ["Wesleyan", "Cal", "Colby"],
-      type: "Duel",
-    },
-    {
-      name: "New England Rowing Championship",
-      host: "WPI",
-      startTime: new Date(2024, 4, 23, 8, 40, 0),
-      participants: ["Cool Schools Only"],
-      type: "Championship",
-      otherInfo: "Ramp closed",
-    },
-    {
-      name: "Why is Yale here??",
-      host: "Yale",
-      startTime: new Date(2024, 3, 24, 8, 40, 0),
-      endTime: new Date(2024, 3, 24, 9, 30, 0),
-      participants: ["Wesleyan", "Cal", "Colby"],
-      type: "Duel",
-    },
-    {
-      name: "Why is Yale here??",
-      host: "Yale",
-      startTime: new Date(2024, 6, 24, 8, 40, 0),
-      endTime: new Date(2024, 3, 24, 9, 30, 0),
-      participants: ["Wesleyan", "Cal", "Colby"],
-      type: "Duel",
-    },
-  ];
+interface LakeScheduleProps {
+  regattas: {
+    name: string;
+    host: string;
+    startDate: EpochTimeStamp;
+    endDate: EpochTimeStamp;
+    participantDescription: string;
+    type: string;
+    rampClosed: boolean;
+  }[];
+}
 
+function LakeSchedule({ regattas }: LakeScheduleProps) {
   return (
     <div className="flex lg:flex-row flex-col overflow-auto">
-      {testSchedule
-        .sort(
-          (a, b) =>
-            new Date(a.startTime).getTime() - new Date(b.startTime).getTime(),
-        )
+      {regattas
+        .sort((a, b) => a.startDate - b.endDate)
         .reduce((uniqueDates: string[], schedule) => {
-          const dateString = schedule.startTime.toLocaleDateString();
+          const dateString = new Date(schedule.startDate).toLocaleDateString();
           if (!uniqueDates.includes(dateString)) {
             uniqueDates.push(dateString);
           }
@@ -70,10 +28,11 @@ function LakeSchedule() {
           <div className="flex" key={index}>
             <div key={index} className="flex flex-col gap-2.5">
               <div className="text-text text-2xl font-normal">{dateString}</div>
-              {testSchedule
+              {regattas
                 .filter(
                   (schedule) =>
-                    schedule.startTime.toLocaleDateString() === dateString,
+                    new Date(schedule.startDate).toLocaleDateString() ===
+                    dateString,
                 )
                 .map((schedule, index) => (
                   <ScheduleCard key={index} {...schedule} />
