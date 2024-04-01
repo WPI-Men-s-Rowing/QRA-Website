@@ -93,10 +93,37 @@ export const Heat = new Entity({
             required: true,
             type: "number",
           },
-          // Finish time in MS
+          // Finish time in MS. RAW IF THERE IS A PENALTY
           finishTime: {
             required: false,
             type: "number",
+          },
+          // Should be set to true if a crew fails to finish
+          didFailToFinish: {
+            required: false,
+            type: "boolean",
+          },
+          // Details about a potential penalty
+          penalty: {
+            required: false,
+            type: "map",
+            properties: {
+              // Type of the penalty
+              type: {
+                required: true,
+                type: ["dsq", "time", "warning"] as const,
+              },
+              // Reason for the penalty
+              reason: {
+                required: true,
+                type: "string",
+              },
+              // The time (added to finish time) for the penalty
+              time: {
+                required: false,
+                type: "string",
+              },
+            },
           },
           segments: {
             // Optional (because this isn't always collected) distance/time pairs at intermediate points in the race
