@@ -76,10 +76,15 @@ jobs:
           PROD_AWS_REGION: ${{vars.PROD_AWS_REGION}}
         run: pnpm sst deploy --stage prod
 
+      - name: Save SST Output
+        id: sst-out
+        run: echo SST_OUT=$(cat ${{github.workspace}}/.sst/outputs.json) >> $GITHUB_OUTPUT
       - name: Process deploy URL regex
         id: url-regex
         uses: actions-ecosystem/action-regex-match@v2
         with:
-          text: $(cat ${{github.workspace}}/.sst/outputs.json)
+          text: ${{steps.sst-out.outputs.SST_OUT}}
           regex: '\"SiteUrl\": \"(https:\/\/[a-zA-Z.]+\.com)\"'
           flags: gm
+      - name: Echo Regex out
+        run: echo ${{ steps.url-regex.outputs.group1 }}
