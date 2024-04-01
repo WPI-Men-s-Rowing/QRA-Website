@@ -3,7 +3,8 @@ import { cache } from "react";
 import "server-only"; // This ensures this library will never under any circumstances be included in the client bundle
 
 /**
- * Method to preload the date values. This can be called before the data is required to asynchronously fetch and cache it
+ * Method to preload the date values. This can be called before
+ * the data is required to asynchronously fetch and cache it
  * @param startDateLower the lower bound on the start date, optional
  * @param endDateLower the lower bound on the end date, optional
  * @param startDateUpper the upper bound on the start date, optional
@@ -52,6 +53,13 @@ export const getRegattasSummary = cache(
           },
         )
         .go()
-    ).data;
+    ).data // Coerce dates to date objects
+      .map((regatta) => {
+        return {
+          ...regatta,
+          startDate: new Date(regatta.startDate),
+          endDate: new Date(regatta.endDate),
+        };
+      });
   },
 );

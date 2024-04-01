@@ -25,12 +25,12 @@ interface RaceCardProps {
   /**
    * The start time of the regatta, to display
    */
-  startDate: EpochTimeStamp;
+  startDate: Date;
 
   /**
    * The end time of the regatta, to display
    */
-  endDate: EpochTimeStamp;
+  endDate: Date;
 
   /**
    * The location of the regatta, to display
@@ -97,13 +97,10 @@ function ScheduleCard(props: RaceCardProps) {
         <div className="self-stretch justify-between items-start inline-flex">
           <div className="text-zinc-800 text-opacity-50 text-base font-normal">
             {!props.rampClosed
-              ? `${new Date(props.startDate).toLocaleTimeString(
+              ? `${props.startDate.toLocaleTimeString(
                   [],
                   timeOptions,
-                )} - ${new Date(props.endDate).toLocaleTimeString(
-                  [],
-                  timeOptions,
-                )}`
+                )} - ${props.endDate.toLocaleTimeString([], timeOptions)}`
               : "All Day"}
           </div>
           <div className="text-zinc-800 text-opacity-50 text-base font-normal">

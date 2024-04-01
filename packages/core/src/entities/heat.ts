@@ -135,6 +135,19 @@ export const Heat = new Entity({
         composite: ["heatId"],
       },
     },
+    heatsByDate: {
+      index: "gsi1",
+      pk: {
+        field: "gsi1pk",
+        composite: [],
+      },
+      // Search by scheduled start. Includes regatta ID and heat ID to enforce uniqueness
+      // (but you probably don't/won't query based on that)
+      sk: {
+        field: "gsi1sk",
+        composite: ["scheduledStart", "regattaId", "heatId"],
+      },
+    },
   },
   databaseConfiguration,
 });

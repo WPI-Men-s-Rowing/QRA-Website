@@ -4,8 +4,8 @@ interface LakeScheduleProps {
   regattas: {
     name: string;
     host: string;
-    startDate: EpochTimeStamp;
-    endDate: EpochTimeStamp;
+    startDate: Date;
+    endDate: Date;
     participantDescription: string;
     type: string;
     rampClosed: boolean;
@@ -16,9 +16,9 @@ function LakeSchedule({ regattas }: LakeScheduleProps) {
   return (
     <div className="flex lg:flex-row flex-col overflow-auto">
       {regattas
-        .sort((a, b) => a.startDate - b.endDate)
+        .sort((a, b) => a.startDate.getTime() - b.endDate.getTime())
         .reduce((uniqueDates: string[], schedule) => {
-          const dateString = new Date(schedule.startDate).toLocaleDateString();
+          const dateString = schedule.startDate.toLocaleDateString();
           if (!uniqueDates.includes(dateString)) {
             uniqueDates.push(dateString);
           }
@@ -31,8 +31,7 @@ function LakeSchedule({ regattas }: LakeScheduleProps) {
               {regattas
                 .filter(
                   (schedule) =>
-                    new Date(schedule.startDate).toLocaleDateString() ===
-                    dateString,
+                    schedule.startDate.toLocaleDateString() === dateString,
                 )
                 .map((schedule, index) => (
                   <ScheduleCard key={index} {...schedule} />
