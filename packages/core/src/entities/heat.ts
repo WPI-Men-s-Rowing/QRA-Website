@@ -135,7 +135,7 @@ export const Heat = new Entity({
         composite: ["heatId"],
       },
     },
-    heatsOnDate: {
+    heatsByDate: {
       index: "gsi1",
       pk: {
         field: "gsi1pk",
