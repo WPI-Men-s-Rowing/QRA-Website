@@ -49,16 +49,26 @@ jobs:
           # Rebuild from the last SST cache on this OS
           restore-keys: |
             ${{ runner.os }}-sst-
-      - name: Cache Next.js
+      - name: Cache Next.js site
         uses: actions/cache@v4
         with:
           path: |
             ${{ github.workspace }}/packages/site/.next/cache
           # Generate a new cache whenever packages or source files change
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/site/**/*.js', 'packages/site/**/*.jsx', 'packages/site/**/*.ts', 'packages/site/**/*.tsx') }}
+          key: ${{ runner.os }}-nextjs-site-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/site/**/*.js', 'packages/site/**/*.jsx', 'packages/site/**/*.ts', 'packages/site/**/*.tsx') }}
           # If source files changed but packages didn't, rebuild from a prior cache
           restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('pnpm-lock.yaml') }}-
+            ${{ runner.os }}-nextjs-site-${{ hashFiles('pnpm-lock.yaml') }}-
+      - name: Cache Next.js maintenance
+        uses: actions/cache@v4
+        with:
+          path: |
+            ${{ github.workspace }}/packages/maintenance/.next/cache
+          # Generate a new cache whenever packages or source files change
+          key: ${{ runner.os }}-nextjs-maintenance-${{ hashFiles('pnpm-lock.yaml') }}-${{ hashFiles('packages/maintenance/**/*.js', 'packages/maintenance/**/*.jsx', 'packages/maintenance/**/*.ts', 'packages/maintenance/**/*.tsx') }}
+          # If source files changed but packages didn't, rebuild from a prior cache
+          restore-keys: |
+            ${{ runner.os }}-nextjs-maintenance-${{ hashFiles('pnpm-lock.yaml') }}-
 
       - name: Pre-deploy app
         env:
@@ -84,5 +94,5 @@ jobs:
         uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{steps.sst-out.outputs.SST_OUT}}
-          regex: '\"SiteUrl\":\s\"(https:\/\/[a-zA-Z1-9.]*\.(com|net))\"'
+          regex: '\"SiteUrl\":\s\"(https:\/\/[a-zA-Z1-9.]*\.(com|net|org))\"'
           flags: gm
