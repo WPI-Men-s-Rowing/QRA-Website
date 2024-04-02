@@ -2,6 +2,20 @@ import { RegattaService } from "@qra-website/core";
 import { CollectionItem, EntityItem } from "electrodb";
 
 /**
+ * Method that converts a break as retrieved from the database to a break with more useful typing information
+ * @param dbBreak the break that has been retrieved from the database
+ * @returns the processed break with better type information
+ */
+export function convertDbBreakToBreak(
+  dbBreak: EntityItem<typeof RegattaService.entities.break>,
+) {
+  return {
+    ...dbBreak,
+    scheduledStart: new Date(dbBreak.scheduledStart),
+  };
+}
+
+/**
  * Converts a heat (as it would be returned from the DB) to one that can be used
  * in the frontend (e.g., with more useful types)
  * @param heat the heat to convert
@@ -165,5 +179,6 @@ export function convertDbRegattaDetailsToRegattaDetails(
   return {
     regatta: convertDbRegattaSummaryToRegattaSummary(regattaDetails.regatta[0]),
     heat: regattaDetails.heat.map(convertDbHeatToHeat),
+    break: regattaDetails.break.map(convertDbBreakToBreak),
   };
 }
