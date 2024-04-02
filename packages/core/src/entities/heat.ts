@@ -37,9 +37,7 @@ export const Heat = new Entity({
           type: ["men", "women", "open"] as const,
         },
         displayName: {
-          // Since a heat may contain some type information that can't be represented by only class and gender,
-          // this enables that (this can be masters, 2v, etc.)
-          required: false,
+          required: true,
           type: "string",
         },
       },
@@ -56,7 +54,13 @@ export const Heat = new Entity({
     },
     status: {
       required: true,
-      type: ["scheduled", "delayed", "unofficial", "official"] as const,
+      type: [
+        "scheduled",
+        "delayed",
+        "unofficial",
+        "official",
+        "in-progress",
+      ] as const,
     },
     // Progression information, optional. Should contain the number to the next heat, and the ID of the next heat
     progression: {
@@ -93,10 +97,37 @@ export const Heat = new Entity({
             required: true,
             type: "number",
           },
-          // Finish time in MS
+          // Finish time in MS. RAW IF THERE IS A PENALTY
           finishTime: {
             required: false,
             type: "number",
+          },
+          // Should be set to true if a crew fails to finish
+          didFailToFinish: {
+            required: false,
+            type: "boolean",
+          },
+          // Details about a potential penalty
+          penalty: {
+            required: false,
+            type: "map",
+            properties: {
+              // Type of the penalty
+              type: {
+                required: true,
+                type: ["dsq", "time", "warning"] as const,
+              },
+              // Reason for the penalty
+              reason: {
+                required: true,
+                type: "string",
+              },
+              // The time (added to finish time) for the penalty
+              time: {
+                required: false,
+                type: "number",
+              },
+            },
           },
           segments: {
             // Optional (because this isn't always collected) distance/time pairs at intermediate points in the race

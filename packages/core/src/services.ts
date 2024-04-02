@@ -1,5 +1,6 @@
 import { Service } from "electrodb";
 import { databaseConfiguration } from "./dynamo.ts";
+import { Break } from "./entities/break.ts";
 import { Heat } from "./entities/heat.ts";
 import { Regatta } from "./entities/regatta.ts";
 import { Team } from "./entities/team.ts";
@@ -21,6 +22,7 @@ export const RegattaService = new Service(
   {
     regatta: Regatta,
     heat: Heat,
+    break: Break,
   },
   databaseConfiguration,
 );
