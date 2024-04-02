@@ -56,7 +56,7 @@ async function createRandomRegatta() {
       rampClosed: regattaType !== "duel",
       distance: [2000, 5000][crypto.randomInt(0, 2)], // Pick either 2k or 5k cuz why not
       startDate: date,
-      endDate: date + dayInMilliseconds * [0, 1][crypto.randomInt(0, 2)], // Regatta either ends same day or one day later
+      endDate: date + dayInMilliseconds * [1, 2][crypto.randomInt(0, 2)], // Regatta either ends same day or one day later
     })
     .go();
 
