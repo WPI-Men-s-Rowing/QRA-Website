@@ -41,21 +41,18 @@ export function SiteStack({ stack }: StackContext) {
     });
   }
 
-  let site: NextjsSite | undefined = undefined;
-
-  // If we're not in prod or it's not the prod prep deploy stage
-  if (!(stack.stage === "prod" && process.env.PROD_DEPLOY_PREP_STAGE)) {
-    // Create the nextJS site, deploy the site
-    site = new NextjsSite(stack, "site", {
-      path: "packages/site",
-      bind: [database],
-    });
-  }
+  // Create the nextJS site, deploy the site
+  const site = new NextjsSite(stack, "site", {
+    // If it's prod and the prod prep stage, deploy the maintenance site instead of the real site
+    // This is a much better double deploy than destroying all of the site resources and rebuilding them
+    path: !(stack.stage === "prod" && process.env.PROD_DEPLOY_PREP_STAGE)
+      ? "packages/site"
+      : "packages/maintenance",
+    bind: [database],
+  });
 
   stack.addOutputs({
     // Add the site output OR revert to localhost if necessary
-    SiteUrl: site
-      ? site.url ?? "http://localhost:3000"
-      : "Site not deployed - prep stage",
+    SiteUrl: site.url ?? "http://localhost:3000",
   });
 }
