@@ -94,5 +94,5 @@ jobs:
         uses: actions-ecosystem/action-regex-match@v2
         with:
           text: ${{steps.sst-out.outputs.SST_OUT}}
-          regex: '\"SiteUrl\":\s\"(https:\/\/[a-zA-Z1-9.]*\.(com|net))\"'
+          regex: '\"SiteUrl\":\s\"(https:\/\/[a-zA-Z1-9.]*\.(com|net|org))\"'
           flags: gm
