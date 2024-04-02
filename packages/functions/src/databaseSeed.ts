@@ -64,9 +64,8 @@ async function createRandomRegatta() {
 }
 
 /**
- * Function to create a random heat and insert it into the database. NOTE: This completely ignores progression info
- * @param regattaId the ID of the regatta the heat belongs to
- * @param regattaHasResults whether to randomly generate results
+ * Function to create a random heat that can be inserted into the database. NOTE: This completely ignores progression info
+ * @param regatta the regatta the created heat will belong to
  * @param teams The teams that can be used to pick entries from
  * @returns the create args for the created heat
  */
@@ -75,7 +74,11 @@ function createRandomHeatCreateArgs(
   teams: readonly string[],
 ): CreateEntityItem<typeof RegattaService.entities.heat> {
   const scheduledStart =
-    regatta.startDate + crypto.randomInt(0, dayInMilliseconds); // Randomly generate a start time
+    regatta.startDate +
+    crypto.randomInt(
+      0,
+      Math.min(dayInMilliseconds, regatta.endDate - regatta.startDate),
+    ); // Randomly generate a start time
   const regattaHasResults = scheduledStart + 1000 * 60 * 20 < Date.now(); // Whether the race has results. If now is more than 20 minutes after scheduled start
   const numEntries =
     regatta.type === "head" ? crypto.randomInt(15, 30) : crypto.randomInt(3, 7);
@@ -120,6 +123,8 @@ function createRandomHeatCreateArgs(
   // If the regatta has results,
   if (regattaHasResults) {
     status = crypto.randomInt(2) == 1 ? "unofficial" : "official"; // generate a random status based on the regatta having results
+  } else if (Date.now() > scheduledStart) {
+    status = "in-progress"; // If it's after the start but not far enough to have results, it's in-progress
   } else {
     status = crypto.randomInt(2) == 1 ? "delayed" : "scheduled";
 
@@ -157,6 +162,48 @@ function createRandomHeatCreateArgs(
 }
 
 /**
+ * Function to create a random break that can be inserted into the database
+ * @param regatta the regatta this break belongs to
+ * @returns the create args for the created break
+ */
+function createRandomBeakCreateArgs(
+  regatta: EntityItem<typeof RegattaService.entities.regatta>,
+): CreateEntityItem<typeof RegattaService.entities.break> {
+  const scheduledStart =
+    regatta.startDate +
+    crypto.randomInt(
+      0,
+      Math.min(dayInMilliseconds, regatta.endDate - regatta.startDate),
+    ); // Randomly generate a start time
+
+  let status: EntityItem<typeof RegattaService.entities.break>["status"]; // Break status
+  let delay: number | undefined; // The regattas delay time  (or undefined for none)
+  const breakComplete = scheduledStart + 1000 * 60 * 20 < Date.now(); // Whether the break is complete. If now is more than 20 minutes after scheduled start
+
+  // Figure out the status
+  if (breakComplete) {
+    status = "complete"; // If it's done it's done
+  } else if (scheduledStart < Date.now()) {
+    status = "in-progress"; // If it's after now but not enough to have results, it's in-progress
+  } else {
+    status = crypto.randomInt(2) == 1 ? "delayed" : "scheduled";
+
+    // Determine whether the regatta is delayed
+    if (status === "delayed") {
+      delay = crypto.randomInt(0, 1000 * 60 * 60);
+    }
+  }
+
+  // Create the final argument
+  return {
+    regattaId: regatta.regattaId,
+    status,
+    delay,
+    scheduledStart,
+  };
+}
+
+/**
  * Script that can be used to seed the database
  */
 export async function script() {
@@ -187,13 +234,18 @@ export async function script() {
     // Create the regatta, fetch its ID
     const regatta = await createRandomRegatta();
 
-    // Now create 20 random create args, and then pass them to a bulk put (because more efficient)
+    // Now create random create args, and then pass them to a bulk put (because more efficient)
     await RegattaService.entities.heat
       .put(
         [...Array(5).keys()].map(() =>
           createRandomHeatCreateArgs(regatta, teams),
         ),
       )
+      .go();
+
+    // Do the same for break
+    await RegattaService.entities.break
+      .put([...Array(1).keys()].map(() => createRandomBeakCreateArgs(regatta)))
       .go();
   }
 }
