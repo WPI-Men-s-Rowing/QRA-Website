@@ -23,7 +23,7 @@ jobs:
       - name: Cache Turbo
         uses: actions/cache@v4
         with:
-          path: .turbo
+          path: ${{ github.workspace }}/.turbo
           # Generate a new hash for every commit
           key: ${{ runner.os }}-turbo-${{ github.sha }}
           # But restore the cache as long as we're on the same OS
