@@ -15,6 +15,10 @@ interface ResultLineProps {
     teamEntryLetter?: string;
     bowNumber: number;
     finishTime?: number;
+    rawFinishTime?: number;
+    finalFinishTime?: number;
+    deltaToNext?: number;
+    deltaToWinner?: number;
     segments?: {
       distance: number;
       time: number;
@@ -41,9 +45,12 @@ function ResultLine(props: ResultLineProps) {
     minutes = minutes < 10 && minutes > 0 ? minutes : minutes;
     seconds = seconds < 10 && seconds > 0 ? seconds : seconds;
 
+    const minutesString = minutes < 10 ? `0${minutes}` : `${minutes}`;
+    const secondsString = seconds < 10 ? `0${seconds}` : `${seconds}`;
+
     return hours > 0
-      ? hours + ":" + minutes + ":" + seconds + "." + milliseconds
-      : minutes + ":" + seconds + "." + milliseconds;
+      ? hours + ":" + minutesString + ":" + seconds + "." + milliseconds
+      : minutes + ":" + secondsString + "." + milliseconds;
   };
 
   if (props.expanded)
@@ -66,7 +73,7 @@ function ResultLine(props: ResultLineProps) {
           >
             <div className="flex flex-col justify-start items-center gap-0 text-center">
               <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold">
-                {props.entry.teamName}
+                {props.entry.teamName} {props.entry.teamEntryLetter}
               </div>
               <TeamIcon teamName={props.entry.teamName} />
               {/*<LineupPopOver*/}
@@ -94,7 +101,12 @@ function ResultLine(props: ResultLineProps) {
             {props.entry.finishTime ? msToTime(props.entry.finishTime) : "-"}
           </div>
           <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
-            {/*// TODO Get margin*/}-
+            {props.entry.deltaToNext ? msToTime(props.entry.deltaToNext) : "-"}
+          </div>
+          <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
+            {props.entry.deltaToWinner
+              ? msToTime(props.entry.deltaToWinner)
+              : "-"}
           </div>
         </div>
       </>
@@ -132,7 +144,9 @@ function ResultLine(props: ResultLineProps) {
             {props.entry.finishTime ? msToTime(props.entry.finishTime) : "-"}
           </div>
           <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
-            {/*// TODO Get margin*/}-
+            {props.entry.deltaToWinner
+              ? msToTime(props.entry.deltaToWinner)
+              : "-"}
           </div>
         </div>
       </>

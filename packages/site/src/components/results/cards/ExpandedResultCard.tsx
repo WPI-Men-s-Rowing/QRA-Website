@@ -13,12 +13,17 @@ interface ResultCardProps {
     displayName?: string;
   };
   scheduledStart: Date;
+  delay?: number;
   status: "scheduled" | "delayed" | "unofficial" | "official" | "in-progress";
   entries: {
     teamName: string;
     teamEntryLetter?: string;
     bowNumber: number;
     finishTime?: number;
+    rawFinishTime?: number;
+    finalFinishTime?: number;
+    deltaToNext?: number;
+    deltaToWinner?: number;
     segments?: {
       distance: number;
       time: number;
@@ -34,7 +39,7 @@ function ExpandedResultCard(props: ResultCardProps) {
   return (
     <>
       <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[5px] flex">
-        <div className="text-red-900 text-2xl font-bold text-red">
+        <div className="text-red-900 text-2xl font-bold text-red capitalize">
           {props.type.displayName}
         </div>
 
@@ -59,10 +64,10 @@ function ExpandedResultCard(props: ResultCardProps) {
             </span>
           </div>
           <div>
-            <span className="text-zinc-800 text-[10px] font-normal ">
+            <span className="text-zinc-800 text-[10px] font-normal capitalize">
               Status:{" "}
             </span>
-            <span className="text-zinc-800 text-[10px] font-bold ">
+            <span className="text-zinc-800 text-[10px] font-bold capitalize">
               {props.status}
             </span>
           </div>
@@ -93,6 +98,9 @@ function ExpandedResultCard(props: ResultCardProps) {
             Finish
           </div>
           <div className="w-[57px] text-neutral-50 lg:text-base text-sm font-bold text-center">
+            Delta
+          </div>
+          <div className="w-[57px] text-neutral-50 lg:text-base text-sm font-bold text-center">
             Margin
           </div>
         </div>
@@ -108,6 +116,10 @@ function ExpandedResultCard(props: ResultCardProps) {
                   finishTime: result.finishTime,
                   place: index + 1,
                   segments: result.segments,
+                  rawFinishTime: result.rawFinishTime,
+                  finalFinishTime: result.finalFinishTime,
+                  deltaToNext: result.deltaToNext,
+                  deltaToWinner: result.deltaToWinner,
                 }}
                 key={index}
                 expanded={true}

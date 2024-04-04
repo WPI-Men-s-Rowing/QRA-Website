@@ -13,12 +13,17 @@ interface ResultCardProps {
     displayName?: string;
   };
   scheduledStart: Date;
+  delay?: number;
   status: "scheduled" | "delayed" | "unofficial" | "official" | "in-progress";
   entries: {
     teamName: string;
     teamEntryLetter?: string;
     bowNumber: number;
     finishTime?: number;
+    rawFinishTime?: number;
+    finalFinishTime?: number;
+    deltaToNext?: number;
+    deltaToWinner?: number;
     segments?: {
       distance: number;
       time: number;
@@ -98,6 +103,10 @@ function StandardResultCard(props: ResultCardProps) {
                   bowNumber: result.bowNumber,
                   finishTime: result.finishTime,
                   place: index + 1,
+                  rawFinishTime: result.rawFinishTime,
+                  finalFinishTime: result.finalFinishTime,
+                  deltaToNext: result.deltaToNext,
+                  deltaToWinner: result.deltaToWinner,
                 }}
                 key={index}
                 expanded={false}

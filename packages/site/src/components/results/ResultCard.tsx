@@ -1,5 +1,6 @@
 "use client";
 
+import BreakResultCard from "@/components/results/cards/BreakResultCard.tsx";
 import ExpandedResultCard from "@/components/results/cards/ExpandedResultCard.tsx";
 import StandardResultCard from "@/components/results/cards/StandardResultCard.tsx";
 import grow from "@public/icons/expand.svg";
@@ -12,18 +13,24 @@ import { useState } from "react";
  */
 interface ResultCardProps {
   host: string;
+  breakId?: string;
   type: {
     boatClass: "8+" | "4+" | "4-" | "4x" | "2+" | "2-" | "1x";
     gender: "men" | "women" | "open";
     displayName?: string;
   };
   scheduledStart: Date;
+  delay?: number;
   status: "scheduled" | "delayed" | "unofficial" | "official" | "in-progress";
   entries: {
     teamName: string;
     teamEntryLetter?: string;
     bowNumber: number;
     finishTime?: number;
+    rawFinishTime?: number;
+    finalFinishTime?: number;
+    deltaToNext?: number;
+    deltaToWinner?: number;
     segments?: {
       distance: number;
       time: number;
@@ -37,11 +44,10 @@ interface ResultCardProps {
  */
 function ResultCard(props: ResultCardProps) {
   const [expanded, setExpanded] = useState(false);
-
-  // switch (props.status) {
-  //     case HeatStatus.BREAK:
-  //         return BreakResultCard(props);
-  // }
+  console.log(props.entries);
+  if (props.breakId) {
+    return <BreakResultCard {...props} />;
+  }
   return (
     <div
       className={`transition-all duration-700 ${
