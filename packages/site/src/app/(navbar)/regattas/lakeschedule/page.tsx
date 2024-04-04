@@ -5,7 +5,6 @@ import { getRegattasSummary } from "@/lib/utils/regattas/get-regattas-summary.ts
 
 async function Regattas() {
   const data = await getRegattasSummary();
-  console.log(data);
   return (
     <div className="flex p-5 flex-col">
       <Header>Lake Schedule</Header>

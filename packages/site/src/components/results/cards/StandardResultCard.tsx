@@ -1,32 +1,29 @@
 "use client";
 
-import { FinishedCrew, HeatStatus } from "@/types/types.ts";
 import ResultLine from "../ResultLine.tsx";
 
 /**
  * Interface representing the props in a result card
  */
 interface ResultCardProps {
-  /**
-   * The title of the regatta
-   */
-  title: string;
-  /**
-   * The regatta's start time
-   */
-  startTime: Date;
-  /**
-   * The host of the regatta
-   */
   host: string;
-  /**
-   * The status of the regatta
-   */
-  status: HeatStatus;
-  /**
-   * Finishing crews in the regatta
-   */
-  finishOrder: FinishedCrew[];
+  type: {
+    boatClass: "8+" | "4+" | "4-" | "4x" | "2+" | "2-" | "1x";
+    gender: "men" | "women" | "open";
+    displayName?: string;
+  };
+  scheduledStart: Date;
+  status: "scheduled" | "delayed" | "unofficial" | "official" | "in-progress";
+  entries: {
+    teamName: string;
+    teamEntryLetter?: string;
+    bowNumber: number;
+    finishTime?: number;
+    segments?: {
+      distance: number;
+      time: number;
+    }[];
+  }[];
 }
 
 /**
@@ -37,8 +34,8 @@ function StandardResultCard(props: ResultCardProps) {
   return (
     <>
       <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[5px] flex">
-        <div className="text-red-900 text-2xl font-bold text-red">
-          {props.title}
+        <div className="text-red-900 text-2xl font-bold text-red capitalize">
+          {props.type.displayName}
         </div>
 
         <div className="self-stretch justify-between items-start inline-flex">
@@ -47,7 +44,7 @@ function StandardResultCard(props: ResultCardProps) {
               Scheduled:{" "}
             </span>
             <span className="text-zinc-800 text-[10px] font-bold ">
-              {props.startTime.toLocaleTimeString([], {
+              {props.scheduledStart.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
@@ -62,10 +59,10 @@ function StandardResultCard(props: ResultCardProps) {
             </span>
           </div>
           <div>
-            <span className="text-zinc-800 text-[10px] font-normal ">
+            <span className="text-zinc-800 text-[10px] font-normal capitalize">
               Status:{" "}
             </span>
-            <span className="text-zinc-800 text-[10px] font-bold ">
+            <span className="text-zinc-800 text-[10px] font-bold capitalize">
               {props.status}
             </span>
           </div>
@@ -91,11 +88,20 @@ function StandardResultCard(props: ResultCardProps) {
           </div>
         </div>
         <div className="self-stretch grow shrink basis-0 flex-col justify-start items-start flex p-1">
-          {props.finishOrder
-            .filter((result) => result.place != 0)
-            .sort((a, b) => a.place - b.place)
+          {props.entries
+            .sort((a, b) => (a.finishTime ?? 0) - (b.finishTime ?? 0))
             .map((result, index) => (
-              <ResultLine {...result} key={index} expanded={false} />
+              <ResultLine
+                entry={{
+                  teamName: result.teamName,
+                  teamEntryLetter: result.teamEntryLetter,
+                  bowNumber: result.bowNumber,
+                  finishTime: result.finishTime,
+                  place: index + 1,
+                }}
+                key={index}
+                expanded={false}
+              />
             ))}
         </div>
       </div>

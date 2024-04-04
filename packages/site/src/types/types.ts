@@ -39,11 +39,12 @@ export interface Penalty {
 
 // Enums
 export enum HeatStatus {
-  UPCOMING = "UPCOMING",
+  SCHEDULED = "scheduled",
   ACTIVE = "ACTIVE",
   UNOFFICIAL = "UNOFFICIAL",
   OFFICIAL = "OFFICIAL",
   BREAK = "BREAK",
+  DELAYED = "DELAYED",
 }
 
 export enum RegattaStatus {

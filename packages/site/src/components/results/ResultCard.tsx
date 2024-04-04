@@ -1,9 +1,7 @@
 "use client";
 
-import BreakResultCard from "@/components/results/cards/BreakResultCard.tsx";
 import ExpandedResultCard from "@/components/results/cards/ExpandedResultCard.tsx";
 import StandardResultCard from "@/components/results/cards/StandardResultCard.tsx";
-import { FinishedCrew, HeatStatus } from "@/types/types.ts";
 import grow from "@public/icons/expand.svg";
 import shrink from "@public/icons/shrink.svg";
 import Image, { StaticImageData } from "next/image";
@@ -13,26 +11,24 @@ import { useState } from "react";
  * Interface representing the props in a result card
  */
 interface ResultCardProps {
-  /**
-   * The title of the regatta
-   */
-  title: string;
-  /**
-   * The regatta's start time
-   */
-  startTime: Date;
-  /**
-   * The host of the regatta
-   */
   host: string;
-  /**
-   * The status of the regatta
-   */
-  status: HeatStatus;
-  /**
-   * Finishing crews in the regatta
-   */
-  finishOrder: FinishedCrew[];
+  type: {
+    boatClass: "8+" | "4+" | "4-" | "4x" | "2+" | "2-" | "1x";
+    gender: "men" | "women" | "open";
+    displayName?: string;
+  };
+  scheduledStart: Date;
+  status: "scheduled" | "delayed" | "unofficial" | "official" | "in-progress";
+  entries: {
+    teamName: string;
+    teamEntryLetter?: string;
+    bowNumber: number;
+    finishTime?: number;
+    segments?: {
+      distance: number;
+      time: number;
+    }[];
+  }[];
 }
 
 /**
@@ -42,10 +38,10 @@ interface ResultCardProps {
 function ResultCard(props: ResultCardProps) {
   const [expanded, setExpanded] = useState(false);
 
-  switch (props.status) {
-    case HeatStatus.BREAK:
-      return BreakResultCard(props);
-  }
+  // switch (props.status) {
+  //     case HeatStatus.BREAK:
+  //         return BreakResultCard(props);
+  // }
   return (
     <div
       className={`transition-all duration-700 ${

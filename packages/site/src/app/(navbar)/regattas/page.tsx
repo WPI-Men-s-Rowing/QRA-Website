@@ -1,36 +1,9 @@
-import RecentResults from "@/components/results/regattalist/RecentResults.tsx";
-import UpcomingRegattas from "@/components/results/regattalist/UpcomingRegattas.tsx";
 import Header from "@/components/text/Header.tsx";
-import { Regatta, RegattaStatus } from "@/types/types";
+import { getRegattasSummary } from "@/lib/utils/regattas/get-regattas-summary.ts";
 
-function Regattas() {
-  const testRegatta: Regatta = {
-    name: "Another Regatta",
-    date: new Date(),
-    uuid: "1234",
-    location: "Lake Quinsigamond",
-    status: RegattaStatus.ACTIVE,
-    heats: [],
-  };
-  const testRegatta2: Regatta = {
-    name: "Quinsigamond Snake Regatta",
-    date: new Date(1638415609),
-    uuid: "1234",
-    location: "Lake Quinsigamond",
-    status: RegattaStatus.FINISHED,
-    heats: [],
-  };
-
-  const testRegatta3: Regatta = {
-    name: "WPI Invitational",
-    date: new Date(1640908800000),
-    uuid: "1234",
-    location: "Lake Quinsigamond",
-    status: RegattaStatus.UPCOMING,
-    heats: [],
-  };
-  const regattas: Regatta[] = [testRegatta, testRegatta2, testRegatta3];
-
+async function Regattas() {
+  const data = await getRegattasSummary();
+  console.log(data);
   return (
     <div className="flex p-5 gap-4 lg:flex-row flex-col">
       <div className="flex flex-col lg:w-3/4">
@@ -72,16 +45,16 @@ function Regattas() {
         </div>
       </div>
       <div className="lg:order-last order-first">
-        <RecentResults
-          Regattas={regattas.filter(
-            (regatta) => regatta.status != RegattaStatus.UPCOMING,
-          )}
-        />
-        <UpcomingRegattas
-          Regattas={regattas.filter(
-            (regatta) => regatta.status == RegattaStatus.UPCOMING,
-          )}
-        />
+        {/*<RecentResults*/}
+        {/*  Regattas={regattas.filter(*/}
+        {/*    (regatta) => regatta.status != RegattaStatus.UPCOMING,*/}
+        {/*  )}*/}
+        {/*/>*/}
+        {/*<UpcomingRegattas*/}
+        {/*  Regattas={regattas.filter(*/}
+        {/*    (regatta) => regatta.status == RegattaStatus.UPCOMING,*/}
+        {/*  )}*/}
+        {/*/>*/}
       </div>
     </div>
   );

@@ -3,13 +3,9 @@
  */
 interface ResultCardProps {
   /**
-   * The title of the regatta
-   */
-  title: string;
-  /**
    * The regatta's start time
    */
-  startTime: Date;
+  scheduledStart: Date;
 }
 
 /**
@@ -23,11 +19,11 @@ function BreakResultCard(props: ResultCardProps) {
         className={`transition-all duration-700 lg:w-[405px] w-full h-[413px] px-[15px] pt-2.5 pb-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-2.5 inline-flex`}
       >
         <div className="self-stretch h-full flex-col justify-center items-center gap-[5px] flex">
-          <div className="text-3xl font-bold text-red">{props.title}</div>
+          <div className="text-3xl font-bold text-red">BREAK</div>
           <div className="flex w-auto flex-row text-zinc-800">
             <div className="">Scheduled:</div>
             <div className="font-bold">
-              {props.startTime.toLocaleTimeString([], {
+              {props.scheduledStart.toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
               })}
