@@ -30,7 +30,7 @@ export const Heat = new Entity({
       properties: {
         boatClass: {
           required: true,
-          type: ["8+", "4+", "4-", "4x", "2+", "2-", "1x"] as const,
+          type: ["8+", "4+", "4-", "4x", "3x", "2+", "2x", "2-", "1x"] as const,
         },
         gender: {
           required: true,
@@ -61,21 +61,6 @@ export const Heat = new Entity({
         "official",
         "in-progress",
       ] as const,
-    },
-    // Progression information, optional. Should contain the number to the next heat, and the ID of the next heat
-    progression: {
-      type: "map",
-      required: false,
-      properties: {
-        numberToNext: {
-          required: true,
-          type: "number",
-        },
-        nextId: {
-          required: true,
-          type: "string",
-        },
-      },
     },
     entries: {
       required: true,

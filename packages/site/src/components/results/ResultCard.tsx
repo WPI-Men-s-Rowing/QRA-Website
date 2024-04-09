@@ -15,7 +15,7 @@ interface ResultCardProps {
   host: string;
   breakId?: string;
   type: {
-    boatClass: "8+" | "4+" | "4-" | "4x" | "2+" | "2-" | "1x";
+    boatClass: "8+" | "4+" | "4-" | "4x" | "3x" | "2x" | "2+" | "2-" | "1x";
     gender: "men" | "women" | "open";
     displayName?: string;
   };
