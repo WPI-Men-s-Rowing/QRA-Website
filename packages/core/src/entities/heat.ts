@@ -62,6 +62,96 @@ export const Heat = new Entity({
         "in-progress",
       ] as const,
     },
+    progression: {
+      required: false,
+      type: "map",
+      properties: {
+        // The description of where in the progression this heat/quarter/semi/final/whatever is
+        // This should be human-readable, as it will be used for display uprposes
+        description: {
+          required: true,
+          type: "string",
+        },
+        // Where the entries of this race go to
+        next: {
+          required: false,
+          type: "list",
+          items: {
+            type: "map",
+            properties: {
+              // Description of who goes to the next heat
+              description: {
+                type: "string",
+                required: true,
+              },
+              // The ID of the next heat
+              id: {
+                type: "string",
+                required: true,
+              },
+            },
+          },
+        },
+        // Where the entries of this come from
+        previous: {
+          required: false,
+          type: "map",
+          properties: {
+            // This can be used to map the bow number to fastest time across heats
+            // (as opposed to the winner of this heat goes in this lane, etc)
+            lanePriority: {
+              required: false,
+              type: "list",
+              items: {
+                type: "map",
+                properties: {
+                  bowNumber: {
+                    type: "number",
+                    required: true,
+                  },
+                  timePosition: {
+                    type: "number",
+                    required: true,
+                  },
+                },
+              },
+            },
+            // Where the entries of this come from
+            entries: {
+              required: true,
+              // NOTE: This is applied IN-ORDER
+              type: "list",
+              items: {
+                type: "map",
+                properties: {
+                  // This can be used to say "the winner of x heat goes in lane x" as opposed to the above.
+                  // If not provided, the above should be used
+                  bowNumber: {
+                    required: false,
+                    type: "number",
+                  },
+                  // Position to start searching for someone not yet included at.
+                  // This enables e.g., winner to semi AB, second to semi BC, etc
+                  startPosition: {
+                    required: false,
+                    type: "number",
+                  },
+                  // The IDs of the heats this should come from. The fastest time not yet included from these
+                  // will take this spot
+                  sourceIds: {
+                    required: true,
+                    type: "list",
+                    items: {
+                      type: "string",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
     entries: {
       required: true,
       type: "list",
