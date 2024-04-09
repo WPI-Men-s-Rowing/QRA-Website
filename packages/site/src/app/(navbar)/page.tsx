@@ -1,18 +1,21 @@
 import JumboTron from "@/components/JumboTron";
 import RecentResults from "@/components/results/regattalist/RecentResults.tsx";
 import Header from "@/components/text/Header";
-import { Regatta, RegattaStatus } from "@/types/types.ts";
+import { Regatta } from "@/lib/utils/regattas/types";
 import donahue from "@public/donahue.jpg";
 import Link from "next/link";
 
 function Home() {
   const testRegatta2: Regatta = {
     name: "Quinsigamond Snake Regatta",
-    date: new Date(1638415609),
-    uuid: "1234",
-    location: "Lake Quinsigamond",
-    status: RegattaStatus.FINISHED,
-    heats: [],
+    startDate: new Date(1638415609),
+    regattaId: "1234",
+    type: "head",
+    distance: 5000,
+    endDate: new Date(1638515609),
+    host: "QRA",
+    rampClosed: true,
+    participantDescription: "Snake Schools",
   };
   const regattas: Regatta[] = [testRegatta2];
 
@@ -57,7 +60,7 @@ function Home() {
               faucibus sit amet.
             </p>
           </div>
-          <RecentResults Regattas={regattas} />
+          <RecentResults regattas={regattas} />
         </div>
       </div>
     </>

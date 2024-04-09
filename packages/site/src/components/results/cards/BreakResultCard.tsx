@@ -1,18 +1,10 @@
-/**
- * Interface representing the props in a result card
- */
-interface ResultCardProps {
-  /**
-   * The regatta's start time
-   */
-  scheduledStart: Date;
-}
+import { Break } from "@/lib/utils/regattas/types";
 
 /**
  * Component that crates a result card showing the results of an individual race
  * @param props the properties defining the result card
  */
-function BreakResultCard(props: ResultCardProps) {
+function BreakResultCard(props: Break) {
   return (
     <>
       <div

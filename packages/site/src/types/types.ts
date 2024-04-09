@@ -1,20 +1,7 @@
-// Regatta Types
-export interface Regatta {
-  name: string;
-  date: Date;
-  uuid: string;
-  status: RegattaStatus;
-  heats: Heat[];
-  location: string;
-}
-
-export interface Heat {
-  title: string;
-  startTime: Date;
-  status: HeatStatus;
-  finishOrder: FinishedCrew[];
-  host: string;
-}
+/**
+ * Type to "unwrap" an array, returning the item inside the array
+ */
+export type Unwrapped<T> = T extends (infer K)[] ? K : never;
 
 export interface FinishedCrew {
   teamName: string;
@@ -35,22 +22,6 @@ export interface Athlete {
 export interface Penalty {
   time: number;
   reason: string;
-}
-
-// Enums
-export enum HeatStatus {
-  SCHEDULED = "scheduled",
-  ACTIVE = "ACTIVE",
-  UNOFFICIAL = "UNOFFICIAL",
-  OFFICIAL = "OFFICIAL",
-  BREAK = "BREAK",
-  DELAYED = "DELAYED",
-}
-
-export enum RegattaStatus {
-  UPCOMING = "UPCOMING",
-  ACTIVE = "ACTIVE",
-  FINISHED = "FINISHED",
 }
 
 export enum LineupSeat {

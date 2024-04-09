@@ -1,38 +1,19 @@
 "use client";
 
 import TeamIcon from "@/components/TeamIcon.tsx";
+import { Heat } from "@/lib/utils/regattas/types";
+import { Unwrapped } from "@/types/types";
 import { useState } from "react";
-
-/**
- * Props for the ResultLine component
- */
-interface ResultLineProps {
-  /**
-   * Entries in the heat
-   */
-  entry: {
-    teamName: string;
-    teamEntryLetter?: string;
-    bowNumber: number;
-    finishTime?: number;
-    rawFinishTime?: number;
-    finalFinishTime?: number;
-    deltaToNext?: number;
-    deltaToWinner?: number;
-    segments?: {
-      distance: number;
-      time: number;
-    }[];
-    place: number;
-  };
-  expanded: boolean;
-}
 
 /**
  * Component representing a singular line in a results viewer, e.g., represents one crew
  * @param props props determining the crew and how to render the line
  */
-function ResultLine(props: ResultLineProps) {
+function ResultLine(
+  props: { entry: Unwrapped<Heat["entries"]> & { place: number } } & {
+    expanded: boolean;
+  },
+) {
   const [isPopoverVisible, setPopoverVisible] = useState(false);
 
   const msToTime = (duration: number) => {
@@ -52,6 +33,15 @@ function ResultLine(props: ResultLineProps) {
       ? hours + ":" + minutesString + ":" + seconds + "." + milliseconds
       : minutes + ":" + secondsString + "." + milliseconds;
   };
+
+  // Finish time display, allows for the time, DNF, DSQ, or nothing yet
+  const finishTimeDisplay = props.entry.finalFinishTime
+    ? msToTime(props.entry.finalFinishTime)
+    : props.entry.didFailToFinish
+      ? "DNF"
+      : props.entry.penalty?.type === "dsq"
+        ? "DSQ"
+        : "-";
 
   if (props.expanded)
     return (
@@ -98,7 +88,7 @@ function ResultLine(props: ResultLineProps) {
               : "-"}
           </div>
           <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
-            {props.entry.finishTime ? msToTime(props.entry.finishTime) : "-"}
+            {finishTimeDisplay}
           </div>
           <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
             {props.entry.deltaToNext ? msToTime(props.entry.deltaToNext) : "-"}
@@ -141,7 +131,7 @@ function ResultLine(props: ResultLineProps) {
             </div>
           </span>
           <div className="w-20 text-zinc-800 lg:text-base text-sm font-bold text-center">
-            {props.entry.finishTime ? msToTime(props.entry.finishTime) : "-"}
+            {finishTimeDisplay}
           </div>
           <div className="w-[57px] text-zinc-800 lg:text-base text-sm font-bold text-center">
             {props.entry.deltaToWinner

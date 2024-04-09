@@ -1,41 +1,13 @@
 "use client";
 
+import { Heat } from "@/lib/utils/regattas/types.ts";
 import ResultLine from "../ResultLine.tsx";
-
-/**
- * Interface representing the props in a result card
- */
-interface ResultCardProps {
-  host: string;
-  type: {
-    boatClass: "8+" | "4+" | "4-" | "3x" | "4x" | "2+" | "2x" | "2-" | "1x";
-    gender: "men" | "women" | "open";
-    displayName?: string;
-  };
-  scheduledStart: Date;
-  delay?: number;
-  status: "scheduled" | "delayed" | "unofficial" | "official" | "in-progress";
-  entries: {
-    teamName: string;
-    teamEntryLetter?: string;
-    bowNumber: number;
-    finishTime?: number;
-    rawFinishTime?: number;
-    finalFinishTime?: number;
-    deltaToNext?: number;
-    deltaToWinner?: number;
-    segments?: {
-      distance: number;
-      time: number;
-    }[];
-  }[];
-}
 
 /**
  * Component that crates a result card showing the results of an individual race
  * @param props the properties defining the result card
  */
-function StandardResultCard(props: ResultCardProps) {
+function StandardResultCard(props: Heat & { host: string }) {
   return (
     <>
       <div className="self-stretch h-[51px] flex-col justify-start items-start gap-[5px] flex">
@@ -93,25 +65,16 @@ function StandardResultCard(props: ResultCardProps) {
           </div>
         </div>
         <div className="self-stretch grow shrink basis-0 flex-col justify-start items-start flex p-1">
-          {props.entries
-            .sort((a, b) => (a.finishTime ?? 0) - (b.finishTime ?? 0))
-            .map((result, index) => (
-              <ResultLine
-                entry={{
-                  teamName: result.teamName,
-                  teamEntryLetter: result.teamEntryLetter,
-                  bowNumber: result.bowNumber,
-                  finishTime: result.finishTime,
-                  place: index + 1,
-                  rawFinishTime: result.rawFinishTime,
-                  finalFinishTime: result.finalFinishTime,
-                  deltaToNext: result.deltaToNext,
-                  deltaToWinner: result.deltaToWinner,
-                }}
-                key={index}
-                expanded={false}
-              />
-            ))}
+          {props.entries.map((result, index) => (
+            <ResultLine
+              entry={{
+                ...result,
+                place: index + 1,
+              }}
+              key={index}
+              expanded={false}
+            />
+          ))}
         </div>
       </div>
     </>

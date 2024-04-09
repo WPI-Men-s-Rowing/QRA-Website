@@ -1,4 +1,5 @@
 import ResultCard from "@/components/results/ResultCard";
+import BreakResultCard from "@/components/results/cards/BreakResultCard";
 
 import { getRegattaDetails } from "@/lib/utils/regattas/get-regatta-details.ts";
 
@@ -6,11 +7,27 @@ async function ResultsDetails({ params }: { params: { raceId: string } }) {
   const data = await getRegattaDetails(params.raceId);
 
   if (!data) return <div>Loading...</div>;
-  // @ts-expect-error apparently i need this here
-  const orderedEvents = data.heat.concat(data.break);
+
+  const orderedEvents = [
+    ...data.heat.map((heat) => {
+      return {
+        scheduledStart: heat.scheduledStart,
+        heat,
+        break: undefined,
+      };
+    }),
+    ...data.break.map((breakData) => {
+      return {
+        scheduledStart: breakData.scheduledStart,
+        break: breakData,
+        heat: undefined,
+      };
+    }),
+  ];
   orderedEvents.sort((a, b) => {
     return a.scheduledStart.getTime() - b.scheduledStart.getTime();
   });
+
   return (
     <>
       <div className="ps-2">
@@ -20,10 +37,12 @@ async function ResultsDetails({ params }: { params: { raceId: string } }) {
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-row lg:justify-start justify-center gap-4 flex-wrap p-2">
             {orderedEvents
-              ? orderedEvents.map((heat, index) => {
-                  return (
+              ? orderedEvents.map((event, index) => {
+                  return event.break ? (
+                    <BreakResultCard {...event.break} />
+                  ) : (
                     <ResultCard
-                      {...heat}
+                      {...event.heat}
                       host={data.regatta.host}
                       key={index}
                     />
