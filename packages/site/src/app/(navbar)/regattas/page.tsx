@@ -1,9 +1,8 @@
+import RecentResults from "@/components/results/regattalist/RecentResults.tsx";
+import UpcomingRegattas from "@/components/results/regattalist/UpcomingRegattas.tsx";
 import Header from "@/components/text/Header.tsx";
-import { getRegattasSummary } from "@/lib/utils/regattas/get-regattas-summary.ts";
 
-async function Regattas() {
-  const data = await getRegattasSummary();
-  console.log(data);
+function Regattas() {
   return (
     <div className="flex p-5 gap-4 lg:flex-row flex-col">
       <div className="flex flex-col lg:w-3/4">
@@ -45,16 +44,8 @@ async function Regattas() {
         </div>
       </div>
       <div className="lg:order-last order-first">
-        {/*<RecentResults*/}
-        {/*  Regattas={regattas.filter(*/}
-        {/*    (regatta) => regatta.status != RegattaStatus.UPCOMING,*/}
-        {/*  )}*/}
-        {/*/>*/}
-        {/*<UpcomingRegattas*/}
-        {/*  Regattas={regattas.filter(*/}
-        {/*    (regatta) => regatta.status == RegattaStatus.UPCOMING,*/}
-        {/*  )}*/}
-        {/*/>*/}
+        <RecentResults />
+        <UpcomingRegattas />
       </div>
     </div>
   );

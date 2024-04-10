@@ -9,16 +9,15 @@ function RaceCard(props: Regatta) {
   return (
     <Link href={"/regattas/results/" + props.regattaId}>
       <div className="w-[379px] h-[100px] p-[15px] bg-neutral-50 rounded-[20px] border border-zinc-800 border-opacity-20 flex-col justify-start items-start gap-[5px] inline-flex">
-        <div className="text-zinc-800 text-opacity-50 text-[10px] font-normal">
-          Head Race
+        <div className="text-zinc-800 text-opacity-50 text-[10px] font-normal capitalize">
+          {props.type}
         </div>
-        {/*##TODO: Change to match regatta type*/}
         <div className="self-stretch text-text-color text-2xl font-bold">
           {props.name}
         </div>
         <div className="text-zinc-800 text-base font-normal">
           {props.startDate.toLocaleDateString()}-
-          {props.startDate.toLocaleDateString()}
+          {props.endDate.toLocaleDateString()}
         </div>
       </div>
     </Link>
