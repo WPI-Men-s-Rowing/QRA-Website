@@ -13,6 +13,12 @@ module.exports = defineConfig({
     "plugin:react/jsx-runtime",
     "plugin:storybook/recommended",
   ],
+  rules: {
+    "@typescript-eslint/no-shadow": [
+      "warn",
+      { builtinGlobals: true, hoist: "functions", allow: ["Image"] },
+    ],
+  },
   plugins: ["react"],
   settings: {
     react: {

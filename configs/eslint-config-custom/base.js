@@ -23,9 +23,9 @@ module.exports = defineConfig({
     "prefer-const": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
-    "no-shadow": [
+    "@typescript-eslint/no-shadow": [
       "warn",
-      { builtinGlobals: true, hoist: "functions", allow: ["Image"] },
+      { builtinGlobals: true, hoist: "functions" },
     ],
   },
   parser: "@typescript-eslint/parser",

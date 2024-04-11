@@ -4,7 +4,7 @@ import { webcrypto } from "node:crypto";
 /* @ts-expect-error Required since we don't have any type data on the polyfill */ /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */
 globalThis.crypto = webcrypto as Crypto;
 
-// eslint-disable-next-line no-shadow
+// eslint-disable-next-line @typescript-eslint/no-shadow
 import crypto from "crypto";
 import { CreateEntityItem, EntityItem } from "electrodb";
 import { auth } from "./auth.ts";
