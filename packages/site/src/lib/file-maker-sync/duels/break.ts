@@ -1,13 +1,13 @@
 import { RegattaService } from "@qra-website/core";
 import { CreateEntityItem } from "electrodb";
-import { LakeScheduleLanesEntry } from "./types";
+import { LakeScheduleLanesEntry } from "../types/duel-types.ts";
 
 /**
  * Determines if a lanes entry is a valid break
  * @param lakeScheduleLanesEntry the entry to parse to determine if it is a break
  * @returns true if the entry is a break; false otherwise
  */
-export function isBreak(lakeScheduleLanesEntry: LakeScheduleLanesEntry) {
+export function isDuelBreak(lakeScheduleLanesEntry: LakeScheduleLanesEntry) {
   return (
     lakeScheduleLanesEntry.event === "Break" ||
     lakeScheduleLanesEntry.host === "Break"
@@ -26,7 +26,7 @@ export function createDuelRegattaBreak(
   lakeScheduleLanesEntry: LakeScheduleLanesEntry,
 ): CreateEntityItem<typeof RegattaService.entities.break> {
   // Validate that this is indeed a break
-  if (!isBreak(lakeScheduleLanesEntry)) {
+  if (!isDuelBreak(lakeScheduleLanesEntry)) {
     throw new Error(
       "Cannot create a break out of an entry that is not a break!",
     );

@@ -1,53 +1,6 @@
 import { RegattaService } from "@qra-website/core";
 import { CreateEntityItem } from "electrodb";
-import { LakeScheduleEntry, LakeScheduleLanesEntry } from "./types";
-
-/**
- * Creates the insert args for a regatta given the FileMaker DB entry. Assumes the regatta took place in GMT-4 (EST). This
- * may be problematic in cases where a regatta occurred during the winter daylight savings...
- * @param lakeScheduleEntry the FileMakerDB entry to use in creating the duel regatta
- * @returns the insert args for the duel regatta. Does not actually insert the regatta
- * @throws {Error} if the club type is not Col or HS or the regatta type is not sprint
- */
-export function createDuelRegatta(
-  lakeScheduleEntry: LakeScheduleEntry,
-): CreateEntityItem<typeof RegattaService.entities.regatta> {
-  // Validate host type to be valid for duels
-  if (
-    lakeScheduleEntry.clubtype !== "Col" &&
-    lakeScheduleEntry.clubtype !== "HS"
-  ) {
-    throw new Error(
-      "Cannot create a duel regatta when regatta type is not college or high school",
-    );
-  }
-
-  // Validate it's a sprint race
-  if (lakeScheduleEntry.regattatype !== "Sprint") {
-    throw new Error(
-      "Cannot create a duel regatta when regatta type is not sprint",
-    );
-  }
-
-  return {
-    regattaId: lakeScheduleEntry.id.toString(),
-    name:
-      lakeScheduleEntry.racename === ""
-        ? `${lakeScheduleEntry.localschool} Duel`
-        : lakeScheduleEntry.racename,
-    distance: 2000,
-    type: "duel",
-    host: lakeScheduleEntry.localschool,
-    rampClosed: false,
-    participantDescription: lakeScheduleEntry.competitors,
-    startDate: Date.parse(
-      `${lakeScheduleEntry.racedate} ${lakeScheduleEntry.timeStart} GMT-0400`,
-    ),
-    endDate: Date.parse(
-      `${lakeScheduleEntry.racedateEnd} ${lakeScheduleEntry.timeEnd} GMT-0400`,
-    ),
-  };
-}
+import { LakeScheduleLanesEntry } from "../types/duel-types";
 
 /**
  * Takes a string, and returns the same string with the first character made uppercase
@@ -79,7 +32,8 @@ function addOrdinal(number: number) {
 }
 
 /**
- * Converts a time string to a time value in milliseconds. In the form HH:MM:SS.MS, where hours are optional and all other fields are required
+ * Converts a time string to a time value in milliseconds. In the form HH:MM:SS.MS, where hours are optional
+ * and all other fields are required
  * @param time the time to convert to milliseconds
  * @returns the time, converted to milliseconds
  * @throws {Error} if the provided time is malformed
@@ -106,7 +60,8 @@ function stringToTimeInMs(time: string) {
 }
 
 /**
- * Method that converts a boat class as returned from the FileMaker DB in the event parameter to one that can be stored in DynamoDB
+ * Method that converts a boat class as returned from the FileMaker DB in the
+ * event parameter to one that can be stored in DynamoDB
  * @param boatClass the boat class retrieved from FileMaker
  * @returns a boat class that conforms to the DynamoDB boat class type
  */
@@ -238,13 +193,13 @@ function rawEntriesToEntries(
  * @param regattaId the ID of the regatta to attach the heat to
  * @param lakeScheduleLanesEntry the lake schedule lanes entry that forms this heat in the FileMaker DB
  * @returns the arguments to create a duel regatta heat in the DB
- * @throws {Error} if the lake schedule entry is invalid for any number of reasons - invalid event type, invalid gender, invalid boat class,
- * or invalid time on an entry
+ * @throws {Error} if the lake schedule entry is invalid for any number of reasons - invalid event type,
+ * invalid gender, invalid boat class, or invalid time on an entry
  */
 export function createDuelRegattaHeat(
   regattaId: string,
   lakeScheduleLanesEntry: LakeScheduleLanesEntry,
-): CreateEntityItem<typeof RegattaService.entities.heat> {
+): CreateEntityItem<typeof RegattaService.entities.heat> & { heatId: string } {
   // Process the event regex. The /s create a regex automatically
   const regexResult =
     /(?:(B|G)([1-9])(?:st|nd|rd|th)|(M|W)([1-9])?(?:V|v|N|n))(8|4\+|4|1x|2x)/gm.exec(

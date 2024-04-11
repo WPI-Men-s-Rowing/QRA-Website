@@ -79,11 +79,6 @@ export const Heat = new Entity({
           items: {
             type: "map",
             properties: {
-              // Description of who goes to the next heat
-              description: {
-                type: "string",
-                required: true,
-              },
               // The ID of the next heat
               id: {
                 type: "string",

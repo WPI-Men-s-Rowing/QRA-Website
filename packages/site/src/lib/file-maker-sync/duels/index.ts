@@ -1,0 +1,63 @@
+import { RegattaService } from "@qra-website/core";
+import { CreateEntityItem } from "electrodb";
+import { LakeScheduleEntry, LakeScheduleLanesEntry } from "../types/duel-types";
+import { createDuelRegattaBreak, isDuelBreak } from "./break";
+import { createDuelRegattaHeat } from "./heat";
+import { processProgression } from "./progression";
+import { createDuelRegatta } from "./regatta";
+
+/**
+ * Creates an individual duel regatta from its lake schedule entry and lake schedule lanes entry
+ * @param regattaEntry the regatta entry from the lake schedule
+ * @param lanesEntries the individual lanes entries for the provided regatta
+ * @returns the create arguments for each of the regatta, heats, and breaks
+ * @throws {Error} if anything is malformed/incorrect for a duel, or the regatta ID does not match any of the lanes entries IDs
+ */
+export default function createDuel(
+  regattaEntry: LakeScheduleEntry,
+  lanesEntries: LakeScheduleLanesEntry[],
+): {
+  regatta: CreateEntityItem<typeof RegattaService.entities.regatta>;
+  heats: CreateEntityItem<typeof RegattaService.entities.heat>[];
+  breaks: CreateEntityItem<typeof RegattaService.entities.break>[];
+} {
+  // Create the regatta and heats
+  const regatta = createDuelRegatta(regattaEntry);
+  const heatsMap = new Map<
+    number,
+    {
+      lanesEntry: LakeScheduleLanesEntry;
+      heat: ReturnType<typeof createDuelRegattaHeat>;
+    }
+  >();
+  const breaks: ReturnType<typeof createDuelRegattaBreak>[] = [];
+
+  // Process each heat
+  lanesEntries.forEach((lanesEntry) => {
+    // Validate that we got the correct lake schedule ID from the lanes entry
+    if (lanesEntry.lk_schd_id !== regattaEntry.id) {
+      throw new Error(
+        "Encountered a lanes entry that does not belong to the provided regatta!",
+      );
+    }
+
+    // If it is a break, then save it as such. Otherwise, save it as a heat
+    if (isDuelBreak(lanesEntry)) {
+      breaks.push(createDuelRegattaBreak(regatta.regattaId, lanesEntry));
+    } else {
+      heatsMap.set(lanesEntry.id, {
+        lanesEntry,
+        heat: createDuelRegattaHeat(regatta.regattaId, lanesEntry),
+      });
+    }
+  });
+
+  processProgression(heatsMap);
+
+  // Return the create args
+  return {
+    regatta,
+    heats: [...heatsMap.values()].map((heatMap) => heatMap.heat),
+    breaks,
+  };
+}
