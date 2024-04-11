@@ -24,6 +24,8 @@ export interface Penalty {
   reason: string;
 }
 
+// No idea what Eslint is on about with this one
+// eslint-disable-next-line no-shadow
 export enum LineupSeat {
   COX = "C",
   STROKE = "S",

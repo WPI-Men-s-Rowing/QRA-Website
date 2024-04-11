@@ -4,6 +4,7 @@ import { webcrypto } from "node:crypto";
 /* @ts-expect-error Required since we don't have any type data on the polyfill */ /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */
 globalThis.crypto = webcrypto as Crypto;
 
+// eslint-disable-next-line no-shadow
 import crypto from "crypto";
 import { CreateEntityItem, EntityItem } from "electrodb";
 import { auth } from "./auth.ts";
@@ -66,12 +67,12 @@ async function createRandomRegatta() {
 /**
  * Function to create a random heat that can be inserted into the database. NOTE: This completely ignores progression info
  * @param regatta the regatta the created heat will belong to
- * @param teams The teams that can be used to pick entries from
+ * @param teamsToUse The teams that can be used to pick entries from
  * @returns the create args for the created heat
  */
 function createRandomHeatCreateArgs(
   regatta: EntityItem<typeof RegattaService.entities.regatta>,
-  teams: readonly string[],
+  teamsToUse: readonly string[],
 ): CreateEntityItem<typeof RegattaService.entities.heat> {
   const scheduledStart =
     regatta.startDate +
@@ -92,7 +93,7 @@ function createRandomHeatCreateArgs(
   // Create the entries
   for (let i = 0; i < numEntries; i++) {
     // Get a team, and then calculate the number of times that team has been in this heat before now
-    const team = teams[crypto.randomInt(0, teams.length)];
+    const team = teamsToUse[crypto.randomInt(0, teamsToUse.length)];
     const numOtherTeams = entries.filter(
       (entry) => entry.teamName === team,
     ).length;

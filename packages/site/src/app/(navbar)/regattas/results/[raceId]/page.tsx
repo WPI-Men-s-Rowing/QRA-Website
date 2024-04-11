@@ -37,12 +37,12 @@ async function ResultsDetails({ params }: { params: { raceId: string } }) {
         <div className="flex flex-col justify-center items-center">
           <div className="flex flex-row lg:justify-start justify-center gap-4 flex-wrap p-2">
             {orderedEvents
-              ? orderedEvents.map((event, index) => {
-                  return event.break ? (
-                    <BreakResultCard {...event.break} />
+              ? orderedEvents.map((eventToPlace, index) => {
+                  return eventToPlace.break ? (
+                    <BreakResultCard {...eventToPlace.break} />
                   ) : (
                     <ResultCard
-                      {...event.heat}
+                      {...eventToPlace.heat}
                       host={data.regatta.host}
                       key={index}
                     />

@@ -23,6 +23,10 @@ module.exports = defineConfig({
     "prefer-const": "warn",
     "@typescript-eslint/no-unused-vars": "warn",
     "@typescript-eslint/no-empty-interface": "warn",
+    "no-shadow": [
+      "warn",
+      { builtinGlobals: true, hoist: "functions", allow: ["Image"] },
+    ],
   },
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],

@@ -33,8 +33,8 @@ function LakeSchedule({ regattas }: LakeScheduleProps) {
                   (schedule) =>
                     schedule.startDate.toLocaleDateString() === dateString,
                 )
-                .map((schedule, index) => (
-                  <ScheduleCard key={index} {...schedule} />
+                .map((schedule, scheduleIndex) => (
+                  <ScheduleCard key={scheduleIndex} {...schedule} />
                 ))}
             </div>
             <div className="w-px bg-divider border-0 h-full mx-4" />
