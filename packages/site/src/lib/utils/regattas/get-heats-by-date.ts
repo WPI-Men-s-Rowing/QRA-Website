@@ -1,4 +1,4 @@
-import { RegattaService } from "@qra-website/core";
+import { RegattaService } from "@qra-website/core/dynamo-db";
 import { cache } from "react";
 import "server-only"; // This ensures this library will never under any circumstances be included in the client bundle
 import { convertDbHeatToHeat } from "./converters";

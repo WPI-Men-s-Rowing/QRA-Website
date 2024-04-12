@@ -1,4 +1,4 @@
-import { RegattaService } from "@qra-website/core";
+import { RegattaService } from "@qra-website/core/dynamo-db";
 import { CollectionItem, EntityItem } from "electrodb";
 
 /**

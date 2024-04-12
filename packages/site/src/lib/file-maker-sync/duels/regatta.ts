@@ -1,4 +1,4 @@
-import { RegattaService } from "@qra-website/core";
+import { RegattaService } from "@qra-website/core/dynamo-db";
 import { CreateEntityItem } from "electrodb";
 import { LakeScheduleEntry } from "../types/duel-types";
 

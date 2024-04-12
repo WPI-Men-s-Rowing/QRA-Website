@@ -1,4 +1,4 @@
-import { dynamoDbAdapter } from "@qra-website/core";
+import { dynamoDbAdapter } from "@qra-website/core/dynamo-db";
 import { lucia } from "lucia";
 import { nextjs_future } from "lucia/middleware";
 

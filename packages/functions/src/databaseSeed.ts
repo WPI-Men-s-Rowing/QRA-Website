@@ -1,4 +1,4 @@
-import { RegattaService, TeamService } from "@qra-website/core";
+import { RegattaService, TeamService } from "@qra-website/core/dynamo-db";
 import { webcrypto } from "node:crypto";
 
 /* @ts-expect-error Required since we don't have any type data on the polyfill */ /* eslint-disable-next-line @typescript-eslint/no-unsafe-assignment */

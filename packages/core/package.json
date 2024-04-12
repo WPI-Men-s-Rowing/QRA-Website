@@ -2,7 +2,9 @@
   "name": "@qra-website/core",
   "version": "0.0.0",
   "type": "module",
-  "exports": "./src/index.ts",
+  "exports": {
+    "./dynamo-db": "./src/dynamo-db/index.ts"
+  },
   "scripts": {
     "test": "sst bind vitest",
     "typecheck": "tsc",
