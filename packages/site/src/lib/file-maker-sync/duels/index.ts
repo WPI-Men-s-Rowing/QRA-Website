@@ -3,7 +3,7 @@ import { CreateEntityItem } from "electrodb";
 import { LakeScheduleEntry, LakeScheduleLanesEntry } from "../types/duel-types";
 import { createDuelRegattaBreak, isDuelBreak } from "./break";
 import { createDuelRegattaHeat } from "./heat";
-import { processProgression } from "./progression";
+import { HeatWithLanesEntry, processProgression } from "./progression";
 import { createDuelRegatta } from "./regatta";
 
 /**
@@ -23,13 +23,7 @@ export default function createDuel(
 } {
   // Create the regatta and heats
   const regatta = createDuelRegatta(regattaEntry);
-  const heatsMap = new Map<
-    number,
-    {
-      lanesEntry: LakeScheduleLanesEntry;
-      heat: ReturnType<typeof createDuelRegattaHeat>;
-    }
-  >();
+  const entries: HeatWithLanesEntry[] = [];
   const breaks: ReturnType<typeof createDuelRegattaBreak>[] = [];
 
   // Process each heat
@@ -45,19 +39,20 @@ export default function createDuel(
     if (isDuelBreak(lanesEntry)) {
       breaks.push(createDuelRegattaBreak(regatta.regattaId, lanesEntry));
     } else {
-      heatsMap.set(lanesEntry.id, {
+      entries.push({
         lanesEntry,
         heat: createDuelRegattaHeat(regatta.regattaId, lanesEntry),
       });
     }
   });
 
-  processProgression(heatsMap);
+  // Process progression on the entries
+  processProgression(entries);
 
   // Return the create args
   return {
     regatta,
-    heats: [...heatsMap.values()].map((heatMap) => heatMap.heat),
+    heats: entries.map((entry) => entry.heat),
     breaks,
   };
 }
