@@ -1,6 +1,6 @@
 import { RegattaService } from "@qra-website/core/dynamo-db";
 import { CreateEntityItem } from "electrodb";
-import { LakeScheduleLanesEntry } from "../types/duel-types";
+import { LakeScheduleLanesEntry } from "../types/duel-types.ts";
 
 /**
  * Takes a string, and returns the same string with the first character made uppercase

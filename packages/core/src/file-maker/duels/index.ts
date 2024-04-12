@@ -1,10 +1,13 @@
 import { RegattaService } from "@qra-website/core/dynamo-db";
 import { CreateEntityItem } from "electrodb";
-import { LakeScheduleEntry, LakeScheduleLanesEntry } from "../types/duel-types";
-import { createDuelRegattaBreak, isDuelBreak } from "./break";
-import { createDuelRegattaHeat } from "./heat";
-import { HeatWithLanesEntry, processProgression } from "./progression";
-import { createDuelRegatta } from "./regatta";
+import {
+  LakeScheduleEntry,
+  LakeScheduleLanesEntry,
+} from "../types/duel-types.ts";
+import { createDuelRegattaBreak, isDuelBreak } from "./break.ts";
+import { createDuelRegattaHeat } from "./heat.ts";
+import { HeatWithLanesEntry, processProgression } from "./progression.ts";
+import { createDuelRegatta } from "./regatta.ts";
 
 /**
  * Creates an individual duel regatta from its lake schedule entry and lake schedule lanes entry

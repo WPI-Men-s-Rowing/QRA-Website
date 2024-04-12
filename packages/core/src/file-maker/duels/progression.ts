@@ -1,6 +1,6 @@
-import { LakeScheduleLanesEntry } from "../types/duel-types";
-import { Unwrapped } from "../types/utils";
-import { createDuelRegattaHeat } from "./heat";
+import { LakeScheduleLanesEntry } from "../types/duel-types.ts";
+import { Unwrapped } from "../types/utils.ts";
+import { createDuelRegattaHeat } from "./heat.ts";
 
 // Type that concatenates a lanes entry with its heat
 export interface HeatWithLanesEntry {

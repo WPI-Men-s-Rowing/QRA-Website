@@ -1,6 +1,6 @@
 import { RegattaService } from "@qra-website/core/dynamo-db";
 import { CreateEntityItem } from "electrodb";
-import { LakeScheduleEntry } from "../types/duel-types";
+import { LakeScheduleEntry } from "../types/duel-types.ts";
 
 /**
  * Determines if a lake schedule lanes entry represents a duel regatta

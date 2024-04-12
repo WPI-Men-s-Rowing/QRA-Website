@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "type": "module",
   "exports": {
-    "./dynamo-db": "./src/dynamo-db/index.ts"
+    "./dynamo-db": "./src/dynamo-db/index.ts",
+    "./file-maker": "./src/file-maker/index.ts"
   },
   "scripts": {
     "test": "sst bind vitest",
