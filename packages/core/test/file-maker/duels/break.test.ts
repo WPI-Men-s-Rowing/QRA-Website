@@ -4,7 +4,7 @@ import { RegattaService } from "../../../src/dynamo-db/services.ts";
 import {
   createDuelRegattaBreak as createDuelBreak,
   isDuelBreak,
-} from "../../../src/file-maker/duels/break.ts";
+} from "../../../src/file-maker/duel/break.ts";
 import { BREAK_HOST, WESLEYEAN_BREAK, WPI_BREAK } from "./examples/break.ts";
 import {
   CLARK_WV8_GF,
