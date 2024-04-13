@@ -80,7 +80,7 @@ export interface FindLakeScheduleBody {
  */
 export interface LakeScheduleLanesEntry {
   id: number;
-  lk_schd_id: number;
+  lk_schd_id: number | "";
   racetime: string;
   event: string;
   host: string;
@@ -113,27 +113,27 @@ export interface LakeScheduleLanesEntry {
   results_code_display: string;
   racedateUnix: string;
   entryseed6: string;
-  order0: string;
-  order1: number;
-  order2: number;
+  order0: number | "";
+  order1: number | "";
+  order2: number | "";
   order3: number | "";
   order4: number | "";
-  order5: string;
-  order6: string;
-  splitprev0: string;
+  order5: number | "";
+  order6: number | "";
+  splitprev0: number | "";
   splitprev1: number | "";
   splitprev2: number | "";
   splitprev3: number | "";
   splitprev4: number | "";
-  splitprev5: string;
-  splitprev6: string;
-  splitwin0: string;
+  splitprev5: number | "";
+  splitprev6: number | "";
+  splitwin0: number | "";
   splitwin1: number | "";
   splitwin2: number | "";
   splitwin3: number | "";
   splitwin4: number | "";
-  splitwin5: string;
-  splitwin6: string;
+  splitwin5: number | "";
+  splitwin6: number | "";
   time0: string;
   time1: string;
   time2: string;
