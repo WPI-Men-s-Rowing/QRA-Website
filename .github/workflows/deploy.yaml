@@ -18,6 +18,8 @@ jobs:
     uses: ./.github/workflows/lint.yaml
   codeql:
     uses: ./.github/workflows/codeql.yaml
+  test:
+    uses: ./.github/workflows/test.yaml
   deploy:
     needs: [lint, codeql]
     name: "Deploy App"

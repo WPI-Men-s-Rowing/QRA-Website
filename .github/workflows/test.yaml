@@ -1,4 +1,4 @@
-name: Lint
+name: Test
 on:
   workflow_call:
   pull_request:
@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   lint:
-    name: "Lint App"
+    name: "Test App"
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -25,10 +25,10 @@ jobs:
         with:
           path: ${{ github.workspace }}/.turbo
           # Generate a new hash for every commit
-          key: ${{ runner.os }}-turbo-lint-${{ github.sha }}
+          key: ${{ runner.os }}-turbo-test-${{ github.sha }}
           # But restore the cache as long as we're on the same OS
           restore-keys: |
-            ${{ runner.os }}-turbo-lint
+            ${{ runner.os }}-turbo-test
 
-      - name: Run Linter
-        run: pnpm turbo lint --cache-dir=.turbo
+      - name: Run Test
+        run: pnpm turbo test --cache-dir=.turbo
