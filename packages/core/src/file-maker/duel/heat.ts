@@ -196,7 +196,7 @@ function rawEntriesToEntries(
  * @throws {Error} if the lake schedule entry is invalid for any number of reasons - invalid event type,
  * invalid gender, invalid boat class, or invalid time on an entry
  */
-export function createDuelRegattaHeat(
+export function createDuelHeat(
   regattaId: string,
   lakeScheduleLanesEntry: LakeScheduleLanesEntry,
 ): CreateEntityItem<typeof RegattaService.entities.heat> & { heatId: string } {

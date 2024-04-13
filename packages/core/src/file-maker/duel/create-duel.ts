@@ -5,7 +5,7 @@ import {
   LakeScheduleLanesEntry,
 } from "../types/duel-types.ts";
 import { createDuelRegattaBreak, isDuelBreak } from "./break.ts";
-import { createDuelRegattaHeat } from "./heat.ts";
+import { createDuelHeat } from "./heat.ts";
 import { HeatWithLanesEntry, processProgression } from "./progression.ts";
 import { createDuelRegatta } from "./regatta.ts";
 
@@ -44,7 +44,7 @@ export default function createDuel(
     } else {
       entries.push({
         lanesEntry,
-        heat: createDuelRegattaHeat(regatta.regattaId, lanesEntry),
+        heat: createDuelHeat(regatta.regattaId, lanesEntry),
       });
     }
   });

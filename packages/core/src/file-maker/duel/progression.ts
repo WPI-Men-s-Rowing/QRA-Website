@@ -1,11 +1,11 @@
 import { LakeScheduleLanesEntry } from "../types/duel-types.ts";
 import { Unwrapped } from "../types/utils.ts";
-import { createDuelRegattaHeat } from "./heat.ts";
+import { createDuelHeat } from "./heat.ts";
 
 // Type that concatenates a lanes entry with its heat
 export interface HeatWithLanesEntry {
   lanesEntry: LakeScheduleLanesEntry;
-  heat: ReturnType<typeof createDuelRegattaHeat>;
+  heat: ReturnType<typeof createDuelHeat>;
 }
 
 // Type of an entry within an event
@@ -24,7 +24,7 @@ function buildHeatMap(
     number,
     {
       lanesEntry: LakeScheduleLanesEntry;
-      heat: ReturnType<typeof createDuelRegattaHeat>;
+      heat: ReturnType<typeof createDuelHeat>;
     }
   >(); // Map relating the heat number to its heat
 
