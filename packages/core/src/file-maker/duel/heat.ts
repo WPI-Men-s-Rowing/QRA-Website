@@ -32,6 +32,20 @@ function addOrdinal(number: number) {
 }
 
 /**
+ * Parses a number and returns undefined if the parsing fails
+ * @param number the number to attempt to parse
+ * @returns the number, or undefined if the number is not valid
+ */
+function parseIntOrUndefined(number: string) {
+  try {
+    const result = parseInt(number);
+    return isNaN(result) ? undefined : result;
+  } catch (_) {
+    return undefined;
+  }
+}
+
+/**
  * Converts a time string to a time value in milliseconds. In the form HH:MM:SS.MS, where hours are optional
  * and all other fields are required
  * @param time the time to convert to milliseconds
@@ -217,7 +231,7 @@ export function createDuelHeat(
 ): CreateEntityItem<typeof RegattaService.entities.heat> & { heatId: string } {
   // Process the event regex. The /s create a regex automatically
   const regexResult =
-    /(?:(B|G)([1-9])(?:st|nd|rd|th)|(M|W)([1-9])?(?:V|v|N|n))(8|4\+|4|1x|2x)/gm.exec(
+    /(?:(B|G)([1-9])(?:st|nd|rd|th)|(M|W)([1-9])?(V|v|N|n))(8|4\+|4|1x|2x)/gm.exec(
       lakeScheduleLanesEntry.event,
     );
 
@@ -243,7 +257,7 @@ export function createDuelHeat(
   }
 
   // Get the boat class
-  const boatClass = fileMakerBoatClassToBoatClass(regexResult[5]);
+  const boatClass = fileMakerBoatClassToBoatClass(regexResult[6]);
 
   // This is the raw list of entries in the database. Some of these may be nonsensical but will be processed
   const entries = rawEntriesToEntries(
@@ -278,13 +292,15 @@ export function createDuelHeat(
       // Take the number from the regex when possible. Otherwise, for collegiate 1st 8, it's not specified so assume.
       // Then, add the ordinal
       displayName: `${toFirstUppercase(gender)}'s ${addOrdinal(
-        parseInt(regexResult[2]) ?? parseInt(regexResult[4]) ?? 1,
+        parseIntOrUndefined(regexResult[2]) ??
+          parseIntOrUndefined(regexResult[4]) ??
+          1,
       )} ${
         // If it's collegiate, we have varsity or novice. Otherwise, we don't, leave it blank.
         // The trailing space is to avoid strange formatting
         regexResult[5]?.toUpperCase() === "N"
           ? "Novice "
-          : regexResult[5].toUpperCase() === "V"
+          : regexResult[5]?.toUpperCase() === "V"
             ? "Varsity "
             : ""
       }${boatClass}`,

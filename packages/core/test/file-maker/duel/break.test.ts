@@ -43,7 +43,7 @@ describe("createDuelRegattaBreak", () => {
     expect(() => createDuelBreak("12345", WPI_MV8_NO_ENTRIES)).toThrow();
   });
 
-  test("Complete break parses", () => {
+  test("Complete break", () => {
     expect(createDuelBreak("123", WPI_BREAK)).toStrictEqual({
       breakId: WPI_BREAK.id.toString(),
       regattaId: "123",
@@ -59,7 +59,7 @@ describe("createDuelRegattaBreak", () => {
     } satisfies CreateEntityItem<typeof RegattaService.entities.break>);
   });
 
-  test("Complete break in host parses", () => {
+  test("Complete break in host", () => {
     expect(createDuelBreak("456", BREAK_HOST)).toStrictEqual({
       breakId: BREAK_HOST.id.toString(),
       regattaId: "456",
@@ -68,7 +68,7 @@ describe("createDuelRegattaBreak", () => {
     } satisfies CreateEntityItem<typeof RegattaService.entities.break>);
   });
 
-  test("Scheduled break parses", () => {
+  test("Scheduled break", () => {
     const dateTime = new Date(new Date().getTime() + 100000);
     expect(
       createDuelBreak("999", {
@@ -89,7 +89,7 @@ describe("createDuelRegattaBreak", () => {
     } satisfies CreateEntityItem<typeof RegattaService.entities.break>);
   });
 
-  test("Scheduled break in host parses", () => {
+  test("Scheduled break in host", () => {
     const dateTime = new Date(new Date().getTime() + 9000);
     expect(
       createDuelBreak("897897", {
