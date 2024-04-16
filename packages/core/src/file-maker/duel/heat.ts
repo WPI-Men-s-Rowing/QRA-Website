@@ -49,11 +49,10 @@ function stringToTimeInMs(time: string) {
   }
 
   // Parse the time. Hours are optional, but the rest are not, so force that
-  const hours =
-    timeRegex.groups![0] !== "" ? parseInt(timeRegex.groups![0]) : 0;
-  const min = parseInt(timeRegex.groups![1]);
-  const sec = parseInt(timeRegex.groups![2]);
-  const ms = parseInt(timeRegex.groups![3]);
+  const hours = timeRegex[1] !== "" ? parseInt(timeRegex[1]) : 0;
+  const min = parseInt(timeRegex[2]);
+  const sec = parseInt(timeRegex[3]);
+  const ms = parseInt(timeRegex[4]);
 
   // Process the finish time
   return hours * 60 * 60 * 1000 + min * 60 * 1000 + sec * 1000 + ms;
@@ -148,8 +147,16 @@ function rawEntriesToEntries(
     typeof RegattaService.entities.heat
   >["entries"] = [];
 
+  // Team to number of entries that team has
+  const teamsWithNoSeed = new Set<string>();
+
   for (let i = 0; i < rawEntries.length; i++) {
     const rawEntry = rawEntries[i];
+
+    // Skip if there is no team name
+    if (rawEntry.teamName === "") {
+      continue;
+    }
 
     // Team entry letter, e.g., the A in WPI A
     let teamEntryLetter: string | undefined;
@@ -160,8 +167,19 @@ function rawEntriesToEntries(
       rawEntries.filter((entry) => entry.teamName === rawEntry.teamName)
         .length > 1
     ) {
+      // Validate we haven't seen this team before
+      if (teamsWithNoSeed.has(rawEntry.teamName)) {
+        // If we have throw
+        throw new Error(
+          `Found multiple entries for a team (${rawEntry.teamName}) with no seed`,
+        );
+      }
+
       // If we don't and the team isn't unique, it's A. That happens sometimes in the data
       teamEntryLetter = "A";
+
+      // Mark it as us having seen this team
+      teamsWithNoSeed.add(rawEntry.teamName);
     }
 
     let finishTime: number | undefined;
@@ -171,9 +189,6 @@ function rawEntriesToEntries(
       didFailToFinish = true;
     } else if (rawEntry.time !== "") {
       finishTime = stringToTimeInMs(rawEntry.time);
-    } else {
-      // This should never happen, throw if this happens
-      throw new Error(`Invalid time value on lane ${i}: ${rawEntry.time}`);
     }
 
     result.push({
@@ -208,26 +223,27 @@ export function createDuelHeat(
 
   // Validate we got a safe result back, throw if not
   if (regexResult === null) {
-    throw new Error(`Invalid heat event: ${lakeScheduleLanesEntry.event}!`);
+    throw new Error(`Invalid heat event: ${lakeScheduleLanesEntry.event}`);
   }
 
   // Determine the gender of the heat
   let gender: CreateEntityItem<
     typeof RegattaService.entities.heat
   >["type"]["gender"];
-  if (regexResult.groups![2] === "M" || regexResult.groups![0] === "B") {
+  if (regexResult[3] === "M" || regexResult[1] === "B") {
     gender = "men"; // If it's M or B, it's men
-  } else if (regexResult.groups![2] === "W" || regexResult.groups![0] === "G") {
+  } else if (regexResult[3] === "W" || regexResult[1] === "G") {
     gender = "women"; // If it's W or G, it's women
   } else {
-    // Otherwise the heat is invalid. Technically this should never happen (the regex should fail first)
+    // Otherwise the heat is invalid.
+    // Technically this should never happen (the regex will fail first)
     throw new Error(
       `Invalid heat event gender: ${lakeScheduleLanesEntry.event}`,
     );
   }
 
   // Get the boat class
-  const boatClass = fileMakerBoatClassToBoatClass(regexResult.groups![4]);
+  const boatClass = fileMakerBoatClassToBoatClass(regexResult[5]);
 
   // This is the raw list of entries in the database. Some of these may be nonsensical but will be processed
   const entries = rawEntriesToEntries(
@@ -239,37 +255,36 @@ export function createDuelHeat(
     (entry) => entry.finishTime ?? entry.didFailToFinish,
   );
 
-  // Validate that if any entries have results, all do
+  const scheduledDate = new Date(
+    `${lakeScheduleLanesEntry.racedatetime} GMT-0400`,
+  );
+
+  // Validate that if any entries have results, or the time is in the past, all do
   if (
     !allEntriesHaveFinish &&
-    entries.some((entry) => entry.finishTime ?? entry.didFailToFinish)
+    (entries.some((entry) => entry.finishTime ?? entry.didFailToFinish) ||
+      scheduledDate < new Date())
   ) {
-    throw new Error(
-      "Invalid heat entry - some entries have results, some are missing",
-    );
+    throw new Error("Heat entry missing finish result");
   }
 
   // Now create the heat
   return {
     heatId: lakeScheduleLanesEntry.id.toString(),
     regattaId: regattaId,
-    scheduledStart: Date.parse(
-      `${lakeScheduleLanesEntry.racedatetime} GMT-0400`,
-    ),
+    scheduledStart: scheduledDate.getTime(),
     type: {
       gender,
       // Take the number from the regex when possible. Otherwise, for collegiate 1st 8, it's not specified so assume.
       // Then, add the ordinal
       displayName: `${toFirstUppercase(gender)}'s ${addOrdinal(
-        parseInt(regexResult.groups![1]) ??
-          parseInt(regexResult.groups![3]) ??
-          1,
+        parseInt(regexResult[2]) ?? parseInt(regexResult[4]) ?? 1,
       )} ${
         // If it's collegiate, we have varsity or novice. Otherwise, we don't, leave it blank.
         // The trailing space is to avoid strange formatting
-        regexResult.groups![4]?.toUpperCase() === "N"
+        regexResult[5]?.toUpperCase() === "N"
           ? "Novice "
-          : regexResult.groups![4].toUpperCase() === "V"
+          : regexResult[5].toUpperCase() === "V"
             ? "Varsity "
             : ""
       }${boatClass}`,

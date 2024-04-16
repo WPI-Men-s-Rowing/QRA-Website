@@ -42,7 +42,7 @@ function buildHeatMap(
       if (heatRegex === null) {
         heatNumber++; // If it's not explicitly specified, increment to get the heat number
       } else {
-        heatNumber = parseInt(heatRegex.groups![0]); // Parse the heat number if we explicitly have it
+        heatNumber = parseInt(heatRegex[1]); // Parse the heat number if we explicitly have it
       }
 
       // Assign the heat number to the progression information
@@ -155,14 +155,14 @@ function assignProgressionForFinal(
     }
 
     // Create and validate the start position
-    const startPosition = parseInt(entryRegex.groups![0]);
+    const startPosition = parseInt(entryRegex[1]);
     if (startPosition === undefined) {
-      throw new Error(`Start position ${entryRegex.groups![0]} is not valid`);
+      throw new Error(`Start position ${entryRegex[1]} is not valid`);
     }
 
-    // Build the source heats. Regex group 1 is the heat number, so if we have that, use it. Otherwise, it's all'
-    const sourceHeats = entryRegex.groups![1]
-      ? [heats.get(parseInt(entryRegex.groups![1]))!]
+    // Build the source heats. Regex group 2 is the heat number, so if we have that, use it. Otherwise, it's all'
+    const sourceHeats = entryRegex[2]
+      ? [heats.get(parseInt(entryRegex[2]))!]
       : [...heats.values()];
 
     // Otherwise, we build progression based on the entry regex
