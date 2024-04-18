@@ -241,13 +241,26 @@ export function createDuelHeat(
   }
 
   // Determine the gender of the heat
+  let displayGender: string;
   let gender: CreateEntityItem<
     typeof RegattaService.entities.heat
   >["type"]["gender"];
   if (regexResult[3] === "M" || regexResult[1] === "B") {
     gender = "men"; // If it's M or B, it's men
+
+    // Display gender based on the expanded result
+    if (regexResult[3] === "M") {
+      displayGender = "men";
+    } else {
+      displayGender = "boy";
+    }
   } else if (regexResult[3] === "W" || regexResult[1] === "G") {
     gender = "women"; // If it's W or G, it's women
+    if (regexResult[3] === "W") {
+      displayGender = "women";
+    } else {
+      displayGender = "girl";
+    }
   } else {
     // Otherwise the heat is invalid.
     // Technically this should never happen (the regex will fail first)
@@ -291,7 +304,7 @@ export function createDuelHeat(
       gender,
       // Take the number from the regex when possible. Otherwise, for collegiate 1st 8, it's not specified so assume.
       // Then, add the ordinal
-      displayName: `${toFirstUppercase(gender)}'s ${addOrdinal(
+      displayName: `${toFirstUppercase(displayGender)}'s ${addOrdinal(
         parseIntOrUndefined(regexResult[2]) ??
           parseIntOrUndefined(regexResult[4]) ??
           1,

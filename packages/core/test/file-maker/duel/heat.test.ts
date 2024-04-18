@@ -11,15 +11,6 @@ import {
 } from "./examples/heat.ts";
 
 /**
- * Takes a string, and returns the same string with the first character made uppercase
- * @param input the string to modify
- * @returns the inputted string with the first character made uppercase
- */
-function toFirstUppercase(input: string) {
-  return input.charAt(0).toUpperCase() + input.slice(1);
-}
-
-/**
  * Takes a number and adds the ordinal to it, and then returns the ordinal
  * @param number the number to add the ordinal to
  * @returns the number and the ordinal in a string
@@ -149,7 +140,7 @@ describe("createDuelHeat", () => {
     ).toThrow("Heat entry missing finish result");
   });
 
-  test("All event/gender combinations", () => {
+  test("All class/gender combinations", () => {
     const boatClasses = ["8", "4+", "4", "2x", "1x"] as const;
     const collegiateGenders = ["M", "W"] as const;
     const collegiateLevels = ["V", "N"] as const;
@@ -170,6 +161,12 @@ describe("createDuelHeat", () => {
       B: "men",
       G: "women",
     };
+    const gendersToDisplayGender: Record<string, string> = {
+      M: "Men's",
+      W: "Women's",
+      B: "Boy's",
+      G: "Girl's",
+    };
 
     boatClasses.forEach((boatClass) => {
       collegiateGenders.forEach((gender) => {
@@ -186,11 +183,11 @@ describe("createDuelHeat", () => {
               type: {
                 boatClass: boatClassesToType[boatClass],
                 gender: gendersToType[gender],
-                displayName: `${toFirstUppercase(
-                  gendersToType[gender],
-                )}'s ${addOrdinal(parseIntOrUndefined(number) ?? 1)} ${
-                  level === "V" ? "Varsity" : "Novice"
-                } ${boatClassesToType[boatClass]}`,
+                displayName: `${gendersToDisplayGender[gender]} ${addOrdinal(
+                  parseIntOrUndefined(number) ?? 1,
+                )} ${level === "V" ? "Varsity" : "Novice"} ${
+                  boatClassesToType[boatClass]
+                }`,
               },
               scheduledStart: Date.parse(
                 `${EMPTY_ENTRY.racedatetime} GMT-0400`,
@@ -215,9 +212,7 @@ describe("createDuelHeat", () => {
             type: {
               gender: gendersToType[gender],
               boatClass: boatClassesToType[boatClass],
-              displayName: `${toFirstUppercase(
-                gendersToType[gender],
-              )}'s ${number} ${boatClassesToType[boatClass]}`,
+              displayName: `${gendersToDisplayGender[gender]} ${number} ${boatClassesToType[boatClass]}`,
             },
             scheduledStart: Date.parse(`${EMPTY_ENTRY.racedatetime} GMT-0400`),
             status: "official",
