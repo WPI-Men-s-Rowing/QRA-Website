@@ -63,13 +63,16 @@ function stringToTimeInMs(time: string) {
   }
 
   // Parse the time. Hours are optional, but the rest are not, so force that
-  const hours = timeRegex[1] !== "" ? parseInt(timeRegex[1]) : 0;
+  const hours =
+    timeRegex[1] && timeRegex[1] !== "" ? parseInt(timeRegex[1]) : 0;
   const min = parseInt(timeRegex[2]);
   const sec = parseInt(timeRegex[3]);
-  const ms = parseInt(timeRegex[4]);
+  const secDecimal = Number(`0.${timeRegex[4]}`);
 
   // Process the finish time
-  return hours * 60 * 60 * 1000 + min * 60 * 1000 + sec * 1000 + ms;
+  return (
+    hours * 60 * 60 * 1000 + min * 60 * 1000 + sec * 1000 + secDecimal * 1000
+  );
 }
 
 /**
@@ -81,22 +84,19 @@ function stringToTimeInMs(time: string) {
 function fileMakerBoatClassToBoatClass(
   boatClass: string,
 ): CreateEntityItem<typeof RegattaService.entities.heat>["type"]["boatClass"] {
-  // Figure out what to do based on the boat class
-  switch (boatClass) {
-    case "8":
-      return "8+";
-    case "4+":
-      return "4+";
-    case "4": // The QRA doesn't support 4- and some coaches use this instead of 4+...
-      return "4+";
-    case "2x":
-      return "2x";
-    case "1x":
-      return "1x";
-    default:
-      // If the boat class is not one of the QRA boat classes, throw
-      throw new Error(`Invalid heat event boat class: ${boatClass}`);
-  }
+  // Map relating boat class to class type
+  const classMap: Record<
+    string,
+    CreateEntityItem<typeof RegattaService.entities.heat>["type"]["boatClass"]
+  > = {
+    "8": "8+",
+    "4+": "4+",
+    "4": "4+",
+    "2x": "2x",
+    "1x": "1x",
+  };
+
+  return classMap[boatClass];
 }
 
 /**
@@ -248,25 +248,19 @@ export function createDuelHeat(
   if (regexResult[3] === "M" || regexResult[1] === "B") {
     gender = "men"; // If it's M or B, it's men
 
-    // Display gender based on the expanded result
     if (regexResult[3] === "M") {
       displayGender = "men";
     } else {
       displayGender = "boy";
     }
-  } else if (regexResult[3] === "W" || regexResult[1] === "G") {
+  } else {
+    // Regex prevents this from being a problem
     gender = "women"; // If it's W or G, it's women
     if (regexResult[3] === "W") {
       displayGender = "women";
     } else {
       displayGender = "girl";
     }
-  } else {
-    // Otherwise the heat is invalid.
-    // Technically this should never happen (the regex will fail first)
-    throw new Error(
-      `Invalid heat event gender: ${lakeScheduleLanesEntry.event}`,
-    );
   }
 
   // Get the boat class
@@ -293,6 +287,11 @@ export function createDuelHeat(
       scheduledDate < new Date())
   ) {
     throw new Error("Heat entry missing finish result");
+  }
+
+  // Ensure we have no results if we're scheduled
+  if (scheduledDate > new Date() && allEntriesHaveFinish) {
+    throw new Error("Found a scheduled event with results");
   }
 
   // Now create the heat
