@@ -29,19 +29,9 @@ export function createDuelRegatta(
   regattaId: string;
 } {
   // Validate host type to be valid for duels
-  if (
-    lakeScheduleEntry.clubtype !== "Col" &&
-    lakeScheduleEntry.clubtype !== "HS"
-  ) {
+  if (!isDuelRegatta(lakeScheduleEntry)) {
     throw new Error(
-      "Cannot create a duel regatta when regatta type is not college or high school",
-    );
-  }
-
-  // Validate it's a sprint race
-  if (lakeScheduleEntry.regattatype !== "Sprint") {
-    throw new Error(
-      "Cannot create a duel regatta when regatta type is not sprint",
+      "Cannot create a duel regatta when regatta is not a valid duel",
     );
   }
 
