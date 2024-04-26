@@ -168,7 +168,10 @@ function rawEntriesToEntries(
     const rawEntry = rawEntries[i];
 
     // Skip if there is no team name
-    if (rawEntry.teamName === "") {
+    if (
+      rawEntry.teamName === "" ||
+      (rawEntry.teamName.trim() === "" && rawEntry.time === "")
+    ) {
       continue;
     }
 
@@ -207,7 +210,7 @@ function rawEntriesToEntries(
 
     result.push({
       bowNumber: i,
-      teamName: rawEntry.teamName,
+      teamName: rawEntry.teamName.trim() === "" ? "Unknown" : rawEntry.teamName,
       teamEntryLetter,
       finishTime,
       didFailToFinish,

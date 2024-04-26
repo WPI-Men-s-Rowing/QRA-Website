@@ -7,12 +7,14 @@ import {
   ASSUMPTION_W3V8_DNF,
   CLARK_WV8_GF,
   EMPTY_ENTRY,
+  HCR_WV4_SEED_NO_A_BLANK_TIME,
   HCR_WV8_SCHEDULED,
   WPI_MV4_SEED,
   WPI_MV8_NO_ENTRIES,
   WPI_MV8_RESULTS,
   WPI_W2V8_SCR,
   WPI_W4V8_SEED,
+  WPI_WV8_BLANK_ENTRY,
 } from "./examples/heat.ts";
 
 /**
@@ -160,7 +162,7 @@ describe("createDuelHeat", () => {
     ).toThrow("scheduled event with results");
   });
 
-  test("All class/gender combinations", () => {
+  describe("All class/gender combinations", () => {
     const boatClasses = ["8", "4+", "4", "2x", "1x"] as const;
     const collegiateGenders = ["M", "W"] as const;
     const collegiateLevels = ["V", "N"] as const;
@@ -192,22 +194,54 @@ describe("createDuelHeat", () => {
       collegiateGenders.forEach((gender) => {
         collegiateLevels.forEach((level) => {
           collegiateNumbers.forEach((number) => {
+            const displayName = `${gendersToDisplayGender[gender]} ${addOrdinal(
+              parseIntOrUndefined(number) ?? 1,
+            )} ${level === "V" ? "Varsity" : "Novice"} ${
+              boatClassesToType[boatClass]
+            }`;
+            test(displayName, () => {
+              expect(
+                createDuelHeat("123", {
+                  ...EMPTY_ENTRY,
+                  event: `${gender}${number}${level}${boatClass}`,
+                }),
+              ).toStrictEqual({
+                regattaId: "123",
+                heatId: EMPTY_ENTRY.id.toString(),
+                type: {
+                  boatClass: boatClassesToType[boatClass],
+                  gender: gendersToType[gender],
+                  displayName,
+                },
+                scheduledStart: Date.parse(
+                  `${EMPTY_ENTRY.racedatetime} GMT-0400`,
+                ),
+                status: "official",
+                entries: [],
+              } satisfies CreateEntityItem<
+                typeof RegattaService.entities.heat
+              >);
+            });
+          });
+        });
+      });
+
+      highSchoolGenders.forEach((gender) => {
+        highSchoolNumbers.forEach((number) => {
+          const displayName = `${gendersToDisplayGender[gender]} ${number} ${boatClassesToType[boatClass]}`;
+          test(displayName, () => {
             expect(
-              createDuelHeat("123", {
+              createDuelHeat("bbb", {
                 ...EMPTY_ENTRY,
-                event: `${gender}${number}${level}${boatClass}`,
+                event: `${gender}${number}${boatClass}`,
               }),
             ).toStrictEqual({
-              regattaId: "123",
+              regattaId: "bbb",
               heatId: EMPTY_ENTRY.id.toString(),
               type: {
-                boatClass: boatClassesToType[boatClass],
                 gender: gendersToType[gender],
-                displayName: `${gendersToDisplayGender[gender]} ${addOrdinal(
-                  parseIntOrUndefined(number) ?? 1,
-                )} ${level === "V" ? "Varsity" : "Novice"} ${
-                  boatClassesToType[boatClass]
-                }`,
+                boatClass: boatClassesToType[boatClass],
+                displayName,
               },
               scheduledStart: Date.parse(
                 `${EMPTY_ENTRY.racedatetime} GMT-0400`,
@@ -216,28 +250,6 @@ describe("createDuelHeat", () => {
               entries: [],
             } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
           });
-        });
-      });
-
-      highSchoolGenders.forEach((gender) => {
-        highSchoolNumbers.forEach((number) => {
-          expect(
-            createDuelHeat("bbb", {
-              ...EMPTY_ENTRY,
-              event: `${gender}${number}${boatClass}`,
-            }),
-          ).toStrictEqual({
-            regattaId: "bbb",
-            heatId: EMPTY_ENTRY.id.toString(),
-            type: {
-              gender: gendersToType[gender],
-              boatClass: boatClassesToType[boatClass],
-              displayName: `${gendersToDisplayGender[gender]} ${number} ${boatClassesToType[boatClass]}`,
-            },
-            scheduledStart: Date.parse(`${EMPTY_ENTRY.racedatetime} GMT-0400`),
-            status: "official",
-            entries: [],
-          } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
         });
       });
     });
@@ -456,6 +468,79 @@ describe("createDuelHeat", () => {
         {
           teamName: "Colgate",
           bowNumber: 3,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("Blank entry with time", () => {
+    expect(
+      createDuelHeat("vbnm", {
+        ...HCR_WV4_SEED_NO_A_BLANK_TIME,
+        entry1: "University of Connecticut",
+        entryseed1: "",
+        entrydisp1: "University of Connecticut",
+      }),
+    ).toEqual({
+      regattaId: "vbnm",
+      heatId: HCR_WV4_SEED_NO_A_BLANK_TIME.id.toString(),
+      type: {
+        gender: "women",
+        boatClass: "4+",
+        displayName: "Women's 1st Varsity 4+",
+      },
+      scheduledStart: Date.parse(
+        `${HCR_WV4_SEED_NO_A_BLANK_TIME.racedatetime.toString()} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "University of Connecticut",
+          bowNumber: 1,
+          finishTime: 7 * 60 * 1000 + 54.5 * 1000,
+        },
+        {
+          teamName: "Boston College",
+          bowNumber: 2,
+          finishTime: 7 * 60 * 1000 + 33.9 * 1000,
+        },
+        {
+          teamName: "Unknown",
+          bowNumber: 3,
+          finishTime: 8 * 60 * 1000 + 17.64 * 1000,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("Blank entry", () => {
+    expect(createDuelHeat("b", WPI_WV8_BLANK_ENTRY)).toEqual({
+      regattaId: "b",
+      heatId: WPI_WV8_BLANK_ENTRY.id.toString(),
+      type: {
+        gender: "women",
+        boatClass: "8+",
+        displayName: "Women's 1st Varsity 8+",
+      },
+      scheduledStart: Date.parse(
+        `${WPI_WV8_BLANK_ENTRY.racedatetime.toString()} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "Bates",
+          bowNumber: 1,
+          finishTime: 6 * 60 * 1000 + 47.97 * 1000,
+        },
+        {
+          teamName: "Hamilton",
+          bowNumber: 2,
+          finishTime: 6 * 60 * 1000 + 51.39 * 1000,
+        },
+        {
+          teamName: "MHC",
+          bowNumber: 3,
+          finishTime: 7 * 60 * 1000 + 41.87 * 1000,
         },
       ],
     } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
