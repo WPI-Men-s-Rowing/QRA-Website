@@ -54,7 +54,9 @@ function parseIntOrUndefined(number: string) {
  */
 function stringToTimeInMs(time: string) {
   // Apply a simple time regex to the time
-  const timeRegex = /(?:([0-9]+):)?([0-9]+):([0-9]+).([0-9]+)/gm.exec(time);
+  const timeRegex = /(?:([0-9]+):)?([0-9]+):([0-9]+)(?:.([0-9]+))?/gm.exec(
+    time,
+  );
 
   // If the time regex is invalid
   if (timeRegex === null) {
@@ -67,7 +69,7 @@ function stringToTimeInMs(time: string) {
     timeRegex[1] && timeRegex[1] !== "" ? parseInt(timeRegex[1]) : 0;
   const min = parseInt(timeRegex[2]);
   const sec = parseInt(timeRegex[3]);
-  const secDecimal = Number(`0.${timeRegex[4]}`);
+  const secDecimal = timeRegex[4] ? Number(`0.${timeRegex[4]}`) : 0;
 
   // Process the finish time
   return (
@@ -156,6 +158,18 @@ function fileMakerEntriesToEntriesArray(
 function rawEntriesToEntries(
   rawEntries: ReturnType<typeof fileMakerEntriesToEntriesArray>,
 ) {
+  // Pre-process to add seed information if it is available but not explicit
+  rawEntries = rawEntries.map((rawEntry) => {
+    // Apply a regex to search for matches
+    const regexResult = /(.*) ([A-Za-z])\s*$/gm.exec(rawEntry.teamName.trim());
+    console.log(rawEntry.teamName);
+    return {
+      ...rawEntry,
+      teamName: regexResult ? regexResult[1] : rawEntry.teamName,
+      seed: regexResult ? regexResult[2] : rawEntry.seed,
+    };
+  });
+
   // Now create the entries
   const result: CreateEntityItem<
     typeof RegattaService.entities.heat
@@ -166,11 +180,12 @@ function rawEntriesToEntries(
 
   for (let i = 0; i < rawEntries.length; i++) {
     const rawEntry = rawEntries[i];
+    const trimmedTeamName = rawEntry.teamName.trim();
 
     // Skip if there is no team name
     if (
       rawEntry.teamName === "" ||
-      (rawEntry.teamName.trim() === "" && rawEntry.time === "")
+      (trimmedTeamName === "" && rawEntry.time === "")
     ) {
       continue;
     }
@@ -210,7 +225,7 @@ function rawEntriesToEntries(
 
     result.push({
       bowNumber: i,
-      teamName: rawEntry.teamName.trim() === "" ? "Unknown" : rawEntry.teamName,
+      teamName: trimmedTeamName === "" ? "Unknown" : trimmedTeamName,
       teamEntryLetter,
       finishTime,
       didFailToFinish,
@@ -286,8 +301,7 @@ export function createDuelHeat(
   // Validate that if any entries have results, or the time is in the past, all do
   if (
     !allEntriesHaveFinish &&
-    (entries.some((entry) => entry.finishTime ?? entry.didFailToFinish) ||
-      scheduledDate < new Date())
+    entries.some((entry) => entry.finishTime ?? entry.didFailToFinish)
   ) {
     throw new Error("Heat entry missing finish result");
   }

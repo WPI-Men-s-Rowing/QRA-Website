@@ -7,13 +7,16 @@ import {
   ASSUMPTION_W3V8_DNF,
   CLARK_WV8_GF,
   EMPTY_ENTRY,
-  HCR_WV4_SEED_NO_A_BLANK_TIME,
+  HCR_WV4_BLANK_TIME,
   HCR_WV8_SCHEDULED,
+  WPI_M3V8_3V_4V_SEED,
   WPI_MV4_SEED,
   WPI_MV8_NO_ENTRIES,
   WPI_MV8_RESULTS,
   WPI_W2V8_SCR,
   WPI_W4V8_SEED,
+  WPI_WV4_B_SEED_NOT_IN_SEED,
+  WPI_WV4_WHITE_SPACE_ENTRY,
   WPI_WV8_BLANK_ENTRY,
 } from "./examples/heat.ts";
 
@@ -133,8 +136,8 @@ describe("createDuelHeat", () => {
     ).toThrow("Heat entry missing finish result");
   });
 
-  test("Missing results for completed event throws", () => {
-    expect(() =>
+  test("Scheduled in past", () => {
+    expect(
       createDuelHeat("id", {
         ...EMPTY_ENTRY,
         event: "MV8",
@@ -142,9 +145,25 @@ describe("createDuelHeat", () => {
         racedateUnix: "2004-01-01",
         racetime: "08:00:00",
         racedatetime: "1/1/2004 08:00:00",
-        entry1: "Wesleyean",
+        entry1: "Wesleyan",
       }),
-    ).toThrow("Heat entry missing finish result");
+    ).toEqual({
+      heatId: EMPTY_ENTRY.id.toString(),
+      regattaId: "id",
+      type: {
+        gender: "men",
+        displayName: "Men's 1st Varsity 8+",
+        boatClass: "8+",
+      },
+      scheduledStart: Date.parse(`1/1/2004 08:00:00 GMT-0400`),
+      status: "scheduled",
+      entries: [
+        {
+          teamName: "Wesleyan",
+          bowNumber: 1,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
   });
 
   test("Results for scheduled event throws", () => {
@@ -365,7 +384,7 @@ describe("createDuelHeat", () => {
     } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
   });
 
-  test("Entries with Seed", () => {
+  test("Entries with seed", () => {
     expect(createDuelHeat("seed", WPI_MV4_SEED)).toEqual({
       regattaId: "seed",
       heatId: WPI_MV4_SEED.id.toString(),
@@ -403,7 +422,7 @@ describe("createDuelHeat", () => {
     } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
   });
 
-  test("Entries with Seed missing A", () => {
+  test("Entries with seed missing A", () => {
     expect(createDuelHeat("noSeed", WPI_W4V8_SEED)).toEqual({
       regattaId: "noSeed",
       heatId: WPI_W4V8_SEED.id.toString(),
@@ -474,23 +493,16 @@ describe("createDuelHeat", () => {
   });
 
   test("Blank entry with time", () => {
-    expect(
-      createDuelHeat("vbnm", {
-        ...HCR_WV4_SEED_NO_A_BLANK_TIME,
-        entry1: "University of Connecticut",
-        entryseed1: "",
-        entrydisp1: "University of Connecticut",
-      }),
-    ).toEqual({
+    expect(createDuelHeat("vbnm", HCR_WV4_BLANK_TIME)).toEqual({
       regattaId: "vbnm",
-      heatId: HCR_WV4_SEED_NO_A_BLANK_TIME.id.toString(),
+      heatId: HCR_WV4_BLANK_TIME.id.toString(),
       type: {
         gender: "women",
         boatClass: "4+",
         displayName: "Women's 1st Varsity 4+",
       },
       scheduledStart: Date.parse(
-        `${HCR_WV4_SEED_NO_A_BLANK_TIME.racedatetime.toString()} GMT-0400`,
+        `${HCR_WV4_BLANK_TIME.racedatetime.toString()} GMT-0400`,
       ),
       status: "official",
       entries: [
@@ -541,6 +553,223 @@ describe("createDuelHeat", () => {
           teamName: "MHC",
           bowNumber: 3,
           finishTime: 7 * 60 * 1000 + 41.87 * 1000,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("B seed not in entrydispseed", () => {
+    expect(createDuelHeat("Bseed", WPI_WV4_B_SEED_NOT_IN_SEED)).toEqual({
+      regattaId: "Bseed",
+      heatId: WPI_WV4_B_SEED_NOT_IN_SEED.id.toString(),
+      type: {
+        gender: "women",
+        boatClass: "4+",
+        displayName: "Women's 1st Varsity 4+",
+      },
+      scheduledStart: Date.parse(
+        `${WPI_WV4_B_SEED_NOT_IN_SEED.racedatetime} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "Connecticut College",
+          bowNumber: 1,
+          didFailToFinish: true,
+        },
+        {
+          teamName: "WPI",
+          bowNumber: 2,
+          didFailToFinish: true,
+        },
+        {
+          teamName: "Williams",
+          bowNumber: 3,
+          teamEntryLetter: "A",
+          didFailToFinish: true,
+        },
+        {
+          teamName: "Williams",
+          bowNumber: 4,
+          teamEntryLetter: "B",
+          didFailToFinish: true,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("Entry name whitespace trimmed", () => {
+    expect(createDuelHeat("trimmed", WPI_WV4_WHITE_SPACE_ENTRY)).toEqual({
+      regattaId: "trimmed",
+      heatId: WPI_WV4_WHITE_SPACE_ENTRY.id.toString(),
+      type: {
+        gender: "women",
+        boatClass: "4+",
+        displayName: "Women's 1st Varsity 4+",
+      },
+      scheduledStart: Date.parse(
+        `${WPI_WV4_WHITE_SPACE_ENTRY.racedatetime.toString()} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "Trinity",
+          bowNumber: 1,
+          teamEntryLetter: "1V",
+          finishTime: 9 * 60 * 1000 + 22.42 * 1000,
+        },
+        {
+          teamName: "WPI",
+          bowNumber: 2,
+          teamEntryLetter: "N4",
+          didFailToFinish: true,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("Finish time with hours", () => {
+    expect(
+      createDuelHeat("hours", {
+        ...WPI_WV8_BLANK_ENTRY,
+        entry1: "WPI",
+        entrydisp1: "WPI",
+        time1: "1:54:12.245",
+        entry2: "",
+        entrydisp2: "",
+        time2: "",
+        entry3: "",
+        entrydisp3: "",
+        time3: "",
+      }),
+    ).toEqual({
+      heatId: WPI_WV8_BLANK_ENTRY.id.toString(),
+      regattaId: "hours",
+      type: {
+        gender: "women",
+        boatClass: "8+",
+        displayName: "Women's 1st Varsity 8+",
+      },
+      scheduledStart: Date.parse(
+        `${WPI_WV8_BLANK_ENTRY.racedatetime.toString()} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "WPI",
+          bowNumber: 1,
+          finishTime: 1 * 60 * 60 * 1000 + 54 * 60 * 1000 + 12.245 * 1000,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("Finish time with no ms", () => {
+    expect(
+      createDuelHeat("MS", {
+        ...WPI_WV8_BLANK_ENTRY,
+        entry1: "",
+        entrydisp1: "",
+        time1: "",
+        entry2: "Holy Cross",
+        entrydisp2: "Holy Cross",
+        time2: "6:45",
+        entry3: "",
+        entrydisp3: "",
+        time3: "",
+      }),
+    ).toEqual({
+      heatId: WPI_WV8_BLANK_ENTRY.id.toString(),
+      regattaId: "MS",
+      type: {
+        gender: "women",
+        boatClass: "8+",
+        displayName: "Women's 1st Varsity 8+",
+      },
+      scheduledStart: Date.parse(
+        `${WPI_WV8_BLANK_ENTRY.racedatetime.toString()} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "Holy Cross",
+          bowNumber: 2,
+          finishTime: 6 * 60 * 1000 + 45 * 1000,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("3v/4v seed", () => {
+    expect(createDuelHeat("asdf", WPI_M3V8_3V_4V_SEED)).toEqual({
+      regattaId: "asdf",
+      heatId: WPI_M3V8_3V_4V_SEED.id.toString(),
+      type: {
+        gender: "men",
+        boatClass: "8+",
+        displayName: "Men's 3rd Varsity 8+",
+      },
+      scheduledStart: Date.parse(
+        `${WPI_M3V8_3V_4V_SEED.racedatetime.toString()} GMT-0400`,
+      ),
+      status: "official",
+      entries: [
+        {
+          teamName: "Wesleyan",
+          teamEntryLetter: "3V",
+          bowNumber: 1,
+          finishTime: 6 * 60 * 1000 + 25.72 * 1000,
+        },
+        {
+          teamName: "WPI",
+          teamEntryLetter: "3V",
+          bowNumber: 2,
+          finishTime: 6 * 60 * 1000 + 29.95 * 1000,
+        },
+        {
+          teamName: "Wesleyan",
+          teamEntryLetter: "4V",
+          bowNumber: 3,
+          finishTime: 6 * 60 * 1000 + 37.92 * 1000,
+        },
+        {
+          teamName: "WPI",
+          teamEntryLetter: "4V",
+          bowNumber: 4,
+          finishTime: 6 * 60 * 1000 + 36.42 * 1000,
+        },
+      ],
+    } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
+  });
+
+  test("B seed only not in entrydispseed", () => {
+    expect(
+      createDuelHeat("seed", {
+        ...EMPTY_ENTRY,
+        event: "B1st8",
+        racedate: "12/12/1996",
+        racedateUnix: "1996-12-12",
+        racetime: "11:00:00",
+        racedatetime: "12/12/1996 11:00:00",
+        entry5: "Colby C",
+        entrydisp5: "Colby C",
+        entryseed5: "",
+      }),
+    ).toEqual({
+      heatId: EMPTY_ENTRY.id.toString(),
+      regattaId: "seed",
+      type: {
+        gender: "men",
+        boatClass: "8+",
+        displayName: "Boy's 1st 8+",
+      },
+      scheduledStart: Date.parse(`12/12/1996 11:00:00 GMT-0400`),
+      status: "scheduled",
+      entries: [
+        {
+          teamName: "Colby",
+          teamEntryLetter: "C",
+          bowNumber: 5,
         },
       ],
     } satisfies CreateEntityItem<typeof RegattaService.entities.heat>);
