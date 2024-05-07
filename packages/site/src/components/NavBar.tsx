@@ -43,21 +43,30 @@ export default function NavBar() {
             <Dropdown
               title="Community"
               items={[
-                { label: "Local Rowing Programs", path: "/community/test" },
-                { label: "Quinsigamond Rowing Club", path: "/community/test2" },
+                {
+                  label: "Local Rowing Programs",
+                  path: "/community/localrowing",
+                },
+                {
+                  label: "Quinsigamond Rowing Club",
+                  path: "https://www.qrcrowing.org/",
+                },
                 {
                   label: "Rules of Racing and Traffic Patterns",
-                  path: "/community/test3",
+                  path: "/community/rulesofracing",
                 },
                 {
                   label: "Regatta Point Information",
-                  path: "/community/test4",
+                  path: "/community/regattapoint",
                 },
                 {
                   label: "Donahue Rowing Center Information",
-                  path: "/community/test5",
+                  path: "/community/drcinfo",
                 },
-                { label: "Spectator Information", path: "/community/test6" },
+                {
+                  label: "Spectator Information",
+                  path: "/community/spectator",
+                },
               ]}
             />
           </div>
