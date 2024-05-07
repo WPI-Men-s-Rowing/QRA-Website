@@ -5,7 +5,11 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <div className="min-w-screen min-h-screen overflow-x-hidden">
-        <JumboTron title={"Community"} subtitle={""} picture={photo} />
+        <JumboTron
+          title={"QRA Community"}
+          subtitle={"At the heart of what we do"}
+          picture={photo}
+        />
         {children}
       </div>
     </>
