@@ -127,6 +127,7 @@ export const Heat = new Entity({
                   },
                   // Position to start searching for someone not yet included at.
                   // This enables e.g., winner to semi AB, second to semi BC, etc
+                  // 0-indexed
                   startPosition: {
                     required: false,
                     type: "number",

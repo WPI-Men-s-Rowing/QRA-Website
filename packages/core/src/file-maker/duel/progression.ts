@@ -102,6 +102,7 @@ function buildProgressionByResults(
           }
         });
 
+        // Ensure that the entry had a finish time
         if (index === undefined) {
           throw new Error(
             `Found an entry (${heatEntry.teamName}) that progressed with no finish time`,
@@ -154,22 +155,28 @@ function assignProgressionForFinal(
       return;
     }
 
-    // Create and validate the start position
-    const startPosition = parseInt(entryRegex[1]);
-    if (startPosition === undefined) {
-      throw new Error(`Start position ${entryRegex[1]} is not valid`);
-    }
+    // Create the start position
+    let startPosition = parseInt(entryRegex[1]);
 
-    // Build the source heats. Regex group 2 is the heat number, so if we have that, use it. Otherwise, it's all'
+    // Build the source heats. Regex group 2 is the heat number, so if we have that, use it. Otherwise, it's all
     const sourceHeats = entryRegex[2]
       ? [heats.get(parseInt(entryRegex[2]))!]
       : [...heats.values()];
+
+    // If this is a singular entry, we need to modify the start position
+    // so that we don't include entries we already have in the count
+    startPosition -= Math.max(
+      final.heat.progression!.previous!.entries.filter((entry) =>
+        entry.sourceIds.some((id) => id === sourceHeats[0].heat.heatId),
+      ).length,
+      0,
+    );
 
     // Otherwise, we build progression based on the entry regex
     final.heat.progression!.previous!.entries.push({
       sourceIds: sourceHeats.map((heat) => heat.heat.heatId),
       bowNumber: finalEntry.bowNumber,
-      startPosition,
+      startPosition: startPosition - 1,
     });
 
     // Build the final array of entries
@@ -180,7 +187,7 @@ function assignProgressionForFinal(
 
     // Remove entries from the source heats that didn't finish and any entries that are already in the final.
     // Then sort the remaining by finish time
-    entries
+    entries = entries
       .filter(
         (entry) =>
           entry.finishTime !== undefined &&
@@ -193,9 +200,55 @@ function assignProgressionForFinal(
       .sort((a, b) => a.finishTime! - b.finishTime!);
 
     // Back-compute the team name for the final results
-    finalEntry.teamName = entries[0].teamName;
-    finalEntry.teamEntryLetter = entries[0].teamEntryLetter;
+    finalEntry.teamName = entries[startPosition - 1].teamName;
+    finalEntry.teamEntryLetter = entries[startPosition - 1].teamEntryLetter;
   });
+}
+
+/**
+ * Function that determines if the provided event is a grand final
+ * @param eventNameLowercase the lowercase event name
+ * @param hostNameLowercase the lowercase hostname string
+ * @returns true if the provided event is a grand final, false otherwise
+ */
+function isGrandFinal(
+  eventNameLowercase: string,
+  hostNameLowercase: string,
+): boolean {
+  return (
+    eventNameLowercase.includes("gf") || hostNameLowercase.includes("grand")
+  );
+}
+
+/**
+ * Function that determines if the provided event is a petite final
+ * @param eventNameLowercase the lowercase event name
+ * @param hostNameLowercase the lowercase host name
+ * @returns true if the provided event is a petite final, false otherwise
+ */
+function isPetiteFinal(
+  eventNameLowercase: string,
+  hostNameLowercase: string,
+): boolean {
+  return (
+    eventNameLowercase.includes("pf") || hostNameLowercase.includes("petite")
+  );
+}
+
+/**
+ * Function that determines if the provided event is a heat
+ * @param eventNameLowercase the lowercase event name
+ * @param hostNameLowercase the lowercase host name
+ * @returns true if the event is a heat, false otherwise
+ */
+function isHeat(
+  eventNameLowercase: string,
+  hostNameLowercase: string,
+): boolean {
+  return (
+    /(?:heat|h)\s?([1-9])/gim.exec(eventNameLowercase) !== null ||
+    hostNameLowercase.includes("heat")
+  );
 }
 
 /**
@@ -207,12 +260,9 @@ function calculateNameForFinal(final: LakeScheduleLanesEntry): string {
   const eventNameLowercase = final.event.toLowerCase();
   const hostNameLowercase = final.host.toLowerCase();
 
-  if (eventNameLowercase.includes("gf") || hostNameLowercase.includes("gf")) {
+  if (isGrandFinal(eventNameLowercase, hostNameLowercase)) {
     return "Grand Final"; // GF in either is grand final
-  } else if (
-    eventNameLowercase.includes("pf") ||
-    hostNameLowercase.includes("pf")
-  ) {
+  } else if (isPetiteFinal(eventNameLowercase, hostNameLowercase)) {
     return "Petite Final"; // PF in either is petite final
   } else {
     // Otherwise, throw
@@ -226,9 +276,10 @@ function calculateNameForFinal(final: LakeScheduleLanesEntry): string {
  * Processes progression information on the provided heats, adding it to each of the heats created when applicable
  * @param heatsMap the entries of heats to create progression information in. This will be mutated as a result of this operation. Should include HEATS
  * AND FINALS (as you shouldn't know that here)
- * @throws {Error} if the algorithm cannot properly determine progression information
+ * @throws {Error} if the algorithm cannot properly determine progression information.
+ * This may leave the input array in an inconsistent state with respect to progression
  */
-export function processProgression(entries: HeatWithLanesEntry[]) {
+export function processProgression(entries: HeatWithLanesEntry[]): void {
   entries.forEach((heat) => {
     // If the heat progression is already defined, something else has handled this so we can skip
     if (heat.heat.progression !== undefined) {
@@ -241,15 +292,28 @@ export function processProgression(entries: HeatWithLanesEntry[]) {
         innerHeat.heat.type.displayName === heat.heat.type.displayName,
     );
     if (entriesWithSameType.length === 1) {
-      return;
-    } // Do nothing if we got only one of the same type
+      // Check to make sure we aren't looking at a heat/final
+      const eventNameLowercase = heat.lanesEntry.event.toLowerCase();
+      const hostNameLowercase = heat.lanesEntry.host.toLowerCase();
+      if (isHeat(eventNameLowercase, hostNameLowercase)) {
+        throw new Error("Found a heat with no matching finals");
+      } else if (
+        isGrandFinal(eventNameLowercase, hostNameLowercase) ||
+        isPetiteFinal(eventNameLowercase, hostNameLowercase)
+      ) {
+        throw new Error("Found a final with no matching heats");
+      }
 
-    // Validate that we have exactly one heat that could be the final
+      return; // If we're not, that's fine there's just no progression
+    }
+
+    // Get all the heats that could be the final
     const finalEligibleHeats = entriesWithSameType.filter(
       (heatWithSameType) =>
-        /(?:heat|h)\s+([1-9])/gim.exec(heatWithSameType.lanesEntry.event) ===
-          undefined &&
-        !heatWithSameType.lanesEntry.host.toLowerCase().includes("heat"),
+        !isHeat(
+          heatWithSameType.lanesEntry.event.toLowerCase(),
+          heatWithSameType.lanesEntry.host.toLowerCase(),
+        ),
     );
 
     // Build the heat map, remove the final eligible heats from it
@@ -265,12 +329,32 @@ export function processProgression(entries: HeatWithLanesEntry[]) {
     // If there are no heats, it's a special case
     if (heatMap.size === 0) {
       // If there are two that can be the final, it's a lane race and then a real race. We can handle that
-      if (finalEligibleHeats.length === 2) {
-        // The one with the higher ID is the final, so sort. Go backwards, so the heat is last so pop removes it
-        finalEligibleHeats.sort((a, b) => b.lanesEntry.id - a.lanesEntry.id);
+      // (also ensure that at most one has the GF/PF tag)
+      if (
+        finalEligibleHeats.length === 2 &&
+        finalEligibleHeats.every((final) => {
+          const eventNameLowercase = final.lanesEntry.event.toLowerCase();
+          const hostNameLowercase = final.lanesEntry.host.toLowerCase();
+
+          return (
+            !isGrandFinal(eventNameLowercase, hostNameLowercase) &&
+            !isPetiteFinal(eventNameLowercase, hostNameLowercase)
+          );
+        })
+      ) {
+        // The one with the higher start time is the final, so sort. Go backwards, so the heat is last so pop removes it
+        finalEligibleHeats.sort(
+          (a, b) => b.heat.scheduledStart - a.heat.scheduledStart,
+        );
 
         // This won't be undefined, but add the newfound heat to the heat array
         heatMap.set(1, finalEligibleHeats.pop()!);
+
+        // Set the heat progression, as it wasn't set with the heatmap
+        heatMap.get(1)!.heat.progression = {
+          description: "Heat",
+          next: [{ id: finalEligibleHeats[0].heat.heatId }],
+        };
       } else {
         // Otherwise we have no idea what to do, just throw
         throw new Error(
@@ -279,12 +363,31 @@ export function processProgression(entries: HeatWithLanesEntry[]) {
       }
     }
 
+    // Validate that no heats throws
+    if (finalEligibleHeats.length === 0) {
+      throw new Error(`Found ${heatMap.size} heats and 0 finals`);
+    }
+
     // Now assign progression for each of the finals
     finalEligibleHeats.forEach((final) => {
+      // Try calculating the final name
+      let finalName: string;
+      try {
+        finalName = calculateNameForFinal(final.lanesEntry);
+      } catch (error) {
+        // If we have a lane race
+        if (finalEligibleHeats.length == 1 && heatMap.size == 1) {
+          finalName = "Final"; // We can just say final
+        } else {
+          throw error; // Otherwise, throw cuz we need information
+        }
+      }
       // Assign progression for the final
       final.heat.progression = {
-        description: calculateNameForFinal(final.lanesEntry),
-        next: [],
+        description: finalName,
+        previous: {
+          entries: [],
+        },
       };
       assignProgressionForFinal(heatMap, final);
     });

@@ -162,7 +162,6 @@ function rawEntriesToEntries(
   rawEntries = rawEntries.map((rawEntry) => {
     // Apply a regex to search for matches
     const regexResult = /(.*) ([A-Za-z])\s*$/gm.exec(rawEntry.teamName.trim());
-    console.log(rawEntry.teamName);
     return {
       ...rawEntry,
       teamName: regexResult ? regexResult[1] : rawEntry.teamName,
