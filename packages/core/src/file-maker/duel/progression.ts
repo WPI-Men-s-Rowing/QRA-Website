@@ -113,9 +113,11 @@ function buildProgressionByResults(
         final.heat.progression!.previous!.entries.push({
           sourceIds: [heat.heat.heatId],
           bowNumber: finalEntry.bowNumber,
-          startPosition: index - final.heat.progression!.previous!.entries.filter((entry) =>
-            entry.sourceIds.some((id) => id === heat.heat.heatId),
-          ).length,
+          startPosition:
+            index -
+            final.heat.progression!.previous!.entries.filter((entry) =>
+              entry.sourceIds.some((id) => id === heat.heat.heatId),
+            ).length,
         });
 
         // Save that we got a match

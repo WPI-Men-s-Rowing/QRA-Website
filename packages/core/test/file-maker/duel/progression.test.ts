@@ -215,10 +215,7 @@ describe("processProgression", () => {
           time2: "06:45.999",
           time3: "06:30.555",
         },
-        { ...HOLY_CROSS_LANE_RACE[1],
-          time1: "06:06.444",
-          time2: "06:08.999"
-         },
+        { ...HOLY_CROSS_LANE_RACE[1], time1: "06:06.444", time2: "06:08.999" },
       ],
       "lane",
     );
@@ -242,8 +239,8 @@ describe("processProgression", () => {
           {
             sourceIds: [expected[0].heat.heatId],
             bowNumber: 2,
-            startPosition: 0
-          }
+            startPosition: 0,
+          },
         ],
       },
     };
@@ -269,14 +266,15 @@ describe("processProgression", () => {
           time2: "08:00.001",
           time3: "07:55.505",
         },
-        { ...HOLY_CROSS_LANE_RACE[1],
+        {
+          ...HOLY_CROSS_LANE_RACE[1],
           entry1: "Clark",
           entry2: "WPI",
           entry3: "Holy Cross",
           time1: "07:06.444",
           time2: "07:08.999",
-          time3: "07:10.999"
-         },
+          time3: "07:10.999",
+        },
       ],
       "lane",
     );
@@ -300,13 +298,13 @@ describe("processProgression", () => {
           {
             sourceIds: [expected[0].heat.heatId],
             bowNumber: 2,
-            startPosition: 0
+            startPosition: 0,
           },
           {
             sourceIds: [expected[0].heat.heatId],
             bowNumber: 3,
-            startPosition: 0
-          }
+            startPosition: 0,
+          },
         ],
       },
     };
