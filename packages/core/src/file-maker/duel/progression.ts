@@ -109,11 +109,13 @@ function buildProgressionByResults(
           );
         }
 
-        // Add the progression to the final
+        // Add the progression to the final. Account for entries that already have this
         final.heat.progression!.previous!.entries.push({
           sourceIds: [heat.heat.heatId],
           bowNumber: finalEntry.bowNumber,
-          startPosition: index + 1,
+          startPosition: index - final.heat.progression!.previous!.entries.filter((entry) =>
+            entry.sourceIds.some((id) => id === heat.heat.heatId),
+          ).length,
         });
 
         // Save that we got a match

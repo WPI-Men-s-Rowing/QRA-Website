@@ -215,7 +215,10 @@ describe("processProgression", () => {
           time2: "06:45.999",
           time3: "06:30.555",
         },
-        { ...HOLY_CROSS_LANE_RACE[1] },
+        { ...HOLY_CROSS_LANE_RACE[1],
+          time1: "06:06.444",
+          time2: "06:08.999"
+         },
       ],
       "lane",
     );
@@ -239,8 +242,8 @@ describe("processProgression", () => {
           {
             sourceIds: [expected[0].heat.heatId],
             bowNumber: 2,
-            startPosition: 0,
-          },
+            startPosition: 0
+          }
         ],
       },
     };
@@ -253,4 +256,91 @@ describe("processProgression", () => {
     expect(laneRace).toStrictEqual(expected);
     expect(reversedLaneRace).toStrictEqual(expected.reverse());
   });
+
+  test("Lane race rebuild progression", () => {
+    const laneRace = lanesEntriesToHeatsWithLanesEntries(
+      [
+        {
+          ...HOLY_CROSS_LANE_RACE[0],
+          entry1: "Holy Cross",
+          entry2: "WPI",
+          entry3: "Clark",
+          time1: "08:39.951",
+          time2: "08:00.001",
+          time3: "07:55.505",
+        },
+        { ...HOLY_CROSS_LANE_RACE[1],
+          entry1: "Clark",
+          entry2: "WPI",
+          entry3: "Holy Cross",
+          time1: "07:06.444",
+          time2: "07:08.999",
+          time3: "07:10.999"
+         },
+      ],
+      "lane",
+    );
+    const reversedLaneRace = structuredClone(laneRace).reverse();
+
+    const expected = structuredClone(laneRace);
+
+    expected[0].heat.progression = {
+      next: [{ id: expected[1].heat.heatId }],
+      description: "Heat",
+    };
+    expected[1].heat.progression = {
+      description: "Final",
+      previous: {
+        entries: [
+          {
+            sourceIds: [expected[0].heat.heatId],
+            bowNumber: 1,
+            startPosition: 0,
+          },
+          {
+            sourceIds: [expected[0].heat.heatId],
+            bowNumber: 2,
+            startPosition: 0
+          },
+          {
+            sourceIds: [expected[0].heat.heatId],
+            bowNumber: 3,
+            startPosition: 0
+          }
+        ],
+      },
+    };
+
+    processProgression(laneRace);
+    processProgression(reversedLaneRace);
+
+    expect(laneRace).toStrictEqual(expected);
+    expect(reversedLaneRace).toStrictEqual(expected.reverse());
+  });
+
+  test("Order does not matter", () => {});
+
+  test("One final progression info", () => {});
+
+  test("Progression info with seed", () => {});
+
+  test("One final with fastest", () => {});
+
+  test("One final rebuild progression", () => {});
+
+  test("Rebuild progression with seed", () => {});
+
+  test("Two finals progression info", () => {});
+
+  test("Two finals with fastest", () => {});
+
+  test("Two finals rebuild progression", () => {});
+
+  test("Progression with no finish data", () => {
+    // NOTE: This should not throw (the progression should still build)
+  });
+
+  test("Multiple events one final each", () => {});
+
+  test("Multiple events multiple finals", () => {});
 });
