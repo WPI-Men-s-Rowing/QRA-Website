@@ -136,6 +136,20 @@ describe("createDuelHeat", () => {
     ).toThrow("Heat entry missing finish result");
   });
 
+  test("Tie throws", () => {
+    expect(() =>
+      createDuelHeat("test", {
+        ...EMPTY_ENTRY,
+        event: "WV8",
+        host: "WPI",
+        entry1: "WPI",
+        time1: "6:00.000",
+        entry2: "Clark",
+        time2: "6:00.000",
+      }),
+    ).toThrow("found a tie");
+  });
+
   test("Scheduled in past", () => {
     expect(
       createDuelHeat("id", {
