@@ -126,10 +126,12 @@ export const Heat = new Entity({
                     type: "number",
                   },
                   // Position to start searching for someone not yet included at.
+                  // This should IGNORE other finals (meaning if this is used
+                  // incorrectly an entry could potentially belong to two finals)
                   // This enables e.g., winner to semi AB, second to semi BC, etc
                   // 0-indexed
                   startPosition: {
-                    required: false,
+                    default: 0,
                     type: "number",
                   },
                   // The IDs of the heats this should come from. The fastest time not yet included from these
