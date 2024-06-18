@@ -21,7 +21,7 @@ jobs:
   test:
     uses: ./.github/workflows/test.yaml
   deploy:
-    needs: [lint, codeql]
+    needs: [lint, codeql, test]
     name: "Deploy App"
     runs-on: ubuntu-latest
     environment:
