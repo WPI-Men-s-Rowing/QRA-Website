@@ -48,6 +48,7 @@ function buildHeatMap(
       // Assign the heat number to the progression information
       entryWithSameType.heat.progression = {
         description: `Heat ${heatNumber}`,
+        next: [],
       };
 
       // Save the heat this is
@@ -120,6 +121,15 @@ function buildProgressionByResults(
             ).length,
         });
 
+        // Ensure next exists for the heat
+        if (
+          !heat.heat.progression!.next!.some(
+            (heatNextEntry) => heatNextEntry.id === final.heat.heatId,
+          )
+        ) {
+          heat.heat.progression!.next!.push({ id: final.heat.heatId });
+        }
+
         // Save that we got a match
         matchFound = true;
       }
@@ -167,11 +177,26 @@ function assignProgressionForFinal(
       ? [heats.get(parseInt(entryRegex[2]))!]
       : [...heats.values()];
 
+    // Ensure next is set for each of the finals
+    sourceHeats.forEach((sourceHeat) => {
+      // If we haven't seen this heat in this final before
+      if (
+        !sourceHeat.heat.progression!.next?.some(
+          (nextHeat) => nextHeat.id === final.heat.heatId,
+        )
+      ) {
+        // And push the final ID
+        sourceHeat.heat.progression!.next!.push({ id: final.heat.heatId });
+      }
+    });
+
     // If this is a singular entry, we need to modify the start position
     // so that we don't include entries we already have in the count
     startPosition -= Math.max(
       final.heat.progression!.previous!.entries.filter((entry) =>
-        entry.sourceIds.some((id) => id === sourceHeats[0].heat.heatId),
+        entry.sourceIds.some((id) =>
+          sourceHeats.some((sourceHeat) => sourceHeat.heat.heatId === id),
+        ),
       ).length,
       0,
     );
@@ -357,7 +382,7 @@ export function processProgression(entries: HeatWithLanesEntry[]): void {
         // Set the heat progression, as it wasn't set with the heatmap
         heatMap.get(1)!.heat.progression = {
           description: "Heat",
-          next: [{ id: finalEligibleHeats[0].heat.heatId }],
+          next: [],
         };
       } else {
         // Otherwise we have no idea what to do, just throw
