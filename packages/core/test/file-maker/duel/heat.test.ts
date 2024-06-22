@@ -147,7 +147,7 @@ describe("createDuelHeat", () => {
         entry2: "Clark",
         time2: "6:00.000",
       }),
-    ).toThrow("found a tie");
+    ).toThrow("Found a tie");
   });
 
   test("Scheduled in past", () => {
@@ -183,14 +183,20 @@ describe("createDuelHeat", () => {
   test("Results for scheduled event throws", () => {
     // Date in the future
     const dateInFuture = new Date(new Date().getTime() + 100000);
+    const adjustedTime = new Date(
+      dateInFuture.getTime() +
+        (dateInFuture.getTimezoneOffset() - 240) * 60 * 1000,
+    );
 
     expect(() =>
       createDuelHeat("test", {
         ...WPI_MV8_RESULTS,
-        racedate: dateInFuture.toDateString(),
-        racedatetime: dateInFuture.toString(),
-        racedateUnix: dateInFuture.toDateString(),
-        racetime: dateInFuture.toTimeString(),
+        racedate: adjustedTime.toLocaleDateString(),
+        racedatetime: adjustedTime.toLocaleString("en-US", {
+          hour12: false,
+        }),
+        racedateUnix: adjustedTime.toLocaleDateString(),
+        racetime: adjustedTime.toLocaleTimeString("en-US", { hour12: false }),
       }),
     ).toThrow("scheduled event with results");
   });
@@ -471,13 +477,18 @@ describe("createDuelHeat", () => {
 
   test("Scheduled Heat", () => {
     const startTimeInFuture = new Date(new Date().getTime() + 123456);
+    const adjustedTime = new Date(
+      startTimeInFuture.getTime() +
+        (startTimeInFuture.getTimezoneOffset() - 240) * 60 * 1000,
+    );
+
     expect(
       createDuelHeat("HCR", {
         ...HCR_WV8_SCHEDULED,
-        racedate: startTimeInFuture.toDateString(),
-        racetime: startTimeInFuture.toTimeString(),
-        racedateUnix: startTimeInFuture.toDateString(),
-        racedatetime: startTimeInFuture.toString(),
+        racedate: adjustedTime.toLocaleDateString(),
+        racetime: adjustedTime.toLocaleTimeString("en-US", { hour12: false }),
+        racedateUnix: adjustedTime.toLocaleDateString(),
+        racedatetime: adjustedTime.toLocaleString("en-US", { hour12: false }),
       }),
     ).toEqual({
       regattaId: "HCR",

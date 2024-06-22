@@ -70,37 +70,49 @@ describe("createDuelRegattaBreak", () => {
 
   test("Scheduled break", () => {
     const dateTime = new Date(new Date().getTime() + 100000);
+    const adjustedTime = new Date(
+      dateTime.getTime() + (dateTime.getTimezoneOffset() - 240) * 60 * 1000,
+    );
+
     expect(
       createDuelBreak("999", {
         ...WESLEYEAN_BREAK, // Fill the random stuff
         event: "Break",
         host: "Wesleyean",
         id: 123,
-        racedate: dateTime.toDateString(),
-        racetime: dateTime.toTimeString(),
-        racedateUnix: dateTime.toDateString(),
-        racedatetime: dateTime.toString(),
+        racedate: adjustedTime.toLocaleDateString(),
+        racetime: adjustedTime.toLocaleTimeString("en-US", { hour12: false }),
+        racedateUnix: adjustedTime.toLocaleDateString(),
+        racedatetime: adjustedTime.toLocaleString("en-US", {
+          hour12: false,
+        }),
       }),
     ).toStrictEqual({
       regattaId: "999",
       breakId: "123",
-      scheduledStart: Date.parse(dateTime.toString()), // Some rounding occurs, so let that happen
+      scheduledStart: Date.parse(
+        dateTime.toLocaleString("en-US", { hour12: false }),
+      ), // Some rounding occurs, so let that happen
       status: "scheduled",
     } satisfies CreateEntityItem<typeof RegattaService.entities.break>);
   });
 
   test("Scheduled break in host", () => {
     const dateTime = new Date(new Date().getTime() + 9000);
+    const adjustedTime = new Date(
+      dateTime.getTime() + (dateTime.getTimezoneOffset() - 240) * 60 * 1000,
+    );
+
     expect(
       createDuelBreak("897897", {
         ...WESLEYEAN_BREAK, // Fill the random stuff
         id: 91234,
         event: "",
         host: "Break",
-        racedate: dateTime.toDateString(),
-        racetime: dateTime.toTimeString(),
-        racedatetime: dateTime.toString(),
-        racedateUnix: dateTime.toString(),
+        racedate: adjustedTime.toLocaleDateString(),
+        racetime: adjustedTime.toLocaleTimeString("en-US", { hour12: false }),
+        racedatetime: adjustedTime.toLocaleString("en-US", { hour12: false }),
+        racedateUnix: adjustedTime.toDateString(),
       }),
     ).toStrictEqual({
       regattaId: "897897",
