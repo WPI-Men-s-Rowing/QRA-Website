@@ -297,7 +297,7 @@ export function createDuelHeat(
     `${lakeScheduleLanesEntry.racedatetime} GMT-0400`,
   );
 
-  // Validate that if any entries have results, or the time is in the past, all do
+  // Validate that if any entries have results, all do
   if (
     !allEntriesHaveFinish &&
     entries.some((entry) => entry.finishTime ?? entry.didFailToFinish)
@@ -308,6 +308,15 @@ export function createDuelHeat(
   // Ensure we have no results if we're scheduled
   if (scheduledDate > new Date() && allEntriesHaveFinish) {
     throw new Error("Found a scheduled event with results");
+  }
+
+  // Ensure we have no ties (using a set is a quick way to do this)
+  const finishTimes = entries
+    .filter((entry) => entry.finishTime)
+    .map((entry) => entry.finishTime);
+  if (finishTimes.length > new Set(finishTimes).size) {
+    console.log("throw");
+    throw new Error("Found a tie in heat");
   }
 
   // Now create the heat
