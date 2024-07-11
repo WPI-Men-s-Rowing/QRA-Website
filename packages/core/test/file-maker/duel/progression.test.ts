@@ -173,9 +173,27 @@ describe("processProgression", () => {
         lanesEntriesToHeatsWithLanesEntries(
           [
             WPI_WV8_HEAT_HOST,
-            WPI_WV8_HEAT_HOST,
-            WPI_WV8_HEAT_HOST,
-            WPI_WV8_HEAT_HOST,
+            {
+              ...WPI_WV8_HEAT_HOST,
+              entryseed1: "B",
+              entryseed2: "B",
+              entryseed3: "B",
+              entryseed4: "B",
+            },
+            {
+              ...WPI_WV8_HEAT_HOST,
+              entryseed1: "C",
+              entryseed2: "C",
+              entryseed3: "C",
+              entryseed4: "C",
+            },
+            {
+              ...WPI_WV8_HEAT_HOST,
+              entryseed1: "D",
+              entryseed2: "D",
+              entryseed3: "D",
+              entryseed4: "D",
+            },
           ],
           "heats",
         ),
@@ -461,8 +479,8 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate heat");
-    expect(processProgression(raceReversed)).toThrow("duplicate heat");
+    expect(() => processProgression(race)).toThrow("duplicate heat");
+    expect(() => processProgression(raceReversed)).toThrow("duplicate heat");
   });
 
   test("Duplicate final throws", () => {
@@ -517,8 +535,8 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate final");
-    expect(processProgression(raceReversed)).toThrow("duplicate final");
+    expect(() => processProgression(race)).toThrow("duplicate final");
+    expect(() => processProgression(raceReversed)).toThrow("duplicate final");
   });
 
   test("Duplicate progression entry same final throws", () => {
@@ -564,9 +582,172 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate progression entry");
-    expect(processProgression(raceReversed)).toThrow(
+    expect(() => processProgression(race)).toThrow(
       "duplicate progression entry",
+    );
+    expect(() => processProgression(raceReversed)).toThrow(
+      "duplicate progression entry",
+    );
+  });
+
+  test("Duplicate processed entry different final throws", () => {
+    const race = lanesEntriesToHeatsWithLanesEntries(
+      [
+        {
+          ...EMPTY_ENTRY,
+          id: 1,
+          event: "MV8 H1",
+          entry1: "WPI",
+          time1: "06:00.000",
+          entry2: "Wesleyan",
+          time2: "06:01.020",
+          entry3: "Bates",
+          time3: "06:06.050",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 2,
+          event: "MV8 H2",
+          entry1: "Williams",
+          time1: "07:07.000",
+          entry2: "Tufts",
+          time2: "07:00.000",
+          entry3: "Coast Guard",
+          time3: "06:45.000",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 3,
+          event: "MV8 GF",
+          entry1: "Williams",
+          time1: "06:06.000",
+          entry2: "Wesleyan",
+          time2: "06:07.000",
+          entry3: "Coast Guard",
+          time3: "06:08.000",
+          entry4: "Tufts",
+          time4: "06:00.000",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 4,
+          event: "MV8 PF",
+          entry5: "Wesleyan",
+          time5: "06:00.000",
+        },
+      ],
+      "dup_prog",
+    );
+    const raceReversed = structuredClone(race).reverse();
+
+    expect(() => processProgression(race)).toThrow("duplicate final entry");
+    expect(() => processProgression(raceReversed)).toThrow(
+      "duplicate final entry",
+    );
+  });
+
+  test("Duplicate processed entry different final no results throws", () => {
+    const race = lanesEntriesToHeatsWithLanesEntries(
+      [
+        {
+          ...EMPTY_ENTRY,
+          id: 1,
+          event: "MV8 H1",
+          entry1: "WPI",
+          entry2: "Wesleyan",
+          entry3: "Bates",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 2,
+          event: "MV8 H2",
+          entry1: "Williams",
+          entry2: "Tufts",
+          entry3: "Coast Guard",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 3,
+          event: "MV8 GF",
+          entry1: "1st H1",
+          entry2: "2nd H1",
+          entry3: "1st H2",
+          entry4: "2nd H2",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 4,
+          event: "MV8 PF",
+          entry5: "1st H1",
+        },
+      ],
+      "dup_prog",
+    );
+    const raceReversed = structuredClone(race).reverse();
+
+    expect(() => processProgression(race)).toThrow(
+      "duplicate progression entry",
+    );
+    expect(() => processProgression(raceReversed)).toThrow(
+      "duplicate progression entry",
+    );
+  });
+
+  test("Duplicate processed entry with seed different final throws", () => {
+    const race = lanesEntriesToHeatsWithLanesEntries(
+      [
+        {
+          ...EMPTY_ENTRY,
+          id: 1,
+          event: "MV8 H1",
+          entry1: "WPI",
+          time1: "06:00.000",
+          entry2: "Wesleyan",
+          entryseed2: "A",
+          time2: "06:01.020",
+          entry3: "Bates",
+          time3: "06:06.050",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 2,
+          event: "MV8 H2",
+          entry1: "Williams",
+          time1: "07:07.000",
+          entry2: "Tufts",
+          time2: "07:00.000",
+          entry3: "Coast Guard",
+          time3: "06:45.000",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 3,
+          event: "MV8 GF",
+          entry1: "Williams",
+          time1: "06:06.000",
+          entry2: "Wesleyan",
+          entryseed2: "A",
+          time2: "06:07.000",
+          entry3: "Coast Guard",
+          time3: "06:08.000",
+          entry4: "Tufts",
+          time4: "06:00.000",
+        },
+        {
+          ...EMPTY_ENTRY,
+          id: 4,
+          event: "MV8 PF",
+          entry5: "Wesleyan",
+          entryseed5: "A",
+        },
+      ],
+      "dup_prog",
+    );
+    const raceReversed = structuredClone(race).reverse();
+
+    expect(() => processProgression(race)).toThrow("duplicate final entry");
+    expect(() => processProgression(raceReversed)).toThrow(
+      "duplicate final entry",
     );
   });
 
@@ -619,8 +800,10 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate progression entry");
-    expect(processProgression(raceReversed)).toThrow(
+    expect(() => processProgression(race)).toThrow(
+      "duplicate progression entry",
+    );
+    expect(() => processProgression(raceReversed)).toThrow(
       "duplicate progression entry",
     );
   });
@@ -656,21 +839,22 @@ describe("processProgression", () => {
           event: "MV4 GF",
           entry1: "1st H1",
           time1: "06:06.000",
-          entry2: "1st heat 1",
+          entry2: "1st heat 2",
           time2: "06:07.000",
           entry3: "2nd h 1",
           time3: "06:08.000",
           entry4: "2nd HEAT2",
           time4: "06:00.000",
           entry6: "1st h9",
+          time6: "06:00.001",
         },
       ],
       "missing_heat",
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("missing heat");
-    expect(processProgression(raceReversed)).toThrow("missing heat");
+    expect(() => processProgression(race)).toThrow("Missing heat");
+    expect(() => processProgression(raceReversed)).toThrow("Missing heat");
   });
 
   test("Progression with no match throws", () => {
@@ -707,22 +891,25 @@ describe("processProgression", () => {
           host: "WPI GRAND",
           entry1: "1st H1",
           time1: "06:06.000",
-          entry2: "1st heat 1",
+          entry2: "1st heat 2",
           time2: "06:07.000",
           entry3: "2nd h 1",
           time3: "06:08.000",
           entry4: "2nd HEAT2",
           time4: "06:00.000",
           entry6: "9th h1",
+          time6: "06:00.001",
         },
       ],
       "no_match",
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("failed to find a match for");
-    expect(processProgression(raceReversed)).toThrow(
-      "failed to find a match for",
+    expect(() => processProgression(race)).toThrow(
+      "Failed to find a match for",
+    );
+    expect(() => processProgression(raceReversed)).toThrow(
+      "Failed to find a match for",
     );
   });
 
@@ -769,9 +956,11 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("failed to find a match for");
-    expect(processProgression(raceReversed)).toThrow(
-      "failed to find a match for",
+    expect(() => processProgression(race)).toThrow(
+      "Failed to find a match for",
+    );
+    expect(() => processProgression(raceReversed)).toThrow(
+      "Failed to find a match for",
     );
   });
 
@@ -806,7 +995,7 @@ describe("processProgression", () => {
           event: "MV8 GF",
           entry1: "1st H1",
           time1: "06:06.000",
-          entry2: "1st heat 1",
+          entry2: "1st heat 2",
           time2: "06:07.000",
           entry3: "2nd h 1",
           time3: "06:08.000",
@@ -818,8 +1007,8 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate entry");
-    expect(processProgression(raceReversed)).toThrow("duplicate entry");
+    expect(() => processProgression(race)).toThrow("duplicate entry");
+    expect(() => processProgression(raceReversed)).toThrow("duplicate entry");
   });
 
   test("Duplicate entry across heats with seed throws", () => {
@@ -856,7 +1045,7 @@ describe("processProgression", () => {
           host: "CLARK PETITE",
           entry1: "1st H1",
           time1: "06:06.000",
-          entry2: "1st heat 1",
+          entry2: "1st heat 2",
           time2: "06:07.000",
           entry3: "2nd h 1",
           time3: "06:08.000",
@@ -868,8 +1057,8 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate entry");
-    expect(processProgression(raceReversed)).toThrow("duplicate entry");
+    expect(() => processProgression(race)).toThrow("duplicate entry");
+    expect(() => processProgression(raceReversed)).toThrow("duplicate entry");
   });
 
   test("No heat numbers provided", () => {
@@ -1006,7 +1195,7 @@ describe("processProgression", () => {
           time2: "06:07.000",
           entry3: "3rd h 1",
           time3: "06:08.000",
-          entry4: "1st HEAT2",
+          entry4: "1st HEAT1",
           time4: "06:00.000",
         },
       ],
@@ -1051,13 +1240,13 @@ describe("processProgression", () => {
         ],
       },
     };
-    expected[2].heat.entries[0].teamName = "Vassar";
-    expected[2].heat.entries[0].teamEntryLetter = "A";
-    expected[2].heat.entries[1].teamName = "Williams";
-    expected[2].heat.entries[1].teamEntryLetter = "A";
-    expected[2].heat.entries[2].teamName = "Williams";
-    expected[2].heat.entries[2].teamEntryLetter = "B";
-    expected[2].heat.entries[3].teamName = "Tufts";
+    expected[2].heat.entries[0].teamName = "Williams";
+    expected[2].heat.entries[0].teamEntryLetter = "B";
+    expected[2].heat.entries[1].teamName = "Tufts";
+    expected[2].heat.entries[2].teamName = "Vassar";
+    expected[2].heat.entries[2].teamEntryLetter = "A";
+    expected[2].heat.entries[3].teamName = "Williams";
+    expected[2].heat.entries[3].teamEntryLetter = "A";
 
     processProgression(race);
     processProgression(raceReversed);
@@ -1234,12 +1423,12 @@ describe("processProgression", () => {
           },
           {
             bowNumber: 2,
-            sourceIds: [expected[1].heat.heatId],
+            sourceIds: [expected[0].heat.heatId],
             startPosition: 0,
           },
           {
             bowNumber: 3,
-            sourceIds: [expected[0].heat.heatId],
+            sourceIds: [expected[1].heat.heatId],
             startPosition: 0,
           },
           {
@@ -1251,8 +1440,8 @@ describe("processProgression", () => {
       },
     };
     expected[2].heat.entries[0].teamName = "Wesleyan";
-    expected[2].heat.entries[1].teamName = "Tufts";
-    expected[2].heat.entries[2].teamName = "Bates";
+    expected[2].heat.entries[1].teamName = "Bates";
+    expected[2].heat.entries[2].teamName = "Tufts";
     expected[2].heat.entries[3].teamName = "Coast Guard";
 
     processProgression(race);
@@ -1275,8 +1464,8 @@ describe("processProgression", () => {
           entry2: "Tufts",
           time2: "06:01.020",
           entry3: "Wesleyan",
-          time3: "06:06.050",
           entryseed3: "B",
+          time3: "06:06.050",
         },
         {
           ...EMPTY_ENTRY,
@@ -1284,9 +1473,10 @@ describe("processProgression", () => {
           event: "WV8",
           host: "Clark HEAT",
           entry1: "Wesleyan",
-          entrydisp1: "A",
+          entryseed1: "A",
           time1: "07:07.000",
           entry2: "Tufts",
+          entryseed2: "B",
           time2: "06:00.000",
           entry3: "Coast Guard",
           time3: "06:45.000",
@@ -1327,7 +1517,7 @@ describe("processProgression", () => {
           {
             bowNumber: 1,
             sourceIds: [expected[0].heat.heatId],
-            startPosition: 2,
+            startPosition: 1,
           },
           {
             bowNumber: 2,
@@ -1336,20 +1526,21 @@ describe("processProgression", () => {
           },
           {
             bowNumber: 3,
-            sourceIds: [expected[1].heat.heatId],
+            sourceIds: [expected[0].heat.heatId],
             startPosition: 0,
           },
           {
             bowNumber: 4,
             sourceIds: [expected[1].heat.heatId],
-            startPosition: 0,
+            startPosition: 1,
           },
         ],
       },
     };
     expected[2].heat.entries[0].teamName = "Wesleyan";
-    expected[2].heat.entries[1].teamName = "Tufts";
-    expected[2].heat.entries[2].teamName = "Bates";
+    expected[2].heat.entries[0].teamEntryLetter = "B";
+    expected[2].heat.entries[1].teamName = "WPI";
+    expected[2].heat.entries[2].teamName = "Tufts";
     expected[2].heat.entries[3].teamName = "Coast Guard";
 
     processProgression(race);
@@ -1471,6 +1662,8 @@ describe("processProgression", () => {
         ],
       },
     };
+    expected[3].heat.entries[0].teamName = "WPI";
+    expected[3].heat.entries[1].teamName = "Williams";
 
     processProgression(race);
     processProgression(raceReversed);
@@ -1535,8 +1728,8 @@ describe("processProgression", () => {
     );
     const raceReversed = structuredClone(race).reverse();
 
-    expect(processProgression(race)).toThrow("duplicate entry");
-    expect(processProgression(raceReversed)).toThrow("duplicate entry");
+    expect(() => processProgression(race)).toThrow("duplicate entry");
+    expect(() => processProgression(raceReversed)).toThrow("duplicate entry");
   });
 
   test("Two finals rebuild progression", () => {
@@ -1604,6 +1797,29 @@ describe("processProgression", () => {
     expected[1].heat.progression = {
       description: "Heat 2",
       next: [{ id: expected[2].heat.heatId }, { id: expected[3].heat.heatId }],
+    };
+
+    expected[2].heat.progression = {
+      description: "Petite Final",
+      previous: {
+        entries: [
+          {
+            bowNumber: 1,
+            sourceIds: [expected[0].heat.heatId],
+            startPosition: 2,
+          },
+          {
+            bowNumber: 2,
+            sourceIds: [expected[1].heat.heatId],
+            startPosition: 2,
+          },
+          {
+            bowNumber: 3,
+            sourceIds: [expected[0].heat.heatId],
+            startPosition: 1,
+          },
+        ],
+      },
     };
 
     expected[3].heat.progression = {
@@ -1692,12 +1908,12 @@ describe("processProgression", () => {
 
     expected[0].heat.progression = {
       description: "Heat 1",
-      next: [{ id: expected[3].heat.heatId }, { id: expected[2].heat.heatId }],
+      next: [{ id: expected[2].heat.heatId }, { id: expected[3].heat.heatId }],
     };
 
     expected[1].heat.progression = {
       description: "Heat 2",
-      next: [{ id: expected[3].heat.heatId }, { id: expected[2].heat.heatId }],
+      next: [{ id: expected[2].heat.heatId }, { id: expected[3].heat.heatId }],
     };
 
     expected[2].heat.progression = {
@@ -1736,10 +1952,10 @@ describe("processProgression", () => {
       },
     };
 
-    expected[2].heat.entries[0].teamName = "WPI";
-    expected[2].heat.entries[1].teamName = "Tufts";
-    expected[3].heat.entries[0].teamName = "Wesleyan";
-    expected[3].heat.entries[1].teamName = "Williams";
+    expected[3].heat.entries[0].teamName = "WPI";
+    expected[3].heat.entries[1].teamName = "Tufts";
+    expected[2].heat.entries[0].teamName = "Wesleyan";
+    expected[2].heat.entries[1].teamName = "Williams";
 
     processProgression(race);
     processProgression(raceReversed);
@@ -1849,7 +2065,7 @@ describe("processProgression", () => {
           {
             bowNumber: 2,
             sourceIds: [expected[1].heat.heatId],
-            startPosition: 0,
+            startPosition: 2,
           },
           {
             bowNumber: 3,
@@ -1859,7 +2075,7 @@ describe("processProgression", () => {
           {
             bowNumber: 4,
             sourceIds: [expected[1].heat.heatId],
-            startPosition: 0,
+            startPosition: 1,
           },
         ],
       },
@@ -1889,7 +2105,7 @@ describe("processProgression", () => {
           {
             bowNumber: 2,
             sourceIds: [expected[4].heat.heatId],
-            startPosition: 0,
+            startPosition: 2,
           },
           {
             bowNumber: 3,
@@ -1899,7 +2115,7 @@ describe("processProgression", () => {
           {
             bowNumber: 4,
             sourceIds: [expected[4].heat.heatId],
-            startPosition: 0,
+            startPosition: 1,
           },
         ],
       },
@@ -1949,8 +2165,6 @@ describe("processProgression", () => {
           time1: "06:50.000",
           entry2: "Dartmouth",
           time2: "06:55.000",
-          entry3: "Yale",
-          time3: "07:05.000",
         },
         {
           ...EMPTY_ENTRY,
@@ -1995,8 +2209,6 @@ describe("processProgression", () => {
           time1: "06:50.000",
           entry2: "Washington",
           time2: "06:55.000",
-          entry3: "Cal",
-          time3: "07:05.000",
         },
         {
           ...EMPTY_ENTRY,
@@ -2021,11 +2233,11 @@ describe("processProgression", () => {
 
     expected[0].heat.progression = {
       description: "Heat 1",
-      next: [{ id: expected[3].heat.heatId }, { id: expected[2].heat.heatId }],
+      next: [{ id: expected[2].heat.heatId }, { id: expected[3].heat.heatId }],
     };
     expected[1].heat.progression = {
       description: "Heat 2",
-      next: [{ id: expected[3].heat.heatId }, { id: expected[2].heat.heatId }],
+      next: [{ id: expected[2].heat.heatId }, { id: expected[3].heat.heatId }],
     };
 
     expected[2].heat.progression = {
@@ -2040,12 +2252,7 @@ describe("processProgression", () => {
           {
             bowNumber: 2,
             sourceIds: [expected[1].heat.heatId],
-            startPosition: 2,
-          },
-          {
-            bowNumber: 3,
-            sourceIds: [expected[0].heat.heatId],
-            startPosition: 1,
+            startPosition: 0,
           },
         ],
       },
@@ -2063,7 +2270,7 @@ describe("processProgression", () => {
           {
             bowNumber: 2,
             sourceIds: [expected[1].heat.heatId],
-            startPosition: 0,
+            startPosition: 2,
           },
           {
             bowNumber: 3,
@@ -2073,7 +2280,7 @@ describe("processProgression", () => {
           {
             bowNumber: 4,
             sourceIds: [expected[0].heat.heatId],
-            startPosition: 1,
+            startPosition: 0,
           },
         ],
       },
@@ -2081,7 +2288,6 @@ describe("processProgression", () => {
 
     expected[2].heat.entries[0].teamName = "Princeton";
     expected[2].heat.entries[1].teamName = "Dartmouth";
-    expected[2].heat.entries[2].teamName = "Yale";
     expected[3].heat.entries[0].teamName = "Harvard";
     expected[3].heat.entries[1].teamName = "Brown";
     expected[3].heat.entries[2].teamName = "Cornell";
@@ -2089,11 +2295,11 @@ describe("processProgression", () => {
 
     expected[4].heat.progression = {
       description: "Heat 1",
-      next: [{ id: expected[7].heat.heatId }, { id: expected[6].heat.heatId }],
+      next: [{ id: expected[6].heat.heatId }, { id: expected[7].heat.heatId }],
     };
     expected[5].heat.progression = {
       description: "Heat 2",
-      next: [{ id: expected[7].heat.heatId }, { id: expected[6].heat.heatId }],
+      next: [{ id: expected[6].heat.heatId }, { id: expected[7].heat.heatId }],
     };
 
     expected[6].heat.progression = {
@@ -2108,12 +2314,7 @@ describe("processProgression", () => {
           {
             bowNumber: 2,
             sourceIds: [expected[5].heat.heatId],
-            startPosition: 2,
-          },
-          {
-            bowNumber: 3,
-            sourceIds: [expected[4].heat.heatId],
-            startPosition: 1,
+            startPosition: 0,
           },
         ],
       },
@@ -2131,7 +2332,7 @@ describe("processProgression", () => {
           {
             bowNumber: 2,
             sourceIds: [expected[5].heat.heatId],
-            startPosition: 0,
+            startPosition: 2,
           },
           {
             bowNumber: 3,
@@ -2141,7 +2342,7 @@ describe("processProgression", () => {
           {
             bowNumber: 4,
             sourceIds: [expected[4].heat.heatId],
-            startPosition: 1,
+            startPosition: 0,
           },
         ],
       },
@@ -2149,7 +2350,6 @@ describe("processProgression", () => {
 
     expected[6].heat.entries[0].teamName = "UCLA";
     expected[6].heat.entries[1].teamName = "Washington";
-    expected[6].heat.entries[2].teamName = "Cal";
     expected[7].heat.entries[0].teamName = "Stanford";
     expected[7].heat.entries[1].teamName = "USC";
     expected[7].heat.entries[2].teamName = "Oregon State";

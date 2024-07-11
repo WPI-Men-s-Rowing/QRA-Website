@@ -8,8 +8,9 @@ export interface HeatWithLanesEntry {
   heat: ReturnType<typeof createDuelHeat>;
 }
 
-// Type of an entry within an event
-type Entry = Unwrapped<HeatWithLanesEntry["heat"]["entries"]>;
+// Helper types
+type Entry = Unwrapped<HeatWithLanesEntry["heat"]["entries"]>; // Full entry
+type EntryBase = Pick<Entry, "teamName" | "teamEntryLetter">; // Base of an entry (only required types)
 
 /**
  * Builds a map that relates heat number (e.g., heat 1 NOT ID) to the heat and lake entry the heat belongs to.
@@ -36,13 +37,18 @@ function buildHeatMap(
     .toSorted((a, b) => a.lanesEntry.id - b.lanesEntry.id)
     .forEach((entryWithSameType) => {
       // Determine the heat number this is
-      const heatRegex = /(?:heat|h)\s+([1-9])/gim.exec(
+      const heatRegex = /(?:heat|h)\s?([1-9])/gim.exec(
         entryWithSameType.lanesEntry.event,
       );
       if (heatRegex === null) {
         heatNumber++; // If it's not explicitly specified, increment to get the heat number
       } else {
         heatNumber = parseInt(heatRegex[1]); // Parse the heat number if we explicitly have it
+      }
+
+      // Ensure this isn't a duplicate heat
+      if (heatNumberToHeat.has(heatNumber)) {
+        throw new Error(`Found a duplicate heat #${heatNumber}`);
       }
 
       // Assign the heat number to the progression information
@@ -64,12 +70,16 @@ function buildHeatMap(
  * @param heats the heats to search for the full-formed team name in
  * @param final the final to assign progression to
  * @param finalEntry the entry in the final to build progression for
+ * @param progressionEntrySet progression entries, used for duplicate checking. In the form startPosition_heat IDs (comma separated)
+ * @param entrySet calculated entries, used for duplicate checking. In the form teamName_teamEntryLetter
  * @throws {Error} if no matching entry could be found or the entry that progressed did not have a finish time
  */
 function buildProgressionByResults(
   heats: HeatWithLanesEntry[],
   final: HeatWithLanesEntry,
   finalEntry: Entry,
+  progressionEntrySet: Set<string>,
+  entrySet: Set<string>,
 ) {
   // Whether we have found a match
   let matchFound = false;
@@ -91,6 +101,19 @@ function buildProgressionByResults(
         heatEntry.teamName === finalEntry.teamName &&
         heatEntry.teamEntryLetter === finalEntry.teamEntryLetter
       ) {
+        const entryHash = `${heatEntry.teamName}_${heatEntry.teamEntryLetter}`;
+
+        if (entrySet.has(entryHash)) {
+          // Ensure this entry isn't a duplicate
+          throw new Error(
+            `Encountered a duplicate final entry ${heatEntry.teamName} ${
+              heatEntry.teamEntryLetter ?? ""
+            }`,
+          );
+        }
+
+        entrySet.add(entryHash);
+
         // Determine the index of the finish position, so we can assign. Order by finish time, ignore everything that DNF'd
         // There are no penalties in duel races
         const entriesByFinishPosition = heat.heat.entries
@@ -110,15 +133,24 @@ function buildProgressionByResults(
           );
         }
 
+        const calculatedStartPosition =
+          index -
+          final.heat.progression!.previous!.entries.filter(
+            (entry) =>
+              entry.startPosition! < index! &&
+              entry.sourceIds.every((id) => id === heat.heat.heatId),
+          ).length;
+
+        // Only save this entry. No need to check here, because we have results, so we know this check will work
+        progressionEntrySet.add(
+          `${calculatedStartPosition}_${heat.heat.heatId}`,
+        );
+
         // Add the progression to the final. Account for entries that already have this
         final.heat.progression!.previous!.entries.push({
           sourceIds: [heat.heat.heatId],
           bowNumber: finalEntry.bowNumber,
-          startPosition:
-            index -
-            final.heat.progression!.previous!.entries.filter((entry) =>
-              entry.sourceIds.some((id) => id === heat.heat.heatId),
-            ).length,
+          startPosition: calculatedStartPosition,
         });
 
         // Ensure next exists for the heat
@@ -128,6 +160,11 @@ function buildProgressionByResults(
           )
         ) {
           heat.heat.progression!.next!.push({ id: final.heat.heatId });
+
+          // Stable ordering for testing
+          heat.heat.progression!.next!.sort(
+            (a, b) => Number(a.id) - Number(b.id),
+          );
         }
 
         // Save that we got a match
@@ -148,15 +185,20 @@ function buildProgressionByResults(
  * Function that assigns the progression for the heats that may or may not belong to the given final
  * @param heats the map relating heat number (not ID) to the heat
  * @param final the final to add progression information to. Assumes the progression and previous[] already exist
+ * @param progressionEntrySet the set of entries by progression info, used to check for duplicates across heats and when we don't have times. Format startPosition_heatIds (comma separated)
+ * @param entrySet the set of entries that have been calculated, used to check complex progression duplicates. Format: Team Name_Team Entry Letter
+ * @throws {Error} when a duplicate entry is detected
  */
 function assignProgressionForFinal(
   heats: Map<number, HeatWithLanesEntry>,
   final: HeatWithLanesEntry,
+  progressionEntrySet: Set<string>,
+  entrySet: Set<string>,
 ) {
   // For each of the entries in the heat
   final.heat.entries.forEach((finalEntry) => {
     const entryRegex =
-      /([1-9]+)(?:st|nd|rd|th) (?:(?:(?:h|heat)\s?([1-9]+))|(?:fastest))/gim.exec(
+      /([1-9]+)(?:st|nd|rd|th) (?:(?:(?:h|heat)\s?([1-9]+))|(?:fastest))/i.exec(
         finalEntry.teamName,
       );
 
@@ -165,7 +207,13 @@ function assignProgressionForFinal(
     // populated. So, go back through and determine progression information
     // based on who came from where
     if (entryRegex === null) {
-      buildProgressionByResults([...heats.values()], final, finalEntry);
+      buildProgressionByResults(
+        [...heats.values()],
+        final,
+        finalEntry,
+        entrySet,
+        progressionEntrySet,
+      );
       return;
     }
 
@@ -177,6 +225,10 @@ function assignProgressionForFinal(
       ? [heats.get(parseInt(entryRegex[2]))!]
       : [...heats.values()];
 
+    // Check if we got a heat that's undefined, throw if so (bad ID)
+    if (sourceHeats[0] === undefined) {
+      throw new Error(`Missing heat #${entryRegex[2]}`);
+    }
     // Ensure next is set for each of the finals
     sourceHeats.forEach((sourceHeat) => {
       // If we haven't seen this heat in this final before
@@ -187,23 +239,48 @@ function assignProgressionForFinal(
       ) {
         // And push the final ID
         sourceHeat.heat.progression!.next!.push({ id: final.heat.heatId });
+
+        // Stable order for testing
+        sourceHeat.heat.progression!.next!.sort(
+          (a, b) => Number(a.id) - Number(b.id),
+        );
       }
     });
 
-    // If this is a singular entry, we need to modify the start position
-    // so that we don't include entries we already have in the count
-    startPosition -= Math.max(
-      final.heat.progression!.previous!.entries.filter((entry) =>
-        entry.sourceIds.some((id) =>
-          sourceHeats.some((sourceHeat) => sourceHeat.heat.heatId === id),
-        ),
-      ).length,
-      0,
-    );
+    const progressionHash = `${startPosition}_${sourceHeats
+      .map((heat) => heat.heat.heatId)
+      .toSorted()
+      .join(",")}`;
+
+    // Check progression set
+    if (progressionEntrySet.has(progressionHash)) {
+      throw new Error(
+        `Detected a duplicate progression entry - start position: ${startPosition} source IDs: [${sourceHeats
+          .map((heat) => heat.heat.heatId)
+          .join(",")}]`,
+      );
+    }
+
+    // Save the progression set
+    progressionEntrySet.add(progressionHash);
+
+    // -1 for each entry we have seen that is formatted *exactly* like this.
+    // So, if we already saw 1st H1 we want 2nd H1 to be 1st H1 out of the rest
+    // But we want 1st Fastest to not be 0th Fastest
+    startPosition -= final.heat.progression!.previous!.entries.filter(
+      (entry) =>
+        entry.startPosition! < startPosition && // Exclude anything with a higher number than this
+        entry.sourceIds.every((id) =>
+          sourceHeats.some((sourceHeat) => sourceHeat.heat.heatId == id),
+        ) &&
+        sourceHeats
+          .map((sourceHeat) => sourceHeat.heat.heatId)
+          .every((id) => entry.sourceIds.includes(id)),
+    ).length;
 
     // Otherwise, we build progression based on the entry regex
     final.heat.progression!.previous!.entries.push({
-      sourceIds: sourceHeats.map((heat) => heat.heat.heatId),
+      sourceIds: sourceHeats.map((sourceHeat) => sourceHeat.heat.heatId),
       bowNumber: finalEntry.bowNumber,
       startPosition: startPosition - 1,
     });
@@ -213,6 +290,15 @@ function assignProgressionForFinal(
     sourceHeats.forEach((heat) => {
       entries = entries.concat(heat.heat.entries);
     });
+
+    // If we have no finish times at all, we can ignore processing progression
+    if (
+      !sourceHeats.some((sourceHeat) =>
+        sourceHeat.heat.entries.some((entry) => entry.finishTime !== undefined),
+      )
+    ) {
+      return;
+    }
 
     // Remove entries from the source heats that didn't finish and any entries that are already in the final.
     // Then sort the remaining by finish time
@@ -228,9 +314,32 @@ function assignProgressionForFinal(
       )
       .sort((a, b) => a.finishTime! - b.finishTime!);
 
+    if (startPosition > entries.length) {
+      throw new Error(`Failed to find a match for ${entryRegex[0]}`);
+    }
+
+    const entry: EntryBase = {
+      teamName: entries[startPosition - 1].teamName,
+      teamEntryLetter: entries[startPosition - 1].teamEntryLetter,
+    };
+
+    const entryHash = `${entry.teamName}_${entry.teamEntryLetter}`;
+
+    // Check entry set
+    if (entrySet.has(entryHash)) {
+      throw new Error(
+        `Detected a duplicate entry - ${entry.teamName} ${
+          entry.teamEntryLetter ?? ""
+        }`,
+      );
+    }
+
     // Back-compute the team name for the final results
-    finalEntry.teamName = entries[startPosition - 1].teamName;
-    finalEntry.teamEntryLetter = entries[startPosition - 1].teamEntryLetter;
+    finalEntry.teamName = entry.teamName;
+    finalEntry.teamEntryLetter = entry.teamEntryLetter;
+
+    // Add the entries
+    entrySet.add(entryHash);
   });
 }
 
@@ -355,6 +464,28 @@ export function processProgression(entries: HeatWithLanesEntry[]): void {
       ),
     );
 
+    // Check for duplicate entries in the heats
+    const allHeatEntries = new Set<string>();
+    heatMap.forEach((entryCheckHeat) => {
+      entryCheckHeat.heat.entries.forEach((entryCheckEntry) => {
+        if (
+          allHeatEntries.has(
+            `${entryCheckEntry.teamName}_${entryCheckEntry.teamEntryLetter}`,
+          )
+        ) {
+          throw new Error(
+            `Found a duplicate entry ${entryCheckEntry.teamName} ${
+              entryCheckEntry.teamEntryLetter ?? ""
+            }`,
+          );
+        }
+
+        allHeatEntries.add(
+          `${entryCheckEntry.teamName}_${entryCheckEntry.teamEntryLetter}`,
+        );
+      });
+    });
+
     // If there are no heats, it's a special case
     if (heatMap.size === 0) {
       // If there are two that can be the final, it's a lane race and then a real race. We can handle that
@@ -396,6 +527,10 @@ export function processProgression(entries: HeatWithLanesEntry[]): void {
     if (finalEligibleHeats.length === 0) {
       throw new Error(`Found ${heatMap.size} heats and 0 finals`);
     }
+    // Duplicate checking sets
+    const finalNameSet = new Set<string>(); // Final names
+    const entryProgressionSet = new Set<string>(); // Entries in terms of progression (needed for cases where we can't yet calculate)
+    const calculatedEntrySet = new Set<string>(); // Entries in terms of real entries (needed for cases where 1st fastest and 1st point at the same)
 
     // Now assign progression for each of the finals
     finalEligibleHeats.forEach((final) => {
@@ -411,6 +546,12 @@ export function processProgression(entries: HeatWithLanesEntry[]): void {
           throw error; // Otherwise, throw cuz we need information
         }
       }
+
+      // Check the final name, ensure it's not a duplicate
+      if (finalNameSet.has(finalName)) {
+        throw new Error(`Found a duplicate final ${finalName}`);
+      }
+
       // Assign progression for the final
       final.heat.progression = {
         description: finalName,
@@ -418,7 +559,15 @@ export function processProgression(entries: HeatWithLanesEntry[]): void {
           entries: [],
         },
       };
-      assignProgressionForFinal(heatMap, final);
+      assignProgressionForFinal(
+        heatMap,
+        final,
+        entryProgressionSet,
+        calculatedEntrySet,
+      );
+
+      // Save the final name
+      finalNameSet.add(finalName);
     });
   });
 }
