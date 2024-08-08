@@ -9,13 +9,13 @@ export default function Footer() {
   return (
     <footer>
       <div className="w-full p-2.5 bg-tertiary justify-between items-center inline-flex">
-        <div className="flex-col justify-start items-start gap-[5px] inline-flex">
-          <small className="text-background text-[10px] font-normal">
+        <div className="flex-col justify-start items-start gap-[5px] inline-flex text-background">
+          <small className="text-[10px] font-normal">
             &#169; {new Date().getFullYear()} Quinsigamond Rowing Association,
             Inc.
           </small>
           <div className="justify-start items-start gap-[5px] inline-flex">
-            <small className="text-background text-[10px] font-normal">
+            <small className="text-[10px] font-normal">
               Photos courtesy of
             </small>
             <a
@@ -25,7 +25,7 @@ export default function Footer() {
               SportGraphics.com
             </a>
           </div>
-          <small className="self-stretch text-background text-[10px] font-normal">
+          <small className="self-stretch text-[10px] font-normal">
             Website developed by Bob Nyce, Ian Wright, and Emerson Shatouhy
           </small>
         </div>
